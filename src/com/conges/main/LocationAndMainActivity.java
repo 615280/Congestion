@@ -6,10 +6,14 @@ import com.baidu.location.LocationClient;
 import com.baidu.location.LocationClientOption;
 import com.baidu.mapapi.SDKInitializer;
 import com.baidu.mapapi.map.BaiduMap;
+import com.baidu.mapapi.map.BitmapDescriptor;
+import com.baidu.mapapi.map.BitmapDescriptorFactory;
 import com.baidu.mapapi.map.MapStatus;
 import com.baidu.mapapi.map.MapStatusUpdateFactory;
 import com.baidu.mapapi.map.MapView;
+import com.baidu.mapapi.map.MyLocationConfiguration;
 import com.baidu.mapapi.map.MyLocationData;
+import com.baidu.mapapi.map.MyLocationConfiguration.LocationMode;
 import com.baidu.mapapi.model.LatLng;
 
 import android.app.Activity;
@@ -25,6 +29,12 @@ public class LocationAndMainActivity extends Activity {
     LocationClient mLocClient;
     public MyLocationListenner myListener = new MyLocationListenner();
     boolean isFirstLoc = true; 	// 是否首次定位
+    
+    //改变定位点样式
+    private LocationMode mCurrentMode;
+    BitmapDescriptor mCurrentMarker;
+    private static final int accuracyCircleFillColor = 0xAAFFFF88;
+    private static final int accuracyCircleStrokeColor = 0xAA00FF00;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -35,6 +45,8 @@ public class LocationAndMainActivity extends Activity {
 	}
 
 	private void init(){
+		changeIconGeo();
+
 		// 地图初始化
         mMapView = (MapView) findViewById(R.id.bmapview);
         mBaiduMap = mMapView.getMap();
@@ -49,6 +61,16 @@ public class LocationAndMainActivity extends Activity {
         option.setScanSpan(1000);
         mLocClient.setLocOption(option);
         mLocClient.start();
+	}
+	
+	public void changeIconGeo(){
+		mCurrentMode = LocationMode.NORMAL;
+		mCurrentMarker = BitmapDescriptorFactory
+                .fromResource(R.drawable.icon_geo);
+        mBaiduMap
+                .setMyLocationConfigeration(new MyLocationConfiguration(
+                        mCurrentMode, true, mCurrentMarker,
+                                        accuracyCircleFillColor, accuracyCircleStrokeColor));
 	}
 	
 	@Override
