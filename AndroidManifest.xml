@@ -46,7 +46,7 @@
         android:allowBackup="true"
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
-        android:theme="@style/AppTheme" >
+        android:theme="@android:style/Theme.Black.NoTitleBar" >
 
         <!-- 百度API访问AccessKey -->
         <meta-data
@@ -61,16 +61,18 @@
         </service>
 
         <!-- activity -->
-        <activity android:name=".MainActivity" >
+        <activity
+            android:name=".MainActivity"
+            android:screenOrientation="portrait" >
+        </activity>
+        <activity
+            android:name=".LocationAndMainActivity"
+            android:screenOrientation="portrait" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-        </activity>
-        <activity 
-            android:name=".LocationAndMainActivity"
-            android:theme="@android:style/Theme.Black.NoTitleBar" >
-            
         </activity>
     </application>
 

@@ -33,8 +33,8 @@ public class LocationAndMainActivity extends Activity {
     //改变定位点样式
     private LocationMode mCurrentMode;
     BitmapDescriptor mCurrentMarker;
-    private static final int accuracyCircleFillColor = 0xAAFFFF88;
-    private static final int accuracyCircleStrokeColor = 0xAA00FF00;
+    private static final int accuracyCircleFillColor = 0xAACCCCCC;			//包围圈背景色
+    private static final int accuracyCircleStrokeColor = 0xAA00FF00;	//边缘线
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -45,8 +45,6 @@ public class LocationAndMainActivity extends Activity {
 	}
 
 	private void init(){
-		changeIconGeo();
-
 		// 地图初始化
         mMapView = (MapView) findViewById(R.id.bmapview);
         mBaiduMap = mMapView.getMap();
@@ -61,6 +59,7 @@ public class LocationAndMainActivity extends Activity {
         option.setScanSpan(1000);
         mLocClient.setLocOption(option);
         mLocClient.start();
+        changeIconGeo();
 	}
 	
 	public void changeIconGeo(){
