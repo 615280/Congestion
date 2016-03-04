@@ -20,7 +20,7 @@ public class MainActivity extends Activity {
 	}
 
 	private void init(){
-		mMapView = (MapView) findViewById(R.id.bmapview);
+//		mMapView = (MapView) findViewById(R.id.bmapview);
 	}
 	
 	@Override
