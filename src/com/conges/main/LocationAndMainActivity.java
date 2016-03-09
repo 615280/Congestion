@@ -45,7 +45,7 @@ public class LocationAndMainActivity extends Activity {
 	// 定位相关
 	LocationClient mLocClient;
 	public MyLocationListenner myListener = new MyLocationListenner();
-	boolean isFirstLoc = true; // 是否首次定位
+	volatile boolean isFirstLoc = true; // 是否首次定位
 
 	// 改变定位点样式
 	private LocationMode mCurrentMode;
@@ -96,6 +96,8 @@ public class LocationAndMainActivity extends Activity {
 		option.setScanSpan(1000);
 		mLocClient.setLocOption(option);
 		mLocClient.start();
+		
+		locationButton.setVisibility(View.INVISIBLE);
 	}
 
 	private void initChangeIconGeo() {
