@@ -9,19 +9,27 @@ import com.baidu.mapapi.map.BaiduMap;
 import com.baidu.mapapi.map.BaiduMapOptions;
 import com.baidu.mapapi.map.BitmapDescriptor;
 import com.baidu.mapapi.map.BitmapDescriptorFactory;
+import com.baidu.mapapi.map.MapPoi;
 import com.baidu.mapapi.map.MapStatus;
 import com.baidu.mapapi.map.MapStatusUpdateFactory;
 import com.baidu.mapapi.map.MapView;
 import com.baidu.mapapi.map.MyLocationConfiguration;
 import com.baidu.mapapi.map.MyLocationData;
+import com.baidu.mapapi.map.BaiduMap.OnMapClickListener;
+import com.baidu.mapapi.map.BaiduMap.OnMapDoubleClickListener;
+import com.baidu.mapapi.map.BaiduMap.OnMapLongClickListener;
+import com.baidu.mapapi.map.BaiduMap.OnMapStatusChangeListener;
+import com.baidu.mapapi.map.BaiduMap.OnMapTouchListener;
 import com.baidu.mapapi.map.MyLocationConfiguration.LocationMode;
 import com.baidu.mapapi.model.LatLng;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -35,6 +43,9 @@ public class LocationAndMainActivity extends Activity {
 	MapView mMapView = null;
 	BaiduMap mBaiduMap;
 	BaiduMapOptions mBaiduMapOptions;
+	
+	LatLng currentPt = null;		//地理坐标经纬度
+	String touchType;
 
 	OnCheckedChangeListener radioButtonListener;
 	Button publishSitButton;
@@ -79,13 +90,76 @@ public class LocationAndMainActivity extends Activity {
 
 		mBaiduMap = mMapView.getMap();
 
-		// 开启定位图层
-		mBaiduMap.setMyLocationEnabled(true);
-
-		initLocPosition();
-		initChangeIconGeo();
+		mBaiduMap.setMyLocationEnabled(true);	// 开启定位图层
+		initLocPosition();		// 初始化定位
+		initChangeIconGeo();		//改变定位点样式
+		
+//		System.out.println(currentPt.latitude);
+//		System.out.println(currentPt.longitude);
+//		initListener();		//初始化监听	
 	}
 
+	private void initListener() {
+		mBaiduMap.setOnMapTouchListener(new OnMapTouchListener() {
+			
+			@Override
+			public void onTouch(MotionEvent event) {
+				
+			}
+		});
+		
+		mBaiduMap.setOnMapClickListener(new OnMapClickListener() {
+			public void onMapClick(LatLng point) {
+				touchType = "单击";
+				currentPt = point;
+				updateMapState();
+			}
+
+			public boolean onMapPoiClick(MapPoi poi) {
+				return false;
+			}
+		});
+		mBaiduMap.setOnMapLongClickListener(new OnMapLongClickListener() {
+			public void onMapLongClick(LatLng point) {
+				touchType = "长按";
+				currentPt = point;
+				updateMapState();
+			}
+		});
+		mBaiduMap.setOnMapDoubleClickListener(new OnMapDoubleClickListener() {
+			public void onMapDoubleClick(LatLng point) {
+				touchType = "双击";
+				currentPt = point;
+				updateMapState();
+			}
+		});
+		mBaiduMap.setOnMapStatusChangeListener(new OnMapStatusChangeListener() {
+			public void onMapStatusChangeStart(MapStatus status) {
+				updateMapState();
+			}
+
+			public void onMapStatusChangeFinish(MapStatus status) {
+				updateMapState();
+			}
+
+			public void onMapStatusChange(MapStatus status) {
+				updateMapState();
+			}
+		});
+	}
+	
+	private void updateMapState() {
+		// TODO Auto-generated method stub
+		String state = "";
+		if (currentPt == null) {
+			state = "点击、长按、双击地图以获取经纬度和地图状态";
+		} else {
+			state = String.format(touchType + ",当前经度： %f 当前纬度：%f",
+					currentPt.longitude, currentPt.latitude);
+		}
+		System.out.println(state);
+	}
+	
 	private void initLocPosition() {
 		// 定位初始化
 		mLocClient = new LocationClient(this);
@@ -129,10 +203,10 @@ public class LocationAndMainActivity extends Activity {
 		};
 		group.setOnCheckedChangeListener(radioButtonListener);
 
-		publishSitButton = (Button) findViewById(R.id.buttonPublish);
-		settingButton = (Button) findViewById(R.id.buttonSetting);
-		locationButton = (Button) findViewById(R.id.buttonLocation);
-		contactButton = (Button) findViewById(R.id.buttonContact);
+		publishSitButton = (Button) findViewById(R.id.button_main_publish);
+		settingButton = (Button) findViewById(R.id.button_main_setting);
+		locationButton = (Button) findViewById(R.id.button_main_location);
+		contactButton = (Button) findViewById(R.id.button_main_contact);
 
 		publishSitButton.setText("路况");
 		settingButton.setText("设置");
@@ -154,6 +228,8 @@ public class LocationAndMainActivity extends Activity {
 				// TODO Auto-generated method stub
 				Toast.makeText(LocationAndMainActivity.this, "设置",
 						Toast.LENGTH_SHORT).show();
+				Intent intent = new Intent(LocationAndMainActivity.this, PreferenceMainActivity.class);
+				startActivity(intent);
 			}
 		});
 
@@ -174,6 +250,8 @@ public class LocationAndMainActivity extends Activity {
 				// TODO Auto-generated method stub
 				Toast.makeText(LocationAndMainActivity.this, "好友",
 						Toast.LENGTH_SHORT).show();
+				Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
+				startActivity(intent);
 			}
 		});
 	}
@@ -222,6 +300,7 @@ public class LocationAndMainActivity extends Activity {
 				builder.target(ll).zoom(18.0f);
 				mBaiduMap.animateMapStatus(MapStatusUpdateFactory
 						.newMapStatus(builder.build()));
+				currentPt = ll;
 			}
 		}
 

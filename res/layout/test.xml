@@ -4,9 +4,9 @@
     android:layout_height="match_parent" >
     
     <Button 
-        android:layout_alignTop="@id/buttonLocation"
-        android:layout_above="@id/buttonPublish"
-        android:layout_alignLeft="@id/buttonPublish"
+        android:layout_alignTop="@id/button_main_location"
+        android:layout_above="@id/button_main_publish"
+        android:layout_alignLeft="@id/button_main_publish"
         android:layout_marginBottom="25dp" />
     
     

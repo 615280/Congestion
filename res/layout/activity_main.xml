@@ -41,7 +41,7 @@
     </LinearLayout>
 
     <Button
-        android:id="@+id/buttonPublish"
+        android:id="@+id/button_main_publish"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
@@ -50,7 +50,7 @@
         android:layout_marginRight="25dp" />
 
     <Button
-        android:id="@+id/buttonSetting"
+        android:id="@+id/button_main_setting"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
@@ -59,20 +59,20 @@
         android:layout_marginLeft="25dp" />
 
     <Button
-        android:id="@+id/buttonLocation"
+        android:id="@+id/button_main_location"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_above="@id/buttonSetting"
-        android:layout_alignLeft="@id/buttonSetting"
-        android:layout_alignStart="@id/buttonSetting"
+        android:layout_above="@id/button_main_setting"
+        android:layout_alignLeft="@id/button_main_setting"
+        android:layout_alignStart="@id/button_main_setting"
         android:layout_marginBottom="50dip" />
 
     <Button
-        android:id="@+id/buttonContact"
+        android:id="@+id/button_main_contact"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignLeft="@id/buttonPublish"
-        android:layout_alignStart="@id/buttonPublish"
-        android:layout_alignTop="@id/buttonLocation" />
+        android:layout_alignLeft="@id/button_main_publish"
+        android:layout_alignStart="@id/button_main_publish"
+        android:layout_alignTop="@id/button_main_location" />
 
 </RelativeLayout>
