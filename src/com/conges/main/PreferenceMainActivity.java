@@ -5,7 +5,6 @@ import java.util.List;
 import android.os.Bundle;
 import android.preference.PreferenceActivity;
 import android.preference.PreferenceFragment;
-import android.widget.Button;
 import android.widget.Toast;
 
 public class PreferenceMainActivity extends PreferenceActivity {

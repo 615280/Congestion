@@ -1,27 +1,6 @@
 package com.conges.main;
 
-import com.baidu.location.BDLocation;
-import com.baidu.location.BDLocationListener;
-import com.baidu.location.LocationClient;
-import com.baidu.location.LocationClientOption;
-import com.baidu.mapapi.SDKInitializer;
-import com.baidu.mapapi.map.BaiduMap;
-import com.baidu.mapapi.map.BaiduMapOptions;
-import com.baidu.mapapi.map.BitmapDescriptor;
-import com.baidu.mapapi.map.BitmapDescriptorFactory;
-import com.baidu.mapapi.map.MapPoi;
-import com.baidu.mapapi.map.MapStatus;
-import com.baidu.mapapi.map.MapStatusUpdateFactory;
-import com.baidu.mapapi.map.MapView;
-import com.baidu.mapapi.map.MyLocationConfiguration;
-import com.baidu.mapapi.map.MyLocationData;
-import com.baidu.mapapi.map.BaiduMap.OnMapClickListener;
-import com.baidu.mapapi.map.BaiduMap.OnMapDoubleClickListener;
-import com.baidu.mapapi.map.BaiduMap.OnMapLongClickListener;
-import com.baidu.mapapi.map.BaiduMap.OnMapStatusChangeListener;
-import com.baidu.mapapi.map.BaiduMap.OnMapTouchListener;
-import com.baidu.mapapi.map.MyLocationConfiguration.LocationMode;
-import com.baidu.mapapi.model.LatLng;
+import java.util.ArrayList;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -34,11 +13,36 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.RadioGroup;
-import android.widget.TextView;
 import android.widget.RadioGroup.OnCheckedChangeListener;
 import android.widget.RelativeLayout;
 import android.widget.RelativeLayout.LayoutParams;
+import android.widget.TextView;
 import android.widget.Toast;
+
+import com.baidu.location.BDLocation;
+import com.baidu.location.BDLocationListener;
+import com.baidu.location.LocationClient;
+import com.baidu.location.LocationClientOption;
+import com.baidu.mapapi.SDKInitializer;
+import com.baidu.mapapi.map.BaiduMap;
+import com.baidu.mapapi.map.BaiduMap.OnMapClickListener;
+import com.baidu.mapapi.map.BaiduMap.OnMapDoubleClickListener;
+import com.baidu.mapapi.map.BaiduMap.OnMapLongClickListener;
+import com.baidu.mapapi.map.BaiduMap.OnMapStatusChangeListener;
+import com.baidu.mapapi.map.BaiduMap.OnMapTouchListener;
+import com.baidu.mapapi.map.BaiduMapOptions;
+import com.baidu.mapapi.map.BitmapDescriptor;
+import com.baidu.mapapi.map.BitmapDescriptorFactory;
+import com.baidu.mapapi.map.MapPoi;
+import com.baidu.mapapi.map.MapStatus;
+import com.baidu.mapapi.map.MapStatusUpdateFactory;
+import com.baidu.mapapi.map.MapView;
+import com.baidu.mapapi.map.Marker;
+import com.baidu.mapapi.map.MarkerOptions;
+import com.baidu.mapapi.map.MyLocationConfiguration;
+import com.baidu.mapapi.map.MyLocationConfiguration.LocationMode;
+import com.baidu.mapapi.map.MyLocationData;
+import com.baidu.mapapi.model.LatLng;
 
 public class LocationAndMainActivity extends Activity {
 	private MapView mMapView = null;
@@ -63,10 +67,12 @@ public class LocationAndMainActivity extends Activity {
 	// 改变定位点样式
 	private LocationMode mCurrentMode;
 	private BitmapDescriptor mCurrentMarker;
-	private static final int accuracyCircleFillColor = 0xCC00CCCC; // 包围圈背景色
+	private static final int accuracyCircleFillColor = 0x2200CCCC; // 包围圈背景色
 	private static final int accuracyCircleStrokeColor = 0xAA00FF00; // 边缘线
 
-	@Override
+	private ArrayList<Marker> markerArr = new ArrayList<Marker>();
+	
+ 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		SDKInitializer.initialize(getApplicationContext());
@@ -168,6 +174,8 @@ public class LocationAndMainActivity extends Activity {
 				"zoom=%.1f rotate=%d overlook=%d",
 				ms.zoom, (int) ms.rotate, (int) ms.overlook);
 		mStateBar.setText(state);
+		
+//		changeLocationButtonVisible();		//显示定位按钮
 	}
 	
 	private void initLocPosition() {
@@ -180,8 +188,6 @@ public class LocationAndMainActivity extends Activity {
 		option.setScanSpan(1000);
 		mLocClient.setLocOption(option);
 		mLocClient.start();
-		
-		locationButton.setVisibility(View.INVISIBLE);
 	}
 
 	private void initChangeIconGeo() {
@@ -208,6 +214,7 @@ public class LocationAndMainActivity extends Activity {
 					// 打开
 					Toast.makeText(LocationAndMainActivity.this, "openColor",
 							Toast.LENGTH_SHORT).show();
+					clearOverlay();
 				}
 			}
 		};
@@ -229,6 +236,7 @@ public class LocationAndMainActivity extends Activity {
 				// TODO Auto-generated method stub
 				Toast.makeText(LocationAndMainActivity.this, "路况",
 						Toast.LENGTH_SHORT).show();
+				publishOverlay();
 			}
 		});
 
@@ -268,6 +276,9 @@ public class LocationAndMainActivity extends Activity {
 		mStateBar = (TextView) findViewById(R.id.state);
 	}
 
+	private void changeLocationButtonVisible(){
+		locationButton.setVisibility(View.VISIBLE);
+	}
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
@@ -306,6 +317,8 @@ public class LocationAndMainActivity extends Activity {
 			mBaiduMap.setMyLocationData(locData);
 			if (isFirstLoc) {
 				isFirstLoc = false;
+				locationButton.setVisibility(View.INVISIBLE);
+				
 				LatLng ll = new LatLng(location.getLatitude(),
 						location.getLongitude());
 				MapStatus.Builder builder = new MapStatus.Builder();
@@ -318,6 +331,33 @@ public class LocationAndMainActivity extends Activity {
 
 		public void onReceivePoi(BDLocation poiLocation) {
 		}
+	}
+	
+	/**
+	 * 添加Overlay
+	 */
+	public void publishOverlay() {
+		Marker marker_jam;
+		BitmapDescriptor bd_jam = BitmapDescriptorFactory
+				.fromResource(R.drawable.mark_jam);
+		// add marker overlay
+		MarkerOptions ooA = new MarkerOptions().position(currentPt).icon(bd_jam)
+				.zIndex(9).draggable(true);
+		marker_jam = (Marker) (mBaiduMap.addOverlay(ooA));
+		
+		ArrayList<BitmapDescriptor> giflist = new ArrayList<BitmapDescriptor>();
+		giflist.add(bd_jam);
+		markerArr.add(marker_jam);
+	}
+	
+	/**
+	 * 清除所有Overlay
+	 */
+	public void clearOverlay() {
+		mBaiduMap.clear();
+//		for(int i=0; i<markerArr.size(); i++){
+//			markerArr.get(i).setVisible(false);;
+//		}
 	}
 
 	@Override

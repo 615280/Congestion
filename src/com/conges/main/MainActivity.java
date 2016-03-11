@@ -2,6 +2,7 @@ package com.conges.main;
 
 import com.baidu.mapapi.SDKInitializer;
 import com.baidu.mapapi.map.MapView;
+import com.baidu.mapapi.map.Marker;
 
 import android.app.Activity;
 import android.os.Bundle;
@@ -10,6 +11,7 @@ import android.view.MenuItem;
 
 public class MainActivity extends Activity {
 	MapView mMapView = null;
+	Marker markJam;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
