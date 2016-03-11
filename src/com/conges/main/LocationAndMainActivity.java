@@ -34,33 +34,35 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.RadioGroup;
+import android.widget.TextView;
 import android.widget.RadioGroup.OnCheckedChangeListener;
 import android.widget.RelativeLayout;
 import android.widget.RelativeLayout.LayoutParams;
 import android.widget.Toast;
 
 public class LocationAndMainActivity extends Activity {
-	MapView mMapView = null;
-	BaiduMap mBaiduMap;
-	BaiduMapOptions mBaiduMapOptions;
+	private MapView mMapView = null;
+	private BaiduMap mBaiduMap;
+	private BaiduMapOptions mBaiduMapOptions;
 	
-	LatLng currentPt = null;		//地理坐标经纬度
-	String touchType;
+	private LatLng currentPt = null;		//地理坐标经纬度
+	private String touchType;
+	private TextView mStateBar;
 
-	OnCheckedChangeListener radioButtonListener;
-	Button publishSitButton;
-	Button settingButton;
-	Button locationButton;
-	Button contactButton;
+	private OnCheckedChangeListener radioButtonListener;
+	private Button publishSitButton;
+	private Button settingButton;
+	private Button locationButton;
+	private Button contactButton;
 
 	// 定位相关
-	LocationClient mLocClient;
+	private LocationClient mLocClient;
 	public MyLocationListenner myListener = new MyLocationListenner();
 	volatile boolean isFirstLoc = true; // 是否首次定位
 
 	// 改变定位点样式
 	private LocationMode mCurrentMode;
-	BitmapDescriptor mCurrentMarker;
+	private BitmapDescriptor mCurrentMarker;
 	private static final int accuracyCircleFillColor = 0xCC00CCCC; // 包围圈背景色
 	private static final int accuracyCircleStrokeColor = 0xAA00FF00; // 边缘线
 
@@ -96,7 +98,7 @@ public class LocationAndMainActivity extends Activity {
 		
 //		System.out.println(currentPt.latitude);
 //		System.out.println(currentPt.longitude);
-//		initListener();		//初始化监听	
+		initListener();		//初始化监听	
 	}
 
 	private void initListener() {
@@ -150,6 +152,9 @@ public class LocationAndMainActivity extends Activity {
 	
 	private void updateMapState() {
 		// TODO Auto-generated method stub
+		if (mStateBar == null) {
+			return;
+		}
 		String state = "";
 		if (currentPt == null) {
 			state = "点击、长按、双击地图以获取经纬度和地图状态";
@@ -157,7 +162,12 @@ public class LocationAndMainActivity extends Activity {
 			state = String.format(touchType + ",当前经度： %f 当前纬度：%f",
 					currentPt.longitude, currentPt.latitude);
 		}
-		System.out.println(state);
+		state += "\n";
+		MapStatus ms = mBaiduMap.getMapStatus();
+		state += String.format(
+				"zoom=%.1f rotate=%d overlook=%d",
+				ms.zoom, (int) ms.rotate, (int) ms.overlook);
+		mStateBar.setText(state);
 	}
 	
 	private void initLocPosition() {
@@ -254,6 +264,8 @@ public class LocationAndMainActivity extends Activity {
 				startActivity(intent);
 			}
 		});
+		
+		mStateBar = (TextView) findViewById(R.id.state);
 	}
 
 	@Override
