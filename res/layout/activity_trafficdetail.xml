@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#010000FF" >
+    
+    <TextView 
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+       	android:background="#44000000" />
+
+    <LinearLayout 
+        android:paddingTop="50dp"
+         android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+        
+    <TextView 
+        android:id="@+id/tv_trafdt_time"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textColor="@color/brown"
+        android:textSize="14sp" />
+    
+     <TextView 
+        android:id="@+id/tv_trafdt_info"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textColor="@color/brown"
+        android:textSize="14sp" />
+     
+      <TextView 
+        android:id="@+id/tv_trafdt_comment"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textColor="@color/brown"
+        android:textSize="14sp" />
+    
+    </LinearLayout>
+</RelativeLayout>
