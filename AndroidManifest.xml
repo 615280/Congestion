@@ -110,6 +110,13 @@
             android:label="好友列表"
             android:screenOrientation="portrait"  >
         </activity>
+        
+         <activity
+            android:name=".TrafficDetailActivity"
+            android:label="路况详情"
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar"  >
+        </activity>
     </application>
 
 </manifest>

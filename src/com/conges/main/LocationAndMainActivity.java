@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Point;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -30,9 +31,11 @@ import com.baidu.mapapi.map.BaiduMap.OnMapDoubleClickListener;
 import com.baidu.mapapi.map.BaiduMap.OnMapLongClickListener;
 import com.baidu.mapapi.map.BaiduMap.OnMapStatusChangeListener;
 import com.baidu.mapapi.map.BaiduMap.OnMapTouchListener;
+import com.baidu.mapapi.map.BaiduMap.OnMarkerClickListener;
 import com.baidu.mapapi.map.BaiduMapOptions;
 import com.baidu.mapapi.map.BitmapDescriptor;
 import com.baidu.mapapi.map.BitmapDescriptorFactory;
+import com.baidu.mapapi.map.InfoWindow;
 import com.baidu.mapapi.map.MapPoi;
 import com.baidu.mapapi.map.MapStatus;
 import com.baidu.mapapi.map.MapStatusUpdateFactory;
@@ -40,6 +43,7 @@ import com.baidu.mapapi.map.MapView;
 import com.baidu.mapapi.map.Marker;
 import com.baidu.mapapi.map.MarkerOptions;
 import com.baidu.mapapi.map.MyLocationConfiguration;
+import com.baidu.mapapi.map.Projection;
 import com.baidu.mapapi.map.MyLocationConfiguration.LocationMode;
 import com.baidu.mapapi.map.MyLocationData;
 import com.baidu.mapapi.model.LatLng;
@@ -70,6 +74,8 @@ public class LocationAndMainActivity extends Activity {
 	private static final int accuracyCircleFillColor = 0x2200CCCC; // 包围圈背景色
 	private static final int accuracyCircleStrokeColor = 0xAA00FF00; // 边缘线
 
+	private Marker marker_jam;
+//	private InfoWindow mInfoWindow;
 	private ArrayList<Marker> markerArr = new ArrayList<Marker>();
 	
  	@Override
@@ -237,6 +243,38 @@ public class LocationAndMainActivity extends Activity {
 				Toast.makeText(LocationAndMainActivity.this, "路况",
 						Toast.LENGTH_SHORT).show();
 				publishOverlay();
+				mBaiduMap.setOnMarkerClickListener(new OnMarkerClickListener() {
+					public boolean onMarkerClick(final Marker marker) {
+						Intent intent = new Intent(LocationAndMainActivity.this, TrafficDetailActivity.class);
+						Bundle data = new Bundle();
+						Projection projection = mMapView.getMap().getProjection();
+						Point point = projection.toScreenLocation(currentPt);
+						data.putInt("pointx", point.x);
+						data.putInt("pointy", point.y);
+						intent.putExtras(data);
+						startActivity(intent);
+						/*
+						Button button = new Button(getApplicationContext());
+						button.setBackgroundResource(R.drawable.popup);
+						OnInfoWindowClickListener listener = null;
+						if (marker == marker_jam) {
+							button.setText("详情信息");
+							listener = new OnInfoWindowClickListener() {
+								public void onInfoWindowClick() {
+									mBaiduMap.hideInfoWindow();
+									//点击提示Button之后的操作
+								}
+							};
+							LatLng ll = marker.getPosition();
+							Bitmap bm = BitmapFactory.decodeResource(getResources(), R.drawable.popup);
+							int yOffset = (int) (bm.getHeight()*(-1.1));
+							mInfoWindow = new InfoWindow(BitmapDescriptorFactory.fromView(button), ll,  yOffset, listener);
+							mBaiduMap.showInfoWindow(mInfoWindow);
+						} 
+						*/
+						return true;
+					}
+				});
 			}
 		});
 
@@ -279,6 +317,7 @@ public class LocationAndMainActivity extends Activity {
 	private void changeLocationButtonVisible(){
 		locationButton.setVisibility(View.VISIBLE);
 	}
+
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
@@ -337,7 +376,6 @@ public class LocationAndMainActivity extends Activity {
 	 * 添加Overlay
 	 */
 	public void publishOverlay() {
-		Marker marker_jam;
 		BitmapDescriptor bd_jam = BitmapDescriptorFactory
 				.fromResource(R.drawable.mark_jam);
 		// add marker overlay
