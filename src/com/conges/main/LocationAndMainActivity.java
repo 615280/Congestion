@@ -1,6 +1,7 @@
 package com.conges.main;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -32,9 +33,12 @@ import com.baidu.mapapi.map.BaiduMap.OnMapLongClickListener;
 import com.baidu.mapapi.map.BaiduMap.OnMapStatusChangeListener;
 import com.baidu.mapapi.map.BaiduMap.OnMapTouchListener;
 import com.baidu.mapapi.map.BaiduMap.OnMarkerClickListener;
+import com.baidu.mapapi.map.ArcOptions;
 import com.baidu.mapapi.map.BaiduMapOptions;
 import com.baidu.mapapi.map.BitmapDescriptor;
 import com.baidu.mapapi.map.BitmapDescriptorFactory;
+import com.baidu.mapapi.map.CircleOptions;
+import com.baidu.mapapi.map.DotOptions;
 import com.baidu.mapapi.map.InfoWindow;
 import com.baidu.mapapi.map.MapPoi;
 import com.baidu.mapapi.map.MapStatus;
@@ -43,7 +47,13 @@ import com.baidu.mapapi.map.MapView;
 import com.baidu.mapapi.map.Marker;
 import com.baidu.mapapi.map.MarkerOptions;
 import com.baidu.mapapi.map.MyLocationConfiguration;
+import com.baidu.mapapi.map.OverlayOptions;
+import com.baidu.mapapi.map.PolygonOptions;
+import com.baidu.mapapi.map.Polyline;
+import com.baidu.mapapi.map.PolylineOptions;
 import com.baidu.mapapi.map.Projection;
+import com.baidu.mapapi.map.Stroke;
+import com.baidu.mapapi.map.TextOptions;
 import com.baidu.mapapi.map.MyLocationConfiguration.LocationMode;
 import com.baidu.mapapi.map.MyLocationData;
 import com.baidu.mapapi.model.LatLng;
@@ -74,6 +84,7 @@ public class LocationAndMainActivity extends Activity {
 	private static final int accuracyCircleFillColor = 0x2200CCCC; // 包围圈背景色
 	private static final int accuracyCircleStrokeColor = 0xAA00FF00; // 边缘线
 
+	Polyline mColorfulPolyline;
 	private Marker marker_jam;
 //	private InfoWindow mInfoWindow;
 	private ArrayList<Marker> markerArr = new ArrayList<Marker>();
@@ -84,6 +95,7 @@ public class LocationAndMainActivity extends Activity {
 		SDKInitializer.initialize(getApplicationContext());
 		setContentView(R.layout.activity_main);
 		init();
+//		addCustomElementsDemo();
 	}
 
 	private void init() {
@@ -231,10 +243,14 @@ public class LocationAndMainActivity extends Activity {
 		locationButton = (Button) findViewById(R.id.button_main_location);
 		contactButton = (Button) findViewById(R.id.button_main_contact);
 
-		publishSitButton.setText("路况");
-		settingButton.setText("设置");
+//		publishSitButton.setText("路况");
+//		settingButton.setText("设置");
+//		locationButton.setText("定位");
+//		contactButton.setText("好友");
+		publishSitButton.setBackgroundResource(R.drawable.button_message100);
+		settingButton.setBackgroundResource(R.drawable.button_setting100);
 		locationButton.setText("定位");
-		contactButton.setText("好友");
+		contactButton.setBackgroundResource(R.drawable.button_friend100);
 
 		publishSitButton.setOnClickListener(new OnClickListener() {
 			@Override
@@ -420,4 +436,36 @@ public class LocationAndMainActivity extends Activity {
 		mMapView = null;
 		super.onDestroy();
 	}
+
+	   /**
+     * 添加点、线、多边形、圆、文字
+     */
+    public void addCustomElementsDemo() {
+        // 添加普通折线绘制
+        
+        // 添加多颜色分段的折线绘制
+        LatLng p11 = new LatLng(31.282150, 120.731186);	//独墅湖
+        LatLng p21 = new LatLng(31.281520, 120.731185);	//中科大西
+        LatLng p31 = new LatLng(31.281410, 120.736247);	//中科大
+        LatLng p41 = new LatLng(31.281563, 120.740390);	//人大国际学院
+        LatLng p51 = new LatLng(31.281593, 120.743733);				//南大研究生院
+        List<LatLng> points1 = new ArrayList<LatLng>();
+        points1.add(p11);
+        points1.add(p21);
+        points1.add(p31);
+        points1.add(p41);
+        points1.add(p51);
+        List<Integer> colorValue = new ArrayList<Integer>();
+        colorValue.add(0xAAFF0000);
+        colorValue.add(0xAAFF7F00);
+        colorValue.add(0xAA00FF00);
+        colorValue.add(0xAAFF0000);
+        OverlayOptions ooPolyline1 = new PolylineOptions().width(12)
+                .color(0xAAFF0000).points(points1).colorsValues(colorValue);
+        mColorfulPolyline = (Polyline) mBaiduMap.addOverlay(ooPolyline1);
+        
+        // 添加多纹理分段的折线绘制
+        // 添加弧线
+        // 添加圆
+    }
 }

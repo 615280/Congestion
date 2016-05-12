@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 public class RegisterActivity extends Activity {
 	private EditText phonenumber;
@@ -29,9 +30,15 @@ public class RegisterActivity extends Activity {
 		registerButton.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
+				String phoneNumStr = phonenumber.getText().toString();
+//				if(!phoneNumStr.matches("")){
+				if(phoneNumStr.equals("")){
+					//不符合电话号码模式，提示重新输入
+					Toast.makeText(RegisterActivity.this, "请输入正确的手机号！", Toast.LENGTH_LONG).show();
+				}
 				Builder checkAlert = new Builder(	RegisterActivity.this);
 				checkAlert.setTitle("请确认手机号").setIcon(R.drawable.ic_launcher)
-						.setMessage(phonenumber.getText().toString());
+						.setMessage(phoneNumStr);
 				checkAlert.setPositiveButton("确认", new DialogInterface.OnClickListener() {
 					@Override
 					public void onClick(DialogInterface dialog, int which) {
