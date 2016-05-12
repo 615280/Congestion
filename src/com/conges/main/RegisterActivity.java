@@ -35,6 +35,7 @@ public class RegisterActivity extends Activity {
 				if(phoneNumStr.equals("")){
 					//不符合电话号码模式，提示重新输入
 					Toast.makeText(RegisterActivity.this, "请输入正确的手机号！", Toast.LENGTH_LONG).show();
+					return;
 				}
 				Builder checkAlert = new Builder(	RegisterActivity.this);
 				checkAlert.setTitle("请确认手机号").setIcon(R.drawable.ic_launcher)
