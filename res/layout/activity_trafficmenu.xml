@@ -2,46 +2,149 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical" >
-    <TableLayout android:id="@+id/trafficmenu_TableLayout"
+    android:layout_gravity="center_horizontal"
+    android:gravity="bottom"
+    android:orientation="vertical"
+    android:weightSum="20"
+    android:background="#44000000" >
+
+    <TextView
+        android:id="@+id/trafficmenu_tv_tableLine"
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content" >
-        
-        <TextView android:id="@+id/trafficmenu_tv_tableLine"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:text="路况"
-            android:textSize="24dp" />
-        
-        <TableRow>
-            <Button android:id="@+id/trafficmenu_bt_traffic"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/mark_jam" />
-             <Button android:id="@+id/trafficmenu_bt_accident"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-				android:src="@drawable/mark_accident" />
-              <Button android:id="@+id/trafficmenu_bt_warning"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-				android:src="@drawable/mark_warn" />
-        </TableRow>
-        
-        <TableRow>
-            <Button android:id="@+id/trafficmenu_bt_camera"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/mark_camera" />
-             <Button android:id="@+id/trafficmenu_bt_mapHi"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-				android:src="@drawable/mark_mapHi" />
-              <Button android:id="@+id/trafficmenu_bt_mapProblem"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/mark_mapProblem" />
-        </TableRow>
-    </TableLayout>
+        android:layout_height="wrap_content"
+        android:background="@color/main_black"
+        android:text="路况"
+        android:textColor="@color/white"
+        android:textSize="24dp"
+        android:gravity="center_horizontal" />
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/forth_color"
+        android:orientation="horizontal"
+        android:layout_weight="2" >
+
+        <ImageButton
+            android:id="@+id/trafficmenu_bt_traffic"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:src="@drawable/mark_jam"
+            android:layout_margin="5dp" />
+
+        <ImageButton
+            android:id="@+id/trafficmenu_bt_accident"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:src="@drawable/mark_accident"
+            android:layout_margin="5dp" />
+
+        <ImageButton
+            android:id="@+id/trafficmenu_bt_warning"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:src="@drawable/mark_warn"
+            android:layout_margin="5dp" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/forth_color"
+        android:orientation="horizontal"
+        android:layout_weight="1"
+        android:gravity="center_horizontal" >
+
+        <TextView
+            android:id="@+id/trafficmenu_tv_traffic"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:text="交通堵塞"
+            android:gravity="center_horizontal" />
+
+        <TextView
+            android:id="@+id/trafficmenu_tv_accident"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:text="事故"
+            android:gravity="center_horizontal" />
+
+        <TextView
+            android:id="@+id/trafficmenu_tv_warning"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:text="危险"
+            android:gravity="center_horizontal" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/forth_color"
+        android:orientation="horizontal"
+        android:layout_weight="2" >
+
+        <ImageButton
+            android:id="@+id/trafficmenu_bt_camera"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:src="@drawable/mark_camera"
+            android:layout_margin="5dp" />
+
+        <ImageButton
+            android:id="@+id/trafficmenu_bt_maphi"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:src="@drawable/mark_maphi"
+            android:layout_margin="5dp" />
+
+        <ImageButton
+            android:id="@+id/trafficmenu_bt_mapproblem"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:src="@drawable/mark_mapproblem"
+            android:layout_margin="5dp" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/forth_color"
+        android:orientation="horizontal"
+        android:layout_weight="1" >
+
+        <TextView
+            android:id="@+id/trafficmenu_tv_camera"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:text="摄像头"
+          	android:gravity="center_horizontal" />
+
+        <TextView
+            android:id="@+id/trafficmenu_tv_maphi"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:text="地图聊天"
+            android:gravity="center_horizontal" />
+
+        <TextView
+            android:id="@+id/trafficmenu_tv_mapproblem"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:text="地图问题"
+            android:gravity="center_horizontal" />
+    </LinearLayout>
 
 </LinearLayout>

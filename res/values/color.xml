@@ -290,5 +290,6 @@
 	<color name="second_color">#a5e4bb</color>
 	<color name="third_color">#cdf0d9</color>
 	<color name="forth_color">#eef7f1</color>
+	<color name="main_black">#292929</color>
 	
 </resources>
