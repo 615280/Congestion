@@ -117,6 +117,13 @@
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Translucent.NoTitleBar"  >
         </activity>
+        
+         <activity
+            android:name=".TrafficMenuActivity"
+            android:label="路况发布"
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar"  >
+        </activity>
     </application>
 
 </manifest>
