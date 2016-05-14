@@ -95,7 +95,7 @@ public class LocationAndMainActivity extends Activity {
 		SDKInitializer.initialize(getApplicationContext());
 		setContentView(R.layout.activity_main);
 		init();
-		 addCustomColorRoute();
+		addCustomColorRoute();
 	}
 
 	private void init() {
@@ -449,7 +449,7 @@ public class LocationAndMainActivity extends Activity {
 	 */
 	public void addCustomColorRoute() {
 		// 添加多颜色分段的折线绘制
-		LatLng p11 = new LatLng(31.282150, 120.731186); // 独墅湖
+		LatLng p11 = new LatLng(31.282150, 120.731186); // 独墅湖图书馆
 		LatLng p21 = new LatLng(31.281520, 120.731185); // 中科大西
 		LatLng p31 = new LatLng(31.281410, 120.736247); // 中科大
 		LatLng p41 = new LatLng(31.281563, 120.740390); // 人大国际学院
