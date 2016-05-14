@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+    <TableLayout android:id="@+id/trafficmenu_TableLayout"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content" >
+        
+        <TextView android:id="@+id/trafficmenu_tv_tableLine"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:text="路况"
+            android:textSize="24dp" />
+        
+        <TableRow>
+            <Button android:id="@+id/trafficmenu_bt_traffic"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/mark_jam" />
+             <Button android:id="@+id/trafficmenu_bt_accident"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+				android:src="@drawable/mark_accident" />
+              <Button android:id="@+id/trafficmenu_bt_warning"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+				android:src="@drawable/mark_warn" />
+        </TableRow>
+        
+        <TableRow>
+            <Button android:id="@+id/trafficmenu_bt_camera"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/mark_camera" />
+             <Button android:id="@+id/trafficmenu_bt_mapHi"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+				android:src="@drawable/mark_mapHi" />
+              <Button android:id="@+id/trafficmenu_bt_mapProblem"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/mark_mapProblem" />
+        </TableRow>
+    </TableLayout>
+
+</LinearLayout>

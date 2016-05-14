@@ -62,8 +62,8 @@ public class LocationAndMainActivity extends Activity {
 	private MapView mMapView = null;
 	private BaiduMap mBaiduMap;
 	private BaiduMapOptions mBaiduMapOptions;
-	
-	private LatLng currentPt = null;		//地理坐标经纬度
+
+	private LatLng currentPt = null; // 地理坐标经纬度
 	private String touchType;
 	private TextView mStateBar;
 
@@ -86,16 +86,16 @@ public class LocationAndMainActivity extends Activity {
 
 	Polyline mColorfulPolyline;
 	private Marker marker_jam;
-//	private InfoWindow mInfoWindow;
+	// private InfoWindow mInfoWindow;
 	private ArrayList<Marker> markerArr = new ArrayList<Marker>();
-	
- 	@Override
+
+	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		SDKInitializer.initialize(getApplicationContext());
 		setContentView(R.layout.activity_main);
 		init();
-//		addCustomElementsDemo();
+		 addCustomColorRoute();
 	}
 
 	private void init() {
@@ -116,24 +116,24 @@ public class LocationAndMainActivity extends Activity {
 
 		mBaiduMap = mMapView.getMap();
 
-		mBaiduMap.setMyLocationEnabled(true);	// 开启定位图层
-		initLocPosition();		// 初始化定位
-		initChangeIconGeo();		//改变定位点样式
-		
-//		System.out.println(currentPt.latitude);
-//		System.out.println(currentPt.longitude);
-		initListener();		//初始化监听	
+		mBaiduMap.setMyLocationEnabled(true); // 开启定位图层
+		initLocPosition(); // 初始化定位
+		initChangeIconGeo(); // 改变定位点样式
+
+		// System.out.println(currentPt.latitude);
+		// System.out.println(currentPt.longitude);
+		initListener(); // 初始化监听
 	}
 
 	private void initListener() {
 		mBaiduMap.setOnMapTouchListener(new OnMapTouchListener() {
-			
+
 			@Override
 			public void onTouch(MotionEvent event) {
-				
+
 			}
 		});
-		
+
 		mBaiduMap.setOnMapClickListener(new OnMapClickListener() {
 			public void onMapClick(LatLng point) {
 				touchType = "单击";
@@ -173,7 +173,7 @@ public class LocationAndMainActivity extends Activity {
 			}
 		});
 	}
-	
+
 	private void updateMapState() {
 		// TODO Auto-generated method stub
 		if (mStateBar == null) {
@@ -188,14 +188,13 @@ public class LocationAndMainActivity extends Activity {
 		}
 		state += "\n";
 		MapStatus ms = mBaiduMap.getMapStatus();
-		state += String.format(
-				"zoom=%.1f rotate=%d overlook=%d",
-				ms.zoom, (int) ms.rotate, (int) ms.overlook);
+		state += String.format("zoom=%.1f rotate=%d overlook=%d", ms.zoom,
+				(int) ms.rotate, (int) ms.overlook);
 		mStateBar.setText(state);
-		
-//		changeLocationButtonVisible();		//显示定位按钮
+
+		// changeLocationButtonVisible(); //显示定位按钮
 	}
-	
+
 	private void initLocPosition() {
 		// 定位初始化
 		mLocClient = new LocationClient(this);
@@ -243,14 +242,17 @@ public class LocationAndMainActivity extends Activity {
 		locationButton = (Button) findViewById(R.id.button_main_location);
 		contactButton = (Button) findViewById(R.id.button_main_contact);
 
-//		publishSitButton.setText("路况");
-//		settingButton.setText("设置");
-//		locationButton.setText("定位");
-//		contactButton.setText("好友");
-		publishSitButton.setBackgroundResource(R.drawable.button_message100);
-		settingButton.setBackgroundResource(R.drawable.button_setting100);
+		// publishSitButton.setText("路况");
+		// settingButton.setText("设置");
+		// locationButton.setText("定位");
+		// contactButton.setText("好友");
+		// iv=(ImageView)findViewById(R.id.homeActivity_imageView);
+		// iv.setImageBitmap(ZoomImage.readBitmapFromResource(this,
+		// R.drawable.logo,displaywidth*2/3,displayheight/6));
+		publishSitButton.setBackgroundResource(R.drawable.button_message60);
+		settingButton.setBackgroundResource(R.drawable.button_setting60);
 		locationButton.setText("定位");
-		contactButton.setBackgroundResource(R.drawable.button_friend100);
+		contactButton.setBackgroundResource(R.drawable.button_friend60);
 
 		publishSitButton.setOnClickListener(new OnClickListener() {
 			@Override
@@ -258,39 +260,42 @@ public class LocationAndMainActivity extends Activity {
 				// TODO Auto-generated method stub
 				Toast.makeText(LocationAndMainActivity.this, "路况",
 						Toast.LENGTH_SHORT).show();
-				publishOverlay();
-				mBaiduMap.setOnMarkerClickListener(new OnMarkerClickListener() {
-					public boolean onMarkerClick(final Marker marker) {
-						Intent intent = new Intent(LocationAndMainActivity.this, TrafficDetailActivity.class);
-						Bundle data = new Bundle();
-						Projection projection = mMapView.getMap().getProjection();
-						Point point = projection.toScreenLocation(currentPt);
-						data.putInt("pointx", point.x);
-						data.putInt("pointy", point.y);
-						intent.putExtras(data);
-						startActivity(intent);
-						/*
-						Button button = new Button(getApplicationContext());
-						button.setBackgroundResource(R.drawable.popup);
-						OnInfoWindowClickListener listener = null;
-						if (marker == marker_jam) {
-							button.setText("详情信息");
-							listener = new OnInfoWindowClickListener() {
-								public void onInfoWindowClick() {
-									mBaiduMap.hideInfoWindow();
-									//点击提示Button之后的操作
-								}
-							};
-							LatLng ll = marker.getPosition();
-							Bitmap bm = BitmapFactory.decodeResource(getResources(), R.drawable.popup);
-							int yOffset = (int) (bm.getHeight()*(-1.1));
-							mInfoWindow = new InfoWindow(BitmapDescriptorFactory.fromView(button), ll,  yOffset, listener);
-							mBaiduMap.showInfoWindow(mInfoWindow);
-						} 
-						*/
-						return true;
-					}
-				});
+				Intent intent = new Intent(LocationAndMainActivity.this,
+						TrafficMenuActivity.class);
+				startActivity(intent);
+//				publishOverlay();
+//				mBaiduMap.setOnMarkerClickListener(new OnMarkerClickListener() {
+//					public boolean onMarkerClick(final Marker marker) {
+//						Intent intent = new Intent(
+//								LocationAndMainActivity.this,
+//								TrafficDetailActivity.class);
+//						Bundle data = new Bundle();
+//						Projection projection = mMapView.getMap()
+//								.getProjection();
+//						Point point = projection.toScreenLocation(currentPt);
+//						data.putInt("pointx", point.x);
+//						data.putInt("pointy", point.y);
+//						intent.putExtras(data);
+//						startActivity(intent);
+//						/*
+//						 * Button button = new Button(getApplicationContext());
+//						 * button.setBackgroundResource(R.drawable.popup);
+//						 * OnInfoWindowClickListener listener = null; if (marker
+//						 * == marker_jam) { button.setText("详情信息"); listener =
+//						 * new OnInfoWindowClickListener() { public void
+//						 * onInfoWindowClick() { mBaiduMap.hideInfoWindow();
+//						 * //点击提示Button之后的操作 } }; LatLng ll =
+//						 * marker.getPosition(); Bitmap bm =
+//						 * BitmapFactory.decodeResource(getResources(),
+//						 * R.drawable.popup); int yOffset = (int)
+//						 * (bm.getHeight()*(-1.1)); mInfoWindow = new
+//						 * InfoWindow(BitmapDescriptorFactory.fromView(button),
+//						 * ll, yOffset, listener);
+//						 * mBaiduMap.showInfoWindow(mInfoWindow); }
+//						 */
+//						return true;
+//					}
+//				});
 			}
 		});
 
@@ -300,7 +305,8 @@ public class LocationAndMainActivity extends Activity {
 				// TODO Auto-generated method stub
 				Toast.makeText(LocationAndMainActivity.this, "设置",
 						Toast.LENGTH_SHORT).show();
-				Intent intent = new Intent(LocationAndMainActivity.this, PreferenceMainActivity.class);
+				Intent intent = new Intent(LocationAndMainActivity.this,
+						PreferenceMainActivity.class);
 				startActivity(intent);
 			}
 		});
@@ -322,15 +328,16 @@ public class LocationAndMainActivity extends Activity {
 				// TODO Auto-generated method stub
 				Toast.makeText(LocationAndMainActivity.this, "好友",
 						Toast.LENGTH_SHORT).show();
-				Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
+				Intent intent = new Intent(getApplicationContext(),
+						LoginActivity.class);
 				startActivity(intent);
 			}
 		});
-		
+
 		mStateBar = (TextView) findViewById(R.id.state);
 	}
 
-	private void changeLocationButtonVisible(){
+	private void changeLocationButtonVisible() {
 		locationButton.setVisibility(View.VISIBLE);
 	}
 
@@ -373,7 +380,7 @@ public class LocationAndMainActivity extends Activity {
 			if (isFirstLoc) {
 				isFirstLoc = false;
 				locationButton.setVisibility(View.INVISIBLE);
-				
+
 				LatLng ll = new LatLng(location.getLatitude(),
 						location.getLongitude());
 				MapStatus.Builder builder = new MapStatus.Builder();
@@ -387,7 +394,7 @@ public class LocationAndMainActivity extends Activity {
 		public void onReceivePoi(BDLocation poiLocation) {
 		}
 	}
-	
+
 	/**
 	 * 添加Overlay
 	 */
@@ -395,23 +402,23 @@ public class LocationAndMainActivity extends Activity {
 		BitmapDescriptor bd_jam = BitmapDescriptorFactory
 				.fromResource(R.drawable.mark_jam);
 		// add marker overlay
-		MarkerOptions ooA = new MarkerOptions().position(currentPt).icon(bd_jam)
-				.zIndex(9).draggable(true);
+		MarkerOptions ooA = new MarkerOptions().position(currentPt)
+				.icon(bd_jam).zIndex(9).draggable(true);
 		marker_jam = (Marker) (mBaiduMap.addOverlay(ooA));
-		
+
 		ArrayList<BitmapDescriptor> giflist = new ArrayList<BitmapDescriptor>();
 		giflist.add(bd_jam);
 		markerArr.add(marker_jam);
 	}
-	
+
 	/**
 	 * 清除所有Overlay
 	 */
 	public void clearOverlay() {
 		mBaiduMap.clear();
-//		for(int i=0; i<markerArr.size(); i++){
-//			markerArr.get(i).setVisible(false);;
-//		}
+		// for(int i=0; i<markerArr.size(); i++){
+		// markerArr.get(i).setVisible(false);;
+		// }
 	}
 
 	@Override
@@ -437,35 +444,29 @@ public class LocationAndMainActivity extends Activity {
 		super.onDestroy();
 	}
 
-	   /**
-     * 添加点、线、多边形、圆、文字
-     */
-    public void addCustomElementsDemo() {
-        // 添加普通折线绘制
-        
-        // 添加多颜色分段的折线绘制
-        LatLng p11 = new LatLng(31.282150, 120.731186);	//独墅湖
-        LatLng p21 = new LatLng(31.281520, 120.731185);	//中科大西
-        LatLng p31 = new LatLng(31.281410, 120.736247);	//中科大
-        LatLng p41 = new LatLng(31.281563, 120.740390);	//人大国际学院
-        LatLng p51 = new LatLng(31.281593, 120.743733);				//南大研究生院
-        List<LatLng> points1 = new ArrayList<LatLng>();
-        points1.add(p11);
-        points1.add(p21);
-        points1.add(p31);
-        points1.add(p41);
-        points1.add(p51);
-        List<Integer> colorValue = new ArrayList<Integer>();
-        colorValue.add(0xAAFF0000);
-        colorValue.add(0xAAFF7F00);
-        colorValue.add(0xAA00FF00);
-        colorValue.add(0xAAFF0000);
-        OverlayOptions ooPolyline1 = new PolylineOptions().width(12)
-                .color(0xAAFF0000).points(points1).colorsValues(colorValue);
-        mColorfulPolyline = (Polyline) mBaiduMap.addOverlay(ooPolyline1);
-        
-        // 添加多纹理分段的折线绘制
-        // 添加弧线
-        // 添加圆
-    }
+	/**
+	 * 添加点、线、多边形、圆、文字
+	 */
+	public void addCustomColorRoute() {
+		// 添加多颜色分段的折线绘制
+		LatLng p11 = new LatLng(31.282150, 120.731186); // 独墅湖
+		LatLng p21 = new LatLng(31.281520, 120.731185); // 中科大西
+		LatLng p31 = new LatLng(31.281410, 120.736247); // 中科大
+		LatLng p41 = new LatLng(31.281563, 120.740390); // 人大国际学院
+		LatLng p51 = new LatLng(31.281593, 120.743733); // 南大研究生院
+		List<LatLng> points1 = new ArrayList<LatLng>();
+		points1.add(p11);
+		points1.add(p21);
+		points1.add(p31);
+		points1.add(p41);
+		points1.add(p51);
+		List<Integer> colorValue = new ArrayList<Integer>();
+		colorValue.add(0xAAFF0000);
+		colorValue.add(0xAAFF7F00);
+		colorValue.add(0xAA00FF00);
+		colorValue.add(0xAAFF0000);
+		OverlayOptions ooPolyline1 = new PolylineOptions().width(12)
+				.color(0xAAFF0000).points(points1).colorsValues(colorValue);
+		mColorfulPolyline = (Polyline) mBaiduMap.addOverlay(ooPolyline1);
+	}
 }
