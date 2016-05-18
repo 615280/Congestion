@@ -95,7 +95,7 @@ public class LocationAndMainActivity extends Activity {
 		SDKInitializer.initialize(getApplicationContext());
 		setContentView(R.layout.activity_main);
 		init();
-		addCustomColorRoute();
+//		addCustomColorRoute();
 	}
 
 	private void init() {
