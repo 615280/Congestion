@@ -17,36 +17,37 @@
         android:textColor="@color/white"
         android:textSize="24dp" />
 
-    <LinearLayout
-        android:id="@+id/traffictypedetail_linearlayout_imabts"
-        android:layout_width="wrap_content"
+    <RadioGroup
+        android:id="@+id/traffictypedetail_radiogp"
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:background="@color/forth_color"
         android:orientation="horizontal" >
 
-        <ImageButton
+        <RadioButton
             android:id="@+id/traffictypedetail_bt_low"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="5dp"
             android:layout_weight="1" />
+        <!--             android:button="@null" -->
 
-        <ImageButton
+        <RadioButton
             android:id="@+id/traffictypedetail_bt_middle"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="5dp"
-            android:layout_weight="1"
-            android:scaleType="fitCenter" />
+            android:layout_weight="1" />
+<!--             android:button="@null" /> -->
 
-        <ImageButton
+        <RadioButton
             android:id="@+id/traffictypedetail_bt_high"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="5dp"
-            android:layout_weight="1"
-            android:scaleType="fitCenter" />
-    </LinearLayout>
+            android:layout_weight="1" />
+<!--             android:button="@null" /> -->
+    </RadioGroup>
 
     <LinearLayout
         android:id="@+id/traffictypedetail_linearlayout_tvs"
@@ -57,13 +58,13 @@
         android:gravity="center_horizontal"
         android:orientation="horizontal" >
 
-         <TextView
+        <TextView
             android:id="@+id/traffictypedetail_tv_low"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:gravity="center_horizontal" />
-        
+
         <TextView
             android:id="@+id/traffictypedetail_tv_middle"
             android:layout_width="match_parent"
@@ -104,6 +105,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_gravity="center|center_vertical"
             android:layout_weight="1"
             android:text="拍照" />
     </LinearLayout>

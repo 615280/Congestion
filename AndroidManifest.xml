@@ -112,7 +112,7 @@
         </activity>
         
          <activity
-            android:name=".TrafficDetailActivity"
+            android:name=".TrafficInfoDetailActivity"
             android:label="路况详情"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Translucent.NoTitleBar"  >

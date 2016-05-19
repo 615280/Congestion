@@ -8,7 +8,7 @@ import android.graphics.Point;
 import android.os.Bundle;
 import android.widget.TextView;
 
-public class TrafficDetailActivity extends Activity {
+public class TrafficInfoDetailActivity extends Activity {
 	private TextView timeTextView;
 	private TextView infoTextView;
 	private TextView commentTextView;
