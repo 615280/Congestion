@@ -19,17 +19,17 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * ç”¨äºæ˜¾ç¤ºæ¢ä¹˜è·¯çº¿çš„Overlayï¼Œè‡ª3.4.0ç‰ˆæœ¬èµ·å¯å®ä¾‹åŒ–å¤šä¸ªæ·»åŠ åœ¨åœ°å›¾ä¸­æ˜¾ç¤º
+ * ÓÃÓÚÏÔÊ¾»»³ËÂ·ÏßµÄOverlay£¬×Ô3.4.0°æ±¾Æğ¿ÉÊµÀı»¯¶à¸öÌí¼ÓÔÚµØÍ¼ÖĞÏÔÊ¾
  */
 public class TransitRouteOverlay extends OverlayManager {
 
     private TransitRouteLine mRouteLine = null;
 
     /**
-     * æ„é€ å‡½æ•°
+     * ¹¹Ôìº¯Êı
      * 
      * @param baiduMap
-     *            è¯¥TransitRouteOverlayå¼•ç”¨çš„ BaiduMap å¯¹è±¡
+     *            ¸ÃTransitRouteOverlayÒıÓÃµÄ BaiduMap ¶ÔÏó
      */
     public TransitRouteOverlay(BaiduMap baiduMap) {
         super(baiduMap);
@@ -56,7 +56,7 @@ public class TransitRouteOverlay extends OverlayManager {
                                     .anchor(0.5f, 0.5f).zIndex(10).extraInfo(b)
                                             .icon(getIconForStep(step)));
                 }
-                // æœ€åè·¯æ®µç»˜åˆ¶å‡ºå£ç‚¹
+                // ×îºóÂ·¶Î»æÖÆ³ö¿Úµã
                 if (mRouteLine.getAllStep().indexOf(step) == (mRouteLine
                         .getAllStep().size() - 1) && step.getExit() != null) {
                     overlayOptionses.add((new MarkerOptions())
@@ -121,28 +121,28 @@ public class TransitRouteOverlay extends OverlayManager {
     }
 
     /**
-     * è®¾ç½®è·¯çº¿æ•°æ®
+     * ÉèÖÃÂ·ÏßÊı¾İ
      * 
      * @param routeOverlay
-     *            è·¯çº¿æ•°æ®
+     *            Â·ÏßÊı¾İ
      */
     public void setData(TransitRouteLine routeOverlay) {
         this.mRouteLine = routeOverlay;
     }
 
     /**
-     * è¦†å†™æ­¤æ–¹æ³•ä»¥æ”¹å˜é»˜è®¤èµ·ç‚¹å›¾æ ‡
+     * ¸²Ğ´´Ë·½·¨ÒÔ¸Ä±äÄ¬ÈÏÆğµãÍ¼±ê
      * 
-     * @return èµ·ç‚¹å›¾æ ‡
+     * @return ÆğµãÍ¼±ê
      */
     public BitmapDescriptor getStartMarker() {
         return null;
     }
 
     /**
-     * è¦†å†™æ­¤æ–¹æ³•ä»¥æ”¹å˜é»˜è®¤ç»ˆç‚¹å›¾æ ‡
+     * ¸²Ğ´´Ë·½·¨ÒÔ¸Ä±äÄ¬ÈÏÖÕµãÍ¼±ê
      * 
-     * @return ç»ˆç‚¹å›¾æ ‡
+     * @return ÖÕµãÍ¼±ê
      */
     public BitmapDescriptor getTerminalMarker() {
         return null;
@@ -152,13 +152,13 @@ public class TransitRouteOverlay extends OverlayManager {
         return 0;
     }
     /**
-     * è¦†å†™æ­¤æ–¹æ³•ä»¥æ”¹å˜èµ·é»˜è®¤ç‚¹å‡»è¡Œä¸º
+     * ¸²Ğ´´Ë·½·¨ÒÔ¸Ä±äÆğÄ¬ÈÏµã»÷ĞĞÎª
      * 
      * @param i
-     *            è¢«ç‚¹å‡»çš„stepåœ¨
+     *            ±»µã»÷µÄstepÔÚ
      *            {@link com.baidu.mapapi.search.route.TransitRouteLine#getAllStep()}
-     *            ä¸­çš„ç´¢å¼•
-     * @return æ˜¯å¦å¤„ç†äº†è¯¥ç‚¹å‡»äº‹ä»¶
+     *            ÖĞµÄË÷Òı
+     * @return ÊÇ·ñ´¦ÀíÁË¸Ãµã»÷ÊÂ¼ş
      */
     public boolean onRouteNodeClick(int i) {
         if (mRouteLine.getAllStep() != null

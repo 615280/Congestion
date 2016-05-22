@@ -105,12 +105,6 @@ public class RoutePlan extends Activity implements
 		} else if (v.getId() == R.id.transit) {
 			mSearch.transitSearch((new TransitRoutePlanOption()).from(stNode)
 					.city("±±¾©").to(enNode));
-		} else if (v.getId() == R.id.walk) {
-			mSearch.walkingSearch((new WalkingRoutePlanOption()).from(stNode)
-					.to(enNode));
-		} else if (v.getId() == R.id.bike) {
-			mSearch.bikingSearch((new BikingRoutePlanOption()).from(stNode).to(
-					enNode));
 		}
 	}
 
