@@ -66,7 +66,7 @@ import com.baidu.mapapi.search.route.TransitRoutePlanOption;
 import com.baidu.mapapi.search.route.TransitRouteResult;
 import com.baidu.mapapi.search.route.WalkingRouteResult;
 
-public class LocationAndMainActivity extends Activity implements OnGetRoutePlanResultListener {
+public class LocationAndMainActivity extends Activity {
 	private MapView mMapView = null;
 	private BaiduMap mBaiduMap;
 	private BaiduMapOptions mBaiduMapOptions;
@@ -92,22 +92,16 @@ public class LocationAndMainActivity extends Activity implements OnGetRoutePlanR
 	private static final int accuracyCircleFillColor = 0x2200CCCC; // 包围圈背景色
 	private static final int accuracyCircleStrokeColor = 0xAA00FF00; // 边缘线
 
-	Polyline mColorfulPolyline;
-	private Marker marker_jam;
-	// private InfoWindow mInfoWindow;
-	private ArrayList<Marker> markerArr = new ArrayList<Marker>();
-
 	private RoutePlanSearch mSearch = null;
-	
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		SDKInitializer.initialize(getApplicationContext());
 		setContentView(R.layout.activity_main);
 		init();
-		
-//		 mSearch = RoutePlanSearch.newInstance();
-//	     mSearch.setOnGetRoutePlanResultListener(this);
+
+		mSearch = RoutePlanSearch.newInstance();
 	}
 
 	private void init() {
@@ -244,7 +238,7 @@ public class LocationAndMainActivity extends Activity implements OnGetRoutePlanR
 					// 打开
 					Toast.makeText(LocationAndMainActivity.this, "openColor",
 							Toast.LENGTH_SHORT).show();
-//					addCustomColorRoute();
+					addCustomColorRoute();
 				}
 			}
 		};
@@ -319,8 +313,8 @@ public class LocationAndMainActivity extends Activity implements OnGetRoutePlanR
 				// TODO Auto-generated method stub
 				Toast.makeText(LocationAndMainActivity.this, "设置",
 						Toast.LENGTH_SHORT).show();
-//				Intent intent = new Intent(LocationAndMainActivity.this,
-//						PreferenceMainActivity.class);
+				// Intent intent = new Intent(LocationAndMainActivity.this,
+				// PreferenceMainActivity.class);
 				Intent intent = new Intent(LocationAndMainActivity.this,
 						RoutePlan.class);
 				startActivity(intent);
@@ -415,6 +409,10 @@ public class LocationAndMainActivity extends Activity implements OnGetRoutePlanR
 	 * 添加Overlay
 	 */
 	public void publishOverlay() {
+		Marker marker_jam;
+		// private InfoWindow mInfoWindow;
+		ArrayList<Marker> markerArr = new ArrayList<Marker>();
+		
 		BitmapDescriptor bd_jam = BitmapDescriptorFactory
 				.fromResource(R.drawable.mark_jam);
 		// add marker overlay
@@ -471,31 +469,8 @@ public class LocationAndMainActivity extends Activity implements OnGetRoutePlanR
 	}
 
 	public void getRouteAndDraw(String city, PlanNode stNode, PlanNode enNode) {
+		Toast.makeText(this, "test", Toast.LENGTH_SHORT).show();
 		mSearch.transitSearch(new TransitRoutePlanOption().from(stNode)
 				.city(city).to(enNode));
-	}
-
-	@Override
-	public void onGetBikingRouteResult(BikingRouteResult arg0) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void onGetDrivingRouteResult(DrivingRouteResult arg0) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void onGetTransitRouteResult(TransitRouteResult arg0) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void onGetWalkingRouteResult(WalkingRouteResult arg0) {
-		// TODO Auto-generated method stub
-		
 	}
 }

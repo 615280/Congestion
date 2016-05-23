@@ -41,8 +41,8 @@ import com.baidu.mapapi.search.route.WalkingRouteResult;
  * 此demo用来展示如何进行驾车、步行、公交路线搜索并在地图使用RouteOverlay、TransitOverlay绘制
  * 同时展示如何进行节点浏览并弹出泡泡
  */
-public class RoutePlan extends Activity implements
-		BaiduMap.OnMapClickListener, OnGetRoutePlanResultListener {
+public class RoutePlan extends Activity implements BaiduMap.OnMapClickListener,
+		OnGetRoutePlanResultListener {
 	// 浏览路线节点相关
 	Button mBtnPre = null; // 上一个节点
 	Button mBtnNext = null; // 下一个节点
@@ -50,7 +50,7 @@ public class RoutePlan extends Activity implements
 	RouteLine route = null;
 	OverlayManager routeOverlay = null;
 	boolean useDefaultIcon = false;
-	private TextView popupText = null; // 泡泡view
+//	private TextView popupText = null; // 泡泡view
 
 	// 地图相关，使用继承MapView的MyRouteMapView目的是重写touch事件实现泡泡处理
 	// 如果不处理touch事件，则无需继承，直接使用MapView即可
@@ -105,7 +105,7 @@ public class RoutePlan extends Activity implements
 		} else if (v.getId() == R.id.transit) {
 			mSearch.transitSearch((new TransitRoutePlanOption()).from(stNode)
 					.city("北京").to(enNode));
-		}
+		} 
 	}
 
 	/**
@@ -142,19 +142,11 @@ public class RoutePlan extends Activity implements
 			nodeLocation = ((DrivingRouteLine.DrivingStep) step).getEntrance()
 					.getLocation();
 			nodeTitle = ((DrivingRouteLine.DrivingStep) step).getInstructions();
-		} else if (step instanceof WalkingRouteLine.WalkingStep) {
-			nodeLocation = ((WalkingRouteLine.WalkingStep) step).getEntrance()
-					.getLocation();
-			nodeTitle = ((WalkingRouteLine.WalkingStep) step).getInstructions();
 		} else if (step instanceof TransitRouteLine.TransitStep) {
 			nodeLocation = ((TransitRouteLine.TransitStep) step).getEntrance()
 					.getLocation();
 			nodeTitle = ((TransitRouteLine.TransitStep) step).getInstructions();
-		} else if (step instanceof BikingRouteLine.BikingStep) {
-			nodeLocation = ((BikingRouteLine.BikingStep) step).getEntrance()
-					.getLocation();
-			nodeTitle = ((BikingRouteLine.BikingStep) step).getInstructions();
-		}
+		} 
 
 		if (nodeLocation == null || nodeTitle == null) {
 			return;
@@ -162,11 +154,11 @@ public class RoutePlan extends Activity implements
 		// 移动节点至中心
 		mBaidumap.setMapStatus(MapStatusUpdateFactory.newLatLng(nodeLocation));
 		// show popup
-		popupText = new TextView(RoutePlan.this);
-		popupText.setBackgroundResource(R.drawable.popup);
-		popupText.setTextColor(0xFF000000);
-		popupText.setText(nodeTitle);
-		mBaidumap.showInfoWindow(new InfoWindow(popupText, nodeLocation, 0));
+//		popupText = new TextView(RoutePlan.this);
+//		popupText.setBackgroundResource(R.drawable.popup);
+//		popupText.setTextColor(0xFF000000);
+//		popupText.setText(nodeTitle);
+//		mBaidumap.showInfoWindow(new InfoWindow(popupText, nodeLocation, 0));
 
 	}
 
@@ -196,6 +188,11 @@ public class RoutePlan extends Activity implements
 		super.onRestoreInstanceState(savedInstanceState);
 	}
 
+	@Override
+	public void onGetWalkingRouteResult(WalkingRouteResult result) {
+		
+	}
+	
 	@Override
 	public void onGetTransitRouteResult(TransitRouteResult result) {
 
@@ -245,6 +242,11 @@ public class RoutePlan extends Activity implements
 			overlay.addToMap();
 			overlay.zoomToSpan();
 		}
+	}
+
+	@Override
+	public void onGetBikingRouteResult(BikingRouteResult bikingRouteResult) {
+
 	}
 
 	// 定制RouteOverly
@@ -321,18 +323,6 @@ public class RoutePlan extends Activity implements
 		mSearch.destroy();
 		mMapView.onDestroy();
 		super.onDestroy();
-	}
-
-	@Override
-	public void onGetWalkingRouteResult(WalkingRouteResult arg0) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void onGetBikingRouteResult(BikingRouteResult arg0) {
-		// TODO Auto-generated method stub
-		
 	}
 
 }

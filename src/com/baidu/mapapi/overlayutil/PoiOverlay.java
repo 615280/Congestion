@@ -14,99 +14,99 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * ç”¨äºæ˜¾ç¤ºpoiçš„overly
+ * ÓÃÓÚÏÔÊ¾poiµÄoverly
  */
 public class PoiOverlay extends OverlayManager {
 
-    private static final int MAX_POI_SIZE = 10;
+	private static final int MAX_POI_SIZE = 10;
 
-    private PoiResult mPoiResult = null;
+	private PoiResult mPoiResult = null;
 
-    /**
-     * æ„é€ å‡½æ•°
-     * 
-     * @param baiduMap
-     *            è¯¥ PoiOverlay å¼•ç”¨çš„ BaiduMap å¯¹è±¡
-     */
-    public PoiOverlay(BaiduMap baiduMap) {
-        super(baiduMap);
-    }
+	/**
+	 * ¹¹Ôìº¯Êı
+	 * 
+	 * @param baiduMap
+	 *            ¸Ã PoiOverlay ÒıÓÃµÄ BaiduMap ¶ÔÏó
+	 */
+	public PoiOverlay(BaiduMap baiduMap) {
+		super(baiduMap);
+	}
 
-    /**
-     * è®¾ç½®POIæ•°æ®
-     * 
-     * @param poiResult
-     *            è®¾ç½®POIæ•°æ®
-     */
-    public void setData(PoiResult poiResult) {
-        this.mPoiResult = poiResult;
-    }
+	/**
+	 * ÉèÖÃPOIÊı¾İ
+	 * 
+	 * @param poiResult
+	 *            ÉèÖÃPOIÊı¾İ
+	 */
+	public void setData(PoiResult poiResult) {
+		this.mPoiResult = poiResult;
+	}
 
-    @Override
-    public final List<OverlayOptions> getOverlayOptions() {
-        if (mPoiResult == null || mPoiResult.getAllPoi() == null) {
-            return null;
-        }
-        List<OverlayOptions> markerList = new ArrayList<OverlayOptions>();
-        int markerSize = 0;
-        for (int i = 0; i < mPoiResult.getAllPoi().size()
-                && markerSize < MAX_POI_SIZE; i++) {
-            if (mPoiResult.getAllPoi().get(i).location == null) {
-                continue;
-            }
-            markerSize++;
-            Bundle bundle = new Bundle();
-            bundle.putInt("index", i);
-            markerList.add(new MarkerOptions()
-                    .icon(BitmapDescriptorFactory.fromAssetWithDpi("Icon_mark"
-                            + markerSize + ".png")).extraInfo(bundle)
-                    .position(mPoiResult.getAllPoi().get(i).location));
-            
-        }
-        return markerList;
-    }
+	@Override
+	public final List<OverlayOptions> getOverlayOptions() {
+		if (mPoiResult == null || mPoiResult.getAllPoi() == null) {
+			return null;
+		}
+		List<OverlayOptions> markerList = new ArrayList<OverlayOptions>();
+		int markerSize = 0;
+		for (int i = 0; i < mPoiResult.getAllPoi().size()
+				&& markerSize < MAX_POI_SIZE; i++) {
+			if (mPoiResult.getAllPoi().get(i).location == null) {
+				continue;
+			}
+			markerSize++;
+			Bundle bundle = new Bundle();
+			bundle.putInt("index", i);
+			markerList.add(new MarkerOptions()
+					.icon(BitmapDescriptorFactory.fromAssetWithDpi("Icon_mark"
+							+ markerSize + ".png")).extraInfo(bundle)
+					.position(mPoiResult.getAllPoi().get(i).location));
 
-    /**
-     * è·å–è¯¥ PoiOverlay çš„ poiæ•°æ®
-     * 
-     * @return
-     */
-    public PoiResult getPoiResult() {
-        return mPoiResult;
-    }
+		}
+		return markerList;
+	}
 
-    /**
-     * è¦†å†™æ­¤æ–¹æ³•ä»¥æ”¹å˜é»˜è®¤ç‚¹å‡»è¡Œä¸º
-     * 
-     * @param i
-     *            è¢«ç‚¹å‡»çš„poiåœ¨
-     *            {@link com.baidu.mapapi.search.poi.PoiResult#getAllPoi()} ä¸­çš„ç´¢å¼•
-     * @return
-     */
-    public boolean onPoiClick(int i) {
-//        if (mPoiResult.getAllPoi() != null
-//                && mPoiResult.getAllPoi().get(i) != null) {
-//            Toast.makeText(BMapManager.getInstance().getContext(),
-//                    mPoiResult.getAllPoi().get(i).name, Toast.LENGTH_LONG)
-//                    .show();
-//        }
-        return false;
-    }
+	/**
+	 * »ñÈ¡¸Ã PoiOverlay µÄ poiÊı¾İ
+	 * 
+	 * @return
+	 */
+	public PoiResult getPoiResult() {
+		return mPoiResult;
+	}
 
-    @Override
-    public final boolean onMarkerClick(Marker marker) {
-        if (!mOverlayList.contains(marker)) {
-            return false;
-        }
-        if (marker.getExtraInfo() != null) {
-            return onPoiClick(marker.getExtraInfo().getInt("index"));
-        }
-        return false;
-    }
+	/**
+	 * ¸²Ğ´´Ë·½·¨ÒÔ¸Ä±äÄ¬ÈÏµã»÷ĞĞÎª
+	 * 
+	 * @param i
+	 *            ±»µã»÷µÄpoiÔÚ
+	 *            {@link com.baidu.mapapi.search.poi.PoiResult#getAllPoi()} ÖĞµÄË÷Òı
+	 * @return
+	 */
+	public boolean onPoiClick(int i) {
+		// if (mPoiResult.getAllPoi() != null
+		// && mPoiResult.getAllPoi().get(i) != null) {
+		// Toast.makeText(BMapManager.getInstance().getContext(),
+		// mPoiResult.getAllPoi().get(i).name, Toast.LENGTH_LONG)
+		// .show();
+		// }
+		return false;
+	}
 
-    @Override
-    public boolean onPolylineClick(Polyline polyline) {
-        // TODO Auto-generated method stub
-        return false;
-    }
+	@Override
+	public final boolean onMarkerClick(Marker marker) {
+		if (!mOverlayList.contains(marker)) {
+			return false;
+		}
+		if (marker.getExtraInfo() != null) {
+			return onPoiClick(marker.getExtraInfo().getInt("index"));
+		}
+		return false;
+	}
+
+	@Override
+	public boolean onPolylineClick(Polyline polyline) {
+		// TODO Auto-generated method stub
+		return false;
+	}
 }

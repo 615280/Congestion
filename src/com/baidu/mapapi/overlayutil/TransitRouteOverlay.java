@@ -24,8 +24,17 @@ import java.util.List;
 public class TransitRouteOverlay extends OverlayManager {
 
     private TransitRouteLine mRouteLine = null;
+    private int degree = -1;
+    
+    public int getDegree() {
+		return degree;
+	}
 
-    /**
+	public void setDegree(int degree) {
+		this.degree = degree;
+	}
+
+	/**
      * 构造函数
      * 
      * @param baiduMap
@@ -52,37 +61,39 @@ public class TransitRouteOverlay extends OverlayManager {
                 b.putInt("index", mRouteLine.getAllStep().indexOf(step));
                 if (step.getEntrance() != null) {
                     overlayOptionses.add((new MarkerOptions())
-                            .position(step.getEntrance().getLocation())
-                                    .anchor(0.5f, 0.5f).zIndex(10).extraInfo(b)
-                                            .icon(getIconForStep(step)));
+                            .position(step.getEntrance().getLocation()).
+                            icon(getIconForStep(step)).visible(false));
+//                                    .anchor(0.5f, 0.5f).zIndex(10).extraInfo(b)
+//                                            .icon(getIconForStep(step)));
                 }
                 // 最后路段绘制出口点
                 if (mRouteLine.getAllStep().indexOf(step) == (mRouteLine
                         .getAllStep().size() - 1) && step.getExit() != null) {
                     overlayOptionses.add((new MarkerOptions())
-                            .position(step.getExit().getLocation())
-                                    .anchor(0.5f, 0.5f).zIndex(10)
-                                            .icon(getIconForStep(step)));
+                            .position(step.getExit().getLocation()).
+                            icon(getIconForStep(step)).visible(false));
+//                                    .anchor(0.5f, 0.5f).zIndex(10)
+//                                            .icon(getIconForStep(step)));
                 }
             }
         }
 
-        if (mRouteLine.getStarting() != null) {
-            overlayOptionses.add((new MarkerOptions())
-                    .position(mRouteLine.getStarting().getLocation())
-                            .icon(getStartMarker() != null ? getStartMarker() :
-                                    BitmapDescriptorFactory
-                                            .fromAssetWithDpi("Icon_start.png")).zIndex(10));
-        }
-        if (mRouteLine.getTerminal() != null) {
-            overlayOptionses
-                    .add((new MarkerOptions())
-                            .position(mRouteLine.getTerminal().getLocation())
-                                    .icon(getTerminalMarker() != null ? getTerminalMarker() :
-                                            BitmapDescriptorFactory
-                                                    .fromAssetWithDpi("Icon_end.png"))
-                                                            .zIndex(10));
-        }
+//        if (mRouteLine.getStarting() != null) {
+//            overlayOptionses.add((new MarkerOptions())
+//                    .position(mRouteLine.getStarting().getLocation())
+//                            .icon(getStartMarker() != null ? getStartMarker() :
+//                                    BitmapDescriptorFactory
+//                                            .fromAssetWithDpi("Icon_start.png")).zIndex(10));
+//        }
+//        if (mRouteLine.getTerminal() != null) {
+//            overlayOptionses
+//                    .add((new MarkerOptions())
+//                            .position(mRouteLine.getTerminal().getLocation())
+//                                    .icon(getTerminalMarker() != null ? getTerminalMarker() :
+//                                            BitmapDescriptorFactory
+//                                                    .fromAssetWithDpi("Icon_end.png"))
+//                                                            .zIndex(10));
+//        }
         // polyline
         if (mRouteLine.getAllStep() != null
                 && mRouteLine.getAllStep().size() > 0) {
@@ -94,10 +105,24 @@ public class TransitRouteOverlay extends OverlayManager {
                 int color = 0;
                 if (step.getStepType() != TransitRouteLine.TransitStep.TransitRouteStepType.WAKLING) {
 //                    color = Color.argb(178, 0, 78, 255);
-                    color = getLineColor() != 0 ? getLineColor() : Color.argb(178, 0, 78, 255);
+                	switch (getDegree()) {
+					case 1:  //绿
+						color = getLineColor() != 0 ? getLineColor() : Color.argb(178, 88, 208, 0);
+						break;
+					case 2:  //橙黄
+						color = getLineColor() != 0 ? getLineColor() : Color.argb(178, 255, 204, 51);
+						break;
+					case 3:  //红
+						color = getLineColor() != 0 ? getLineColor() : Color.argb(178, 255, 0, 0);
+						break;
+					default:  //默认绿
+						color = getLineColor() != 0 ? getLineColor() : Color.argb(178, 88, 208, 0);
+						break;
+					}
                 } else {
-//                    color = Color.argb(178, 88, 208, 0);
-                    color = getLineColor() != 0 ? getLineColor() : Color.argb(178, 88, 208, 0);
+                	//不画！只画公交线路部分
+////                    color = Color.argb(178, 88, 208, 0);
+//                    color = getLineColor() != 0 ? getLineColor() : Color.argb(178, 88, 208, 0);
                 }
                 overlayOptionses.add(new PolylineOptions()
                         .points(step.getWayPoints()).width(10).color(color)

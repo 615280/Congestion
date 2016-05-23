@@ -1,18 +1,26 @@
 package com.conges.main;
 
+import com.conges.database.Connector;
+import com.conges.util.Constant;
+
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
+import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 public class LoginActivity extends Activity {
 	private EditText userName;
 	private EditText userPass;
 	private Button loginButton;
 	private Button toRegisterButton;
+	String result = "";
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -32,17 +40,28 @@ public class LoginActivity extends Activity {
 		loginButton.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				//+++ Make connect with Server to authentication
-				boolean result_auth = true;
-				if(result_auth){
-//					Toast.makeText(getApplicationContext(), userName.getText(), Toast.LENGTH_SHORT).show();
-					Intent intent = new Intent(LoginActivity.this, FriendListActivity.class);
-					Bundle data = new Bundle();
-					data.putString("username", userName.getText().toString());
-					intent.putExtras(data);
-					startActivity(intent);
-					finish();
-				}
+				new Thread(){
+					public void run() {
+						result = Connector.sendPost(Constant.URL, 
+								"{'login':{'phoneNum':'13718528992','userPwd':'123456'}}");
+						handler.sendEmptyMessage(0x123);
+					};
+				}.start();
+				
+				
+				Log.i("result", result);
+				
+//				if(Integer.parseInt(result) == 0){
+////					Toast.makeText(getApplicationContext(), userName.getText(), Toast.LENGTH_SHORT).show();
+//					Intent intent = new Intent(LoginActivity.this, FriendListActivity.class);
+//					Bundle data = new Bundle();
+//					data.putString("username", userName.getText().toString());
+//					intent.putExtras(data);
+//					startActivity(intent);
+//					finish();
+//				} else {
+//					Toast.makeText(getApplicationContext(), "Error", Toast.LENGTH_SHORT).show();
+//				}
 			}
 		});
 		toRegisterButton.setOnClickListener(new OnClickListener() {
@@ -55,4 +74,12 @@ public class LoginActivity extends Activity {
 			}
 		});
 	}
+	
+	Handler handler = new Handler(){
+		public void handleMessage(Message msg){
+			if(msg.what == 0x123){
+				Toast.makeText(getApplicationContext(), result, Toast.LENGTH_SHORT).show();
+			}
+		}
+	};
 }
