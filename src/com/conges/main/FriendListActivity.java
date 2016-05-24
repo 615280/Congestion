@@ -21,7 +21,7 @@ public class FriendListActivity extends Activity {
 		setContentView(R.layout.activity_friendlist);
 		
 		userNameTextView = (TextView) findViewById(R.id.tv_fl_userName);
-		userNameTextView.setText(getIntent().getStringExtra("username"));
+		userNameTextView.setText(getIntent().getStringExtra("userName"));
 		userNameTextView.setTextColor(getResources().getColor(R.color.whitesmoke));
 		
 		okButton = (Button) findViewById(R.id.button_fl_ok);

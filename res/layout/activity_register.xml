@@ -24,6 +24,27 @@
             android:inputType="phone"
             android:ellipsize="start" />
          
+         <EditText 
+             android:id="@+id/et_register_username"
+             android:layout_width="match_parent"
+             android:layout_height="match_parent"
+             android:hint="请输入用户名"
+             android:inputType="text" />
+         
+         <EditText 
+             android:id="@+id/et_register_userpass"
+             android:layout_width="match_parent"
+             android:layout_height="wrap_content"
+             android:hint="请输入密码"
+             android:inputType="textPassword" />
+         
+           <EditText 
+             android:id="@+id/et_register_userpasscheck"
+             android:layout_width="match_parent"
+             android:layout_height="wrap_content"
+             android:hint="请再次输入密码"
+             android:inputType="textPassword" />
+         
         <Button 
             android:id="@+id/button_register"
             android:layout_width="wrap_content"

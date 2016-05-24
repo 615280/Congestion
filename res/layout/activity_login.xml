@@ -20,8 +20,9 @@
             android:id="@+id/et_login_username"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:hint="请输入用户名"
-            android:ellipsize="start" />
+            android:hint="请输入手机号"
+            android:ellipsize="start"
+            android:inputType="phone" />
         <EditText 
             android:id="@+id/et_login_userpass"
              android:layout_width="match_parent"
