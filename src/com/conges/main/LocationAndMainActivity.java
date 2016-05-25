@@ -1,11 +1,11 @@
 package com.conges.main;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.graphics.Point;
+import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -32,14 +32,9 @@ import com.baidu.mapapi.map.BaiduMap.OnMapDoubleClickListener;
 import com.baidu.mapapi.map.BaiduMap.OnMapLongClickListener;
 import com.baidu.mapapi.map.BaiduMap.OnMapStatusChangeListener;
 import com.baidu.mapapi.map.BaiduMap.OnMapTouchListener;
-import com.baidu.mapapi.map.BaiduMap.OnMarkerClickListener;
-import com.baidu.mapapi.map.ArcOptions;
 import com.baidu.mapapi.map.BaiduMapOptions;
 import com.baidu.mapapi.map.BitmapDescriptor;
 import com.baidu.mapapi.map.BitmapDescriptorFactory;
-import com.baidu.mapapi.map.CircleOptions;
-import com.baidu.mapapi.map.DotOptions;
-import com.baidu.mapapi.map.InfoWindow;
 import com.baidu.mapapi.map.MapPoi;
 import com.baidu.mapapi.map.MapStatus;
 import com.baidu.mapapi.map.MapStatusUpdateFactory;
@@ -47,24 +42,12 @@ import com.baidu.mapapi.map.MapView;
 import com.baidu.mapapi.map.Marker;
 import com.baidu.mapapi.map.MarkerOptions;
 import com.baidu.mapapi.map.MyLocationConfiguration;
-import com.baidu.mapapi.map.OverlayOptions;
-import com.baidu.mapapi.map.PolygonOptions;
-import com.baidu.mapapi.map.Polyline;
-import com.baidu.mapapi.map.PolylineOptions;
-import com.baidu.mapapi.map.Projection;
-import com.baidu.mapapi.map.Stroke;
-import com.baidu.mapapi.map.TextOptions;
 import com.baidu.mapapi.map.MyLocationConfiguration.LocationMode;
 import com.baidu.mapapi.map.MyLocationData;
 import com.baidu.mapapi.model.LatLng;
-import com.baidu.mapapi.search.route.BikingRouteResult;
-import com.baidu.mapapi.search.route.DrivingRouteResult;
-import com.baidu.mapapi.search.route.OnGetRoutePlanResultListener;
 import com.baidu.mapapi.search.route.PlanNode;
 import com.baidu.mapapi.search.route.RoutePlanSearch;
 import com.baidu.mapapi.search.route.TransitRoutePlanOption;
-import com.baidu.mapapi.search.route.TransitRouteResult;
-import com.baidu.mapapi.search.route.WalkingRouteResult;
 
 public class LocationAndMainActivity extends Activity {
 	private MapView mMapView = null;
@@ -238,7 +221,11 @@ public class LocationAndMainActivity extends Activity {
 					// 打开
 					Toast.makeText(LocationAndMainActivity.this, "openColor",
 							Toast.LENGTH_SHORT).show();
-					addCustomColorRoute();
+					SharedPreferences pref = getSharedPreferences("info", MODE_PRIVATE);
+					Editor editor = pref.edit();
+					editor.putString("aaa:", "123456");
+					editor.commit();
+//					addCustomColorRoute();
 				}
 			}
 		};
@@ -265,8 +252,8 @@ public class LocationAndMainActivity extends Activity {
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
-				Toast.makeText(LocationAndMainActivity.this, "路况",
-						Toast.LENGTH_SHORT).show();
+//				Toast.makeText(LocationAndMainActivity.this, "路况",
+//						Toast.LENGTH_SHORT).show();
 				Intent intent = new Intent(LocationAndMainActivity.this,
 						TrafficMenuActivity.class);
 				startActivity(intent);
@@ -311,8 +298,8 @@ public class LocationAndMainActivity extends Activity {
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
-				Toast.makeText(LocationAndMainActivity.this, "设置",
-						Toast.LENGTH_SHORT).show();
+//				Toast.makeText(LocationAndMainActivity.this, "设置",
+//						Toast.LENGTH_SHORT).show();
 				// Intent intent = new Intent(LocationAndMainActivity.this,
 				// PreferenceMainActivity.class);
 				Intent intent = new Intent(LocationAndMainActivity.this,
@@ -336,8 +323,8 @@ public class LocationAndMainActivity extends Activity {
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
-				Toast.makeText(LocationAndMainActivity.this, "好友",
-						Toast.LENGTH_SHORT).show();
+//				Toast.makeText(LocationAndMainActivity.this, "好友",
+//						Toast.LENGTH_SHORT).show();
 				Intent intent = new Intent(getApplicationContext(),
 						LoginActivity.class);
 				startActivity(intent);

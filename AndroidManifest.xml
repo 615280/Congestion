@@ -68,21 +68,21 @@
         <activity
             android:name=".EntryActivity"
             android:screenOrientation="portrait" >
-<!--             <intent-filter> -->
-<!--                 <action android:name="android.intent.action.MAIN" /> -->
-
-<!--                 <category android:name="android.intent.category.LAUNCHER" /> -->
-<!--             </intent-filter> -->
-        </activity>
-        <activity
-            android:name=".LocationAndMainActivity"
-            android:screenOrientation="portrait"
-            android:launchMode="singleTask" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+        </activity>
+        <activity
+            android:name=".LocationAndMainActivity"
+            android:screenOrientation="portrait"
+            android:launchMode="singleTask" >
+<!--             <intent-filter> -->
+<!--                 <action android:name="android.intent.action.MAIN" /> -->
+
+<!--                 <category android:name="android.intent.category.LAUNCHER" /> -->
+<!--             </intent-filter> -->
         </activity>
         <activity
             android:name=".PreferenceMainActivity"
@@ -135,6 +135,12 @@
         
          <activity
             android:name=".RoutePlan"
+            android:screenOrientation="portrait" >
+        </activity>
+        
+         <activity
+            android:name=".UserInfoActivity"
+            android:label="用户信息"
             android:screenOrientation="portrait" >
         </activity>
     </application>

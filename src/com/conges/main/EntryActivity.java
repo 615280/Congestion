@@ -1,18 +1,23 @@
 package com.conges.main;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import com.conges.util.SystemUiHider;
-
+import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.MotionEvent;
 import android.view.View;
+
+import com.conges.util.SystemUiHider;
 
 /**
  * An example full-screen activity that shows and hides the system UI (i.e.
@@ -20,6 +25,8 @@ import android.view.View;
  * 
  * @see SystemUiHider
  */
+@SuppressLint({ "SimpleDateFormat", "WorldReadableFiles",
+		"ClickableViewAccessibility" })
 public class EntryActivity extends Activity {
 	/**
 	 * Whether or not the system UI should be auto-hidden after
@@ -49,13 +56,27 @@ public class EntryActivity extends Activity {
 	 */
 	private SystemUiHider mSystemUiHider;
 
+	SharedPreferences preferences;
+	Editor editor;
+
+	@SuppressWarnings("deprecation")
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_entry);
 
-		final View contentView = findViewById(R.id.fullscreen_waitpic);
+		preferences = getSharedPreferences("conges", MODE_WORLD_READABLE);
+		editor = preferences.edit();
 
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy年MM月dd日 " + "hh:mm:ss");
+		// 存入当前时间
+		editor.putString("time", sdf.format(new Date()));
+		// 存入一个随机数
+		editor.putInt("loginState", 35);
+		// 提交所有存入的数据
+		editor.commit();
+
+		final View contentView = findViewById(R.id.fullscreen_waitpic);
 		// Set up an instance of SystemUiHider to control the system UI for
 		// this activity.
 		mSystemUiHider = SystemUiHider.getInstance(this, contentView,
@@ -103,11 +124,12 @@ public class EntryActivity extends Activity {
 			}
 		});
 
-		//主页加载完毕并等待3s 切换至主页
-		final Intent entryIntent = new Intent(EntryActivity.this,LocationAndMainActivity.class);
+		// 主页加载完毕并等待3s 切换至主页
+		final Intent entryIntent = new Intent(EntryActivity.this,
+				LocationAndMainActivity.class);
 		Timer timer = new Timer();
 		TimerTask task = new TimerTask() {
-			
+
 			@Override
 			public void run() {
 				// TODO Auto-generated method stub

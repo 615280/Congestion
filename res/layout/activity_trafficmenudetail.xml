@@ -84,6 +84,7 @@
         android:id="@+id/traffictypedetail_et_description"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="@color/forth_color"
         android:hint="分享详情..." />
 
     <LinearLayout
@@ -100,7 +101,8 @@
             android:layout_height="wrap_content"
             android:layout_margin="5dp"
             android:layout_weight="1"
-            android:src="@drawable/mark_takephoto" />
+            android:src="@drawable/mark_takephoto"
+            android:scaleType="centerInside" />
 
         <TextView
             android:layout_width="wrap_content"

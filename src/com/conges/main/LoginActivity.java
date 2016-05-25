@@ -8,6 +8,7 @@ import com.conges.database.ConnectUtil;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -30,6 +31,17 @@ public class LoginActivity extends Activity {
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_login);
+		SharedPreferences preferences = getSharedPreferences("conges",
+				MODE_WORLD_READABLE);
+		// 读取字符串数据
+		String time = preferences.getString("time", null);
+		// 读取int类型的数据
+		int randNum = preferences.getInt("loginState", 0);
+		String result = time == null ? "您暂时还未写入数据" : "时间：" + time
+				+ "\nloginState：" + randNum;
+		// 使用Toast提示信息
+		Toast.makeText(getApplicationContext(), result, 5000).show();
+
 		init();
 
 	}
@@ -43,17 +55,20 @@ public class LoginActivity extends Activity {
 		loginButton.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				
+
 				final String userName = et_userName.getText().toString();
 				final String userPass = et_userPass.getText().toString();
-				if(userName.equals("") || userPass.equals("")){
-					Toast.makeText(getApplicationContext(), "请输入正确的手机号和密码！", Toast.LENGTH_LONG).show();
+				if (userName.equals("") || userPass.equals("")) {
+					Toast.makeText(getApplicationContext(), "请输入正确的手机号和密码！",
+							Toast.LENGTH_LONG).show();
 					return;
 				}
-				
+
 				new Thread() {
 					public void run() {
-						String message = String.format("{\"login\":{\"phoneNum\":\"%s\",\"userPwd\":\"%s\"}}", userName,userPass);
+						String message = String
+								.format("{\"login\":{\"phoneNum\":\"%s\",\"userPwd\":\"%s\"}}",
+										userName, userPass);
 						result = ConnectUtil.getConnDef(message);
 						handler.sendEmptyMessage(0x123);
 					};
@@ -80,16 +95,16 @@ public class LoginActivity extends Activity {
 					JSONArray jArray = new JSONArray(result);
 					JSONObject j_data = jArray.getJSONObject(0);
 					auth_result = (Integer) j_data.get("loginResult");
-					if(j_data.getString("userName") != null){
+					if (j_data.getString("userName") != null) {
 						userName = (String) j_data.getString("userName");
 					}
 				} catch (JSONException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
-				
+
 				Log.i("result", "loginResult:" + auth_result);
-				if (auth_result == 0) {		//验证成功，返回0
+				if (auth_result == 0) { // 验证成功，返回0
 					Intent intent = new Intent(LoginActivity.this,
 							FriendListActivity.class);
 					Bundle data = new Bundle();
@@ -97,10 +112,10 @@ public class LoginActivity extends Activity {
 					intent.putExtras(data);
 					startActivity(intent);
 					finish();
-				} else if(auth_result == 1){		//输入错误，返回1
-					Toast.makeText(getApplicationContext(), "登录失败，\n请检查用户名密码是否正确",
-							Toast.LENGTH_LONG).show();
-				} else {		//程序错误，返回-1
+				} else if (auth_result == 1) { // 输入错误，返回1
+					Toast.makeText(getApplicationContext(),
+							"登录失败，\n请检查用户名密码是否正确", Toast.LENGTH_LONG).show();
+				} else { // 程序错误，返回-1
 					Toast.makeText(getApplicationContext(), "登录失败，请稍后重试",
 							Toast.LENGTH_LONG).show();
 				}

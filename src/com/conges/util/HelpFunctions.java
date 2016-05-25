@@ -11,8 +11,12 @@ public class HelpFunctions {
 	/**
 	 * 使用Toast显示信息
 	 * */
-	public static void useToast(Context context,String text){
+	public static void useToastShort(Context context,String text){
 		Toast.makeText(context, text, Toast.LENGTH_SHORT).show();
+	}
+	
+	public static void useToastLong(Context context,String text){
+		Toast.makeText(context, text, Toast.LENGTH_LONG).show();
 	}
 	
 	public static String getCurrentTime(){

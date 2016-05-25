@@ -1,5 +1,7 @@
 package com.conges.main;
 
+import com.conges.util.HelpFunctions;
+
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -73,7 +75,7 @@ public class TrafficMenuDetailActivity extends Activity {
 			@Override
 			public void onCheckedChanged(RadioGroup group, int checkedId) {
 				// TODO Auto-generated method stub
-				
+				HelpFunctions.useToastShort(getApplicationContext(), checkedId+"");
 			}
 		});
 		
