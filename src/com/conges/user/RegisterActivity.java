@@ -15,6 +15,8 @@ import android.app.Activity;
 import android.app.AlertDialog.Builder;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -23,6 +25,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 
+@SuppressLint("WorldReadableFiles")
 public class RegisterActivity extends Activity {
 	private EditText phonenumber;
 	private EditText userName;
@@ -34,6 +37,9 @@ public class RegisterActivity extends Activity {
 	private Button registerButton;
 	private Button toLoginButton;
 	private String registerResult;
+	
+	SharedPreferences preferences;
+	Editor editor;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -134,6 +140,7 @@ public class RegisterActivity extends Activity {
 
 	@SuppressLint("HandlerLeak")
 	Handler handler = new Handler() {
+		@SuppressWarnings("deprecation")
 		public void handleMessage(Message msg) {
 			if (msg.what == 0x123) {
 				int reg_result = -1;
@@ -151,10 +158,13 @@ public class RegisterActivity extends Activity {
 				if (reg_result == 0) { // 验证成功，返回0
 					Intent intent = new Intent(RegisterActivity.this,
 							UserInfoActivity.class);
-					Bundle data = new Bundle();
-					data.putString("phoneNumber", phoneNumStr);
-					data.putString("userName", userNameStr);
-					intent.putExtras(data);
+					preferences = getSharedPreferences("conges", MODE_WORLD_READABLE);
+					editor = preferences.edit();
+					editor.putString("phoneNum", phoneNumStr);
+					editor.putString("userName", userNameStr);
+					editor.putInt("loginState", 1);
+					editor.commit();
+					
 					startActivity(intent);
 					finish();
 				} else if(reg_result == 2) {

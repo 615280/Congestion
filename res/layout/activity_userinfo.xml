@@ -26,4 +26,10 @@
         android:layout_height="wrap_content"
         android:text="返回主页" />
     
+     <Button
+        android:id="@+id/userinfo_bt_logout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="退出登录" />
+    
 </LinearLayout>

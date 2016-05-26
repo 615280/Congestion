@@ -28,41 +28,30 @@ public class LoginActivity extends Activity {
 	private Button loginButton;
 	private Button toRegisterButton;
 	String result = "";
-	
-	String phoneNum,userPass;
-	
+
+	String phoneNum, userPass;
+
 	SharedPreferences preferences;
 	Editor editor;
 
-	@SuppressWarnings("deprecation")
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_login);
 		init();
-		preferences = getSharedPreferences("conges",
-				MODE_WORLD_READABLE);
-
-//		// 读取字符串数据
-//		String time = preferences.getString("lastTime", null);
-//		// 读取int类型的数据
-//		int randNum = preferences.getInt("loginState", 0);
-//		String result = time == null ? "您暂时还未写入数据" : "时间：" + time
-//				+ "\nloginState：" + randNum;
-//		// 使用Toast提示信息
-//		Toast.makeText(getApplicationContext(), result, Toast.LENGTH_LONG).show();
-
 	}
 
+	@SuppressWarnings("deprecation")
 	private void init() {
 		et_phoneNum = (EditText) findViewById(R.id.et_login_username);
 		et_userPass = (EditText) findViewById(R.id.et_login_userpass);
-		
+
+		preferences = getSharedPreferences("conges", MODE_WORLD_READABLE);
 		et_phoneNum.setText(preferences.getString("phoneNum", ""));
-		
+
 		loginButton = (Button) findViewById(R.id.button_login);
 		toRegisterButton = (Button) findViewById(R.id.button_login_toregister);
-		
+
 		loginButton.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
@@ -116,13 +105,14 @@ public class LoginActivity extends Activity {
 
 				Log.i("result", "loginResult:" + auth_result);
 				if (auth_result == 0) { // 验证成功，返回0
-					preferences = getSharedPreferences("conges", MODE_WORLD_READABLE);
+					preferences = getSharedPreferences("conges",
+							MODE_WORLD_READABLE);
 					editor = preferences.edit();
 					editor.putString("phoneNum", phoneNum);
 					editor.putString("userName", userName);
 					editor.putInt("loginState", 1);
 					editor.commit();
-					
+
 					Intent intent = new Intent(LoginActivity.this,
 							FriendListActivity.class);
 					startActivity(intent);
