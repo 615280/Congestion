@@ -2,12 +2,18 @@ package com.conges.main;
 
 import java.util.ArrayList;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -49,6 +55,7 @@ import com.baidu.mapapi.model.LatLng;
 import com.baidu.mapapi.search.route.PlanNode;
 import com.baidu.mapapi.search.route.RoutePlanSearch;
 import com.baidu.mapapi.search.route.TransitRoutePlanOption;
+import com.conges.database.ConnectUtil;
 import com.conges.user.FriendListActivity;
 import com.conges.user.LoginActivity;
 
@@ -80,9 +87,11 @@ public class LocationAndMainActivity extends Activity {
 	private static final int accuracyCircleStrokeColor = 0xAA00FF00; // 边缘线
 
 	private RoutePlanSearch mSearch = null;
+	Thread getRoadState;
+	String roadStateResult;
 
 	SharedPreferences preferences;
-	
+
 	@SuppressWarnings("deprecation")
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -93,6 +102,21 @@ public class LocationAndMainActivity extends Activity {
 		init();
 
 		mSearch = RoutePlanSearch.newInstance();
+		getRoadState = new Thread(new Runnable() {
+			
+			@Override
+			public void run() {
+				// TODO Auto-generated method stub
+				String message = String
+						.format("{\"getRoadState\":[{\"latitudeMin\":\"%s\",\"latitudeMax\":\"%s\",    \"longitudeMin\":\"%s\",\"longitudeMax\":\"%s\"}]}",
+								currentPt.latitude - 0.01,
+								currentPt.latitude + 0.01,
+								currentPt.longitude - 0.01,
+								currentPt.longitude + 0.01);
+				roadStateResult = ConnectUtil.getConnDef(message);
+				handler.sendEmptyMessage(0x123);
+			}
+		});
 	}
 
 	private void init() {
@@ -223,7 +247,8 @@ public class LocationAndMainActivity extends Activity {
 					// 关闭
 					Toast.makeText(LocationAndMainActivity.this, "closeColor",
 							Toast.LENGTH_SHORT).show();
-					clearOverlay();
+					addCustomColorRoute();
+					// clearOverlay();
 				}
 				if (checkedId == R.id.openColor) {
 					// 打开
@@ -232,7 +257,7 @@ public class LocationAndMainActivity extends Activity {
 					Intent intent = new Intent(LocationAndMainActivity.this,
 							RoutePlan.class);
 					startActivity(intent);
-//					addCustomColorRoute();
+					// addCustomColorRoute();
 				}
 			}
 		};
@@ -252,8 +277,8 @@ public class LocationAndMainActivity extends Activity {
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
-//				Toast.makeText(LocationAndMainActivity.this, "路况",
-//						Toast.LENGTH_SHORT).show();
+				// Toast.makeText(LocationAndMainActivity.this, "路况",
+				// Toast.LENGTH_SHORT).show();
 				Intent intent = new Intent(LocationAndMainActivity.this,
 						TrafficMenuActivity.class);
 				startActivity(intent);
@@ -298,10 +323,10 @@ public class LocationAndMainActivity extends Activity {
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
-//				Toast.makeText(LocationAndMainActivity.this, "设置",
-//						Toast.LENGTH_SHORT).show();
-				 Intent intent = new Intent(LocationAndMainActivity.this,
-				 PreferenceMainActivity.class);
+				// Toast.makeText(LocationAndMainActivity.this, "设置",
+				// Toast.LENGTH_SHORT).show();
+				Intent intent = new Intent(LocationAndMainActivity.this,
+						PreferenceMainActivity.class);
 				startActivity(intent);
 			}
 		});
@@ -339,11 +364,12 @@ public class LocationAndMainActivity extends Activity {
 					intent.setClass(getApplicationContext(),
 							LoginActivity.class);
 					startActivity(intent);
-					preferences = getSharedPreferences("conges", MODE_WORLD_READABLE);
+					preferences = getSharedPreferences("conges",
+							MODE_WORLD_READABLE);
 					Editor editor = preferences.edit();
 					editor.putInt("loginState", 0);
 					editor.commit();
-					
+
 					break;
 				}
 			}
@@ -417,7 +443,7 @@ public class LocationAndMainActivity extends Activity {
 		Marker marker_jam;
 		// private InfoWindow mInfoWindow;
 		ArrayList<Marker> markerArr = new ArrayList<Marker>();
-		
+
 		BitmapDescriptor bd_jam = BitmapDescriptorFactory
 				.fromResource(R.drawable.mark_jam);
 		// add marker overlay
@@ -474,8 +500,29 @@ public class LocationAndMainActivity extends Activity {
 	}
 
 	public void getRouteAndDraw(String city, PlanNode stNode, PlanNode enNode) {
-		Toast.makeText(this, "test", Toast.LENGTH_SHORT).show();
-		mSearch.transitSearch(new TransitRoutePlanOption().from(stNode)
-				.city(city).to(enNode));
+		// Toast.makeText(this, "test", Toast.LENGTH_SHORT).show();
+		// mSearch.transitSearch(new TransitRoutePlanOption().from(stNode)
+		// .city(city).to(enNode));
+		getRoadState.start();
 	}
+
+	Handler handler = new Handler() {
+		@Override
+		public void handleMessage(Message msg) {
+			if (msg.what == 0x123) {
+				try {
+					JSONArray jArray = new JSONArray(getRoadState);
+					if (jArray.length() > 0) {
+						for (int i = 0; i < jArray.length(); i++) {
+							JSONObject jObject = jArray.getJSONObject(i);
+							jObject.get("");
+						}
+					}
+				} catch (JSONException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+		}
+	};
 }

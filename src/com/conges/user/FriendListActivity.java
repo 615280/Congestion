@@ -29,7 +29,7 @@ public class FriendListActivity extends Activity {
 		SharedPreferences preferences = getSharedPreferences("conges", MODE_WORLD_READABLE);
 		String userName = preferences.getString("userName","信息获取失败");
 		
-		userNameTextView.setText(userName + preferences.getInt("loginState", -1));
+		userNameTextView.setText(userName);
 		userNameTextView.setTextColor(getResources().getColor(R.color.whitesmoke));
 		
 		okButton = (Button) findViewById(R.id.button_fl_ok);
