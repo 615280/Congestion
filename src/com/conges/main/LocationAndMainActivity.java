@@ -48,6 +48,7 @@ import com.baidu.mapapi.model.LatLng;
 import com.baidu.mapapi.search.route.PlanNode;
 import com.baidu.mapapi.search.route.RoutePlanSearch;
 import com.baidu.mapapi.search.route.TransitRoutePlanOption;
+import com.conges.user.LoginActivity;
 
 public class LocationAndMainActivity extends Activity {
 	private MapView mMapView = null;

@@ -42,8 +42,8 @@ public class ConnectUtil {
 				result += line;
 			}
 		} catch(SocketTimeoutException e){
-			//net error
-			e.printStackTrace();
+			result = Constant.ERROR_NETWORK;				//net error
+			e.printStackTrace();	
 		} catch (IOException e) {
 			e.printStackTrace();
 		} finally {

@@ -3,6 +3,8 @@ package com.conges.util;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import com.conges.database.ConnectUtil;
+
 import android.content.Context;
 import android.widget.Toast;
 
@@ -23,5 +25,16 @@ public class HelpFunctions {
 		SimpleDateFormat format = new SimpleDateFormat("yyyyƒÍMM‘¬dd»’ HH:mm:ss");
 		Date date = new Date(System.currentTimeMillis());       
 		return format.format(date);
+	}
+	
+	public static String getConnResult(String message){
+		return ConnectUtil.getConnDef(message);
+	}
+	
+	public static void main(String[] args) {
+		String message = String
+				.format("{\"login\":{\"phoneNum\":\"%s\",\"userPwd\":\"%s\"}}",
+						"18522569895", "123456");
+		System.out.println(getConnResult(message));
 	}
 }

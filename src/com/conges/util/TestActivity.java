@@ -1,6 +1,5 @@
-package com.conges.main;
+package com.conges.util;
 
-import com.conges.util.GeoCodeUtil;
 
 public class TestActivity{
 	public static void main(String[] args) {

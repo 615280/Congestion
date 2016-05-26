@@ -1,10 +1,13 @@
-package com.conges.main;
+package com.conges.user;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import com.conges.database.ConnectUtil;
+import com.conges.main.R;
+import com.conges.main.R.id;
+import com.conges.main.R.layout;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -92,8 +95,7 @@ public class LoginActivity extends Activity {
 				int auth_result = -1;
 				String userName = "";
 				try {
-					JSONArray jArray = new JSONArray(result);
-					JSONObject j_data = jArray.getJSONObject(0);
+					JSONObject j_data = new JSONObject(result);
 					auth_result = (Integer) j_data.get("loginResult");
 					if (j_data.getString("userName") != null) {
 						userName = (String) j_data.getString("userName");

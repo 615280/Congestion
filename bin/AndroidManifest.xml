@@ -67,7 +67,8 @@
         </activity>
         <activity
             android:name=".EntryActivity"
-            android:screenOrientation="portrait" >
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.Black.NoTitleBar.Fullscreen" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -92,21 +93,21 @@
         </activity>
         
          <activity
-            android:name=".LoginActivity"
+            android:name="com.conges.user.LoginActivity"
             android:label="登录"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme" >
         </activity>
         
          <activity
-            android:name=".RegisterActivity"
+            android:name="com.conges.user.RegisterActivity"
             android:label="注册"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme" >
         </activity>
         
          <activity
-            android:name=".FriendListActivity"
+            android:name="com.conges.user.FriendListActivity"
             android:label="好友列表"
             android:screenOrientation="portrait"  >
         </activity>
@@ -138,8 +139,8 @@
             android:screenOrientation="portrait" >
         </activity>
         
-         <activity
-            android:name=".UserInfoActivity"
+        <activity
+            android:name="com.conges.user.UserInfoActivity"
             android:label="用户信息"
             android:screenOrientation="portrait" >
         </activity>

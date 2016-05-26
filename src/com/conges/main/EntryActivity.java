@@ -70,11 +70,21 @@ public class EntryActivity extends Activity {
 
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy年MM月dd日 " + "hh:mm:ss");
 		// 存入当前时间
-		editor.putString("time", sdf.format(new Date()));
+		editor.putString("lastTime", sdf.format(new Date()));
 		// 存入一个随机数
-		editor.putInt("loginState", 35);
+		editor.putInt("loginState", -1);
 		// 提交所有存入的数据
 		editor.commit();
+		
+		preferences.getString("phoneNum", "0");
+		preferences.getString("userPass", "0");
+		
+		new Thread(){
+			public void run() {
+				
+			};
+		}.start();;
+		
 
 		final View contentView = findViewById(R.id.fullscreen_waitpic);
 		// Set up an instance of SystemUiHider to control the system UI for
@@ -137,7 +147,7 @@ public class EntryActivity extends Activity {
 				EntryActivity.this.finish();
 			}
 		};
-		timer.schedule(task, 2000);
+		timer.schedule(task, 3000);
 	}
 
 	@Override

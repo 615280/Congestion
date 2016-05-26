@@ -1,4 +1,10 @@
-package com.conges.main;
+package com.conges.user;
+
+import com.conges.main.LocationAndMainActivity;
+import com.conges.main.R;
+import com.conges.main.R.color;
+import com.conges.main.R.id;
+import com.conges.main.R.layout;
 
 import android.app.Activity;
 import android.content.Intent;

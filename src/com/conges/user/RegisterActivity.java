@@ -1,12 +1,19 @@
-package com.conges.main;
+package com.conges.user;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
 import com.conges.database.ConnectUtil;
+import com.conges.main.R;
+import com.conges.main.R.drawable;
+import com.conges.main.R.id;
+import com.conges.main.R.layout;
 import com.conges.util.HelpFunctions;
+
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog.Builder;
@@ -130,8 +137,7 @@ public class RegisterActivity extends Activity {
 			if (msg.what == 0x123) {
 				int reg_result = -1;
 				try {
-					JSONArray jArray = new JSONArray(registerResult);
-					JSONObject j_data = jArray.getJSONObject(0);
+					JSONObject j_data = new JSONObject(registerResult);
 					if(j_data.get("registerResult") != null){
 						reg_result = (Integer) j_data.get("registerResult");
 					}
