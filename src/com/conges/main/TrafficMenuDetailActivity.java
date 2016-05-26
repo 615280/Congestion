@@ -75,7 +75,7 @@ public class TrafficMenuDetailActivity extends Activity {
 			@Override
 			public void onCheckedChanged(RadioGroup group, int checkedId) {
 				// TODO Auto-generated method stub
-				HelpFunctions.useToastShort(getApplicationContext(), checkedId+"");
+				HelpFunctions.useToastShort(getApplicationContext(), "checkedId" + checkedId);
 			}
 		});
 		

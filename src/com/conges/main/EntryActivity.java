@@ -5,6 +5,9 @@ import java.util.Date;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.app.Activity;
@@ -58,6 +61,7 @@ public class EntryActivity extends Activity {
 
 	SharedPreferences preferences;
 	Editor editor;
+	String result;
 
 	@SuppressWarnings("deprecation")
 	@Override
@@ -76,15 +80,29 @@ public class EntryActivity extends Activity {
 		// 提交所有存入的数据
 		editor.commit();
 		
-		preferences.getString("phoneNum", "0");
-		preferences.getString("userPass", "0");
+		final String phoneNum = preferences.getString("phoneNum", "");
+		final String userPass = preferences.getString("userPass", "");
 		
-		new Thread(){
-			public void run() {
-				
-			};
-		}.start();;
-		
+		int autoLogin = preferences.getInt("autoLogin", 0);
+		if(autoLogin == 1){
+			new Thread(){
+				public void run() {
+					result = BusinessFunctions.login(phoneNum, userPass,preferences,getBaseContext());
+					JSONObject jObject;
+					try {
+						jObject = new JSONObject(result);
+						if(((Integer)jObject.get("loginResult")) == 0){
+							editor = preferences.edit();
+							editor.putInt("loginState", 1);
+							editor.commit();
+						}
+					} catch (JSONException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+				};
+			}.start();;
+		}
 
 		final View contentView = findViewById(R.id.fullscreen_waitpic);
 		// Set up an instance of SystemUiHider to control the system UI for

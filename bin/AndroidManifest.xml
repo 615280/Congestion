@@ -109,7 +109,8 @@
          <activity
             android:name="com.conges.user.FriendListActivity"
             android:label="好友列表"
-            android:screenOrientation="portrait"  >
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme"  >
         </activity>
         
          <activity
@@ -142,7 +143,8 @@
         <activity
             android:name="com.conges.user.UserInfoActivity"
             android:label="用户信息"
-            android:screenOrientation="portrait" >
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme" >
         </activity>
     </application>
 

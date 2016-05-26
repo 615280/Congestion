@@ -1,8 +1,6 @@
 package com.conges.main;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
@@ -53,7 +51,6 @@ import com.baidu.mapapi.search.route.RoutePlanSearch;
 import com.baidu.mapapi.search.route.TransitRoutePlanOption;
 import com.conges.user.FriendListActivity;
 import com.conges.user.LoginActivity;
-import com.conges.util.HelpFunctions;
 
 @SuppressLint("WorldReadableFiles")
 public class LocationAndMainActivity extends Activity {
@@ -86,6 +83,7 @@ public class LocationAndMainActivity extends Activity {
 
 	SharedPreferences preferences;
 	
+	@SuppressWarnings("deprecation")
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -231,6 +229,9 @@ public class LocationAndMainActivity extends Activity {
 					// ´ò¿ª
 					Toast.makeText(LocationAndMainActivity.this, "openColor",
 							Toast.LENGTH_SHORT).show();
+					Intent intent = new Intent(LocationAndMainActivity.this,
+							RoutePlan.class);
+					startActivity(intent);
 //					addCustomColorRoute();
 				}
 			}
@@ -299,10 +300,8 @@ public class LocationAndMainActivity extends Activity {
 				// TODO Auto-generated method stub
 //				Toast.makeText(LocationAndMainActivity.this, "ÉèÖÃ",
 //						Toast.LENGTH_SHORT).show();
-				// Intent intent = new Intent(LocationAndMainActivity.this,
-				// PreferenceMainActivity.class);
-				Intent intent = new Intent(LocationAndMainActivity.this,
-						RoutePlan.class);
+				 Intent intent = new Intent(LocationAndMainActivity.this,
+				 PreferenceMainActivity.class);
 				startActivity(intent);
 			}
 		});
@@ -319,6 +318,7 @@ public class LocationAndMainActivity extends Activity {
 		});
 
 		contactButton.setOnClickListener(new OnClickListener() {
+			@SuppressWarnings({ "deprecation" })
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub

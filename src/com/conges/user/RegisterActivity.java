@@ -1,14 +1,7 @@
 package com.conges.user;
 
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import com.conges.database.ConnectUtil;
-import com.conges.main.R;
-import com.conges.util.HelpFunctions;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
@@ -24,6 +17,10 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+
+import com.conges.database.ConnectUtil;
+import com.conges.main.R;
+import com.conges.util.HelpFunctions;
 
 @SuppressLint("WorldReadableFiles")
 public class RegisterActivity extends Activity {
@@ -62,10 +59,8 @@ public class RegisterActivity extends Activity {
 				userPassStr = userPass.getText().toString();
 				userPassCheckStr = userPassCheck.getText().toString();
 
-				Pattern p = Pattern
-						.compile("^((1[3,5,8][0-9])|(14[5,7])|(17[0,1,6,7,8]))/d{8}$");
-				Matcher m = p.matcher(phoneNumStr);
-				if (phoneNumStr.equals("") || m.matches()) {
+				String pattern = "(1[358][0-9]\\d{8})|(14[57]\\d{8})|(17[01678]\\d{8})";
+				if (phoneNumStr.equals("") || !phoneNumStr.matches(pattern)) {
 					// 不符合电话号码模式，提示重新输入
 					HelpFunctions.useToastShort(getApplicationContext(), "请确认输入手机号！");
 					return;

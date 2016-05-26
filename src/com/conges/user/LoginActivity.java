@@ -3,7 +3,7 @@ package com.conges.user;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import com.conges.database.ConnectUtil;
+import com.conges.main.BusinessFunctions;
 import com.conges.main.R;
 
 import android.annotation.SuppressLint;
@@ -18,6 +18,9 @@ import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
+import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -25,10 +28,11 @@ import android.widget.Toast;
 public class LoginActivity extends Activity {
 	private EditText et_phoneNum;
 	private EditText et_userPass;
+	private CheckBox cb_autoLogin;
 	private Button loginButton;
 	private Button toRegisterButton;
+	
 	String result = "";
-
 	String phoneNum, userPass;
 
 	SharedPreferences preferences;
@@ -43,19 +47,35 @@ public class LoginActivity extends Activity {
 
 	@SuppressWarnings("deprecation")
 	private void init() {
-		et_phoneNum = (EditText) findViewById(R.id.et_login_username);
+		et_phoneNum = (EditText) findViewById(R.id.et_login_phonenum);
 		et_userPass = (EditText) findViewById(R.id.et_login_userpass);
-
+		
 		preferences = getSharedPreferences("conges", MODE_WORLD_READABLE);
 		et_phoneNum.setText(preferences.getString("phoneNum", ""));
+		et_userPass.setText(preferences.getString("userPass", ""));
 
+		cb_autoLogin = (CheckBox) findViewById(R.id.cb_login_autologin);
+		cb_autoLogin.setOnCheckedChangeListener(new OnCheckedChangeListener() {
+			@Override
+			public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+				if(isChecked){
+					editor = preferences.edit();
+					editor.putInt("autoLogin", 1);
+					editor.commit();
+				} else {
+					editor = preferences.edit();
+					editor.putInt("autoLogin", 0);
+					editor.commit();
+				}
+			}
+		});
+		
 		loginButton = (Button) findViewById(R.id.button_login);
 		toRegisterButton = (Button) findViewById(R.id.button_login_toregister);
 
 		loginButton.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-
 				phoneNum = et_phoneNum.getText().toString();
 				userPass = et_userPass.getText().toString();
 				if (phoneNum.equals("") || userPass.equals("")) {
@@ -66,10 +86,7 @@ public class LoginActivity extends Activity {
 
 				new Thread() {
 					public void run() {
-						String message = String
-								.format("{\"login\":{\"phoneNum\":\"%s\",\"userPwd\":\"%s\"}}",
-										phoneNum, userPass);
-						result = ConnectUtil.getConnDef(message);
+						result = BusinessFunctions.login(phoneNum, userPass,preferences,getBaseContext());
 						handler.sendEmptyMessage(0x123);
 					};
 				}.start();
@@ -108,7 +125,6 @@ public class LoginActivity extends Activity {
 					preferences = getSharedPreferences("conges",
 							MODE_WORLD_READABLE);
 					editor = preferences.edit();
-					editor.putString("phoneNum", phoneNum);
 					editor.putString("userName", userName);
 					editor.putInt("loginState", 1);
 					editor.commit();
@@ -127,4 +143,5 @@ public class LoginActivity extends Activity {
 			}
 		}
 	};
+	
 }
