@@ -1,17 +1,16 @@
 package com.conges.user;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import com.conges.database.ConnectUtil;
 import com.conges.main.R;
-import com.conges.main.R.id;
-import com.conges.main.R.layout;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -22,46 +21,55 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+@SuppressLint({ "HandlerLeak", "WorldReadableFiles" })
 public class LoginActivity extends Activity {
-	private EditText et_userName;
+	private EditText et_phoneNum;
 	private EditText et_userPass;
 	private Button loginButton;
 	private Button toRegisterButton;
 	String result = "";
+	
+	String phoneNum,userPass;
+	
+	SharedPreferences preferences;
+	Editor editor;
 
+	@SuppressWarnings("deprecation")
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
-		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_login);
-		SharedPreferences preferences = getSharedPreferences("conges",
-				MODE_WORLD_READABLE);
-		// 读取字符串数据
-		String time = preferences.getString("time", null);
-		// 读取int类型的数据
-		int randNum = preferences.getInt("loginState", 0);
-		String result = time == null ? "您暂时还未写入数据" : "时间：" + time
-				+ "\nloginState：" + randNum;
-		// 使用Toast提示信息
-		Toast.makeText(getApplicationContext(), result, 5000).show();
-
 		init();
+		preferences = getSharedPreferences("conges",
+				MODE_WORLD_READABLE);
+
+//		// 读取字符串数据
+//		String time = preferences.getString("lastTime", null);
+//		// 读取int类型的数据
+//		int randNum = preferences.getInt("loginState", 0);
+//		String result = time == null ? "您暂时还未写入数据" : "时间：" + time
+//				+ "\nloginState：" + randNum;
+//		// 使用Toast提示信息
+//		Toast.makeText(getApplicationContext(), result, Toast.LENGTH_LONG).show();
 
 	}
 
 	private void init() {
-		et_userName = (EditText) findViewById(R.id.et_login_username);
+		et_phoneNum = (EditText) findViewById(R.id.et_login_username);
 		et_userPass = (EditText) findViewById(R.id.et_login_userpass);
+		
+		et_phoneNum.setText(preferences.getString("phoneNum", ""));
+		
 		loginButton = (Button) findViewById(R.id.button_login);
 		toRegisterButton = (Button) findViewById(R.id.button_login_toregister);
-
+		
 		loginButton.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
 
-				final String userName = et_userName.getText().toString();
-				final String userPass = et_userPass.getText().toString();
-				if (userName.equals("") || userPass.equals("")) {
+				phoneNum = et_phoneNum.getText().toString();
+				userPass = et_userPass.getText().toString();
+				if (phoneNum.equals("") || userPass.equals("")) {
 					Toast.makeText(getApplicationContext(), "请输入正确的手机号和密码！",
 							Toast.LENGTH_LONG).show();
 					return;
@@ -71,7 +79,7 @@ public class LoginActivity extends Activity {
 					public void run() {
 						String message = String
 								.format("{\"login\":{\"phoneNum\":\"%s\",\"userPwd\":\"%s\"}}",
-										userName, userPass);
+										phoneNum, userPass);
 						result = ConnectUtil.getConnDef(message);
 						handler.sendEmptyMessage(0x123);
 					};
@@ -90,6 +98,7 @@ public class LoginActivity extends Activity {
 	}
 
 	Handler handler = new Handler() {
+		@SuppressWarnings("deprecation")
 		public void handleMessage(Message msg) {
 			if (msg.what == 0x123) {
 				int auth_result = -1;
@@ -107,11 +116,15 @@ public class LoginActivity extends Activity {
 
 				Log.i("result", "loginResult:" + auth_result);
 				if (auth_result == 0) { // 验证成功，返回0
+					preferences = getSharedPreferences("conges", MODE_WORLD_READABLE);
+					editor = preferences.edit();
+					editor.putString("phoneNum", phoneNum);
+					editor.putString("userName", userName);
+					editor.putInt("loginState", 1);
+					editor.commit();
+					
 					Intent intent = new Intent(LoginActivity.this,
 							FriendListActivity.class);
-					Bundle data = new Bundle();
-					data.putString("userName", userName);
-					intent.putExtras(data);
 					startActivity(intent);
 					finish();
 				} else if (auth_result == 1) { // 输入错误，返回1

@@ -3,15 +3,11 @@ package com.conges.user;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import com.conges.database.ConnectUtil;
 import com.conges.main.R;
-import com.conges.main.R.drawable;
-import com.conges.main.R.id;
-import com.conges.main.R.layout;
 import com.conges.util.HelpFunctions;
 
 import android.annotation.SuppressLint;
@@ -76,6 +72,11 @@ public class RegisterActivity extends Activity {
 
 				if (userPassStr.equals("") || userPassCheckStr.equals("")) {
 					HelpFunctions.useToastShort(getApplicationContext(), "请确认密码！");
+					return;
+				}
+				
+				if (userPassStr.length() < 6) {
+					HelpFunctions.useToastShort(getApplicationContext(), "请确认密码长度至少6位！");
 					return;
 				}
 

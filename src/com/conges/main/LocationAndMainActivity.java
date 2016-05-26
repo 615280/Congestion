@@ -1,7 +1,10 @@
 package com.conges.main;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -48,8 +51,11 @@ import com.baidu.mapapi.model.LatLng;
 import com.baidu.mapapi.search.route.PlanNode;
 import com.baidu.mapapi.search.route.RoutePlanSearch;
 import com.baidu.mapapi.search.route.TransitRoutePlanOption;
+import com.conges.user.FriendListActivity;
 import com.conges.user.LoginActivity;
+import com.conges.util.HelpFunctions;
 
+@SuppressLint("WorldReadableFiles")
 public class LocationAndMainActivity extends Activity {
 	private MapView mMapView = null;
 	private BaiduMap mBaiduMap;
@@ -78,11 +84,14 @@ public class LocationAndMainActivity extends Activity {
 
 	private RoutePlanSearch mSearch = null;
 
+	SharedPreferences preferences;
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		SDKInitializer.initialize(getApplicationContext());
 		setContentView(R.layout.activity_main);
+		preferences = getSharedPreferences("conges", MODE_WORLD_READABLE);
 		init();
 
 		mSearch = RoutePlanSearch.newInstance();
@@ -222,10 +231,6 @@ public class LocationAndMainActivity extends Activity {
 					// 打开
 					Toast.makeText(LocationAndMainActivity.this, "openColor",
 							Toast.LENGTH_SHORT).show();
-					SharedPreferences pref = getSharedPreferences("info", MODE_PRIVATE);
-					Editor editor = pref.edit();
-					editor.putString("aaa:", "123456");
-					editor.commit();
 //					addCustomColorRoute();
 				}
 			}
@@ -237,13 +242,6 @@ public class LocationAndMainActivity extends Activity {
 		locationButton = (Button) findViewById(R.id.button_main_location);
 		contactButton = (Button) findViewById(R.id.button_main_contact);
 
-		// publishSitButton.setText("路况");
-		// settingButton.setText("设置");
-		// locationButton.setText("定位");
-		// contactButton.setText("好友");
-		// iv=(ImageView)findViewById(R.id.homeActivity_imageView);
-		// iv.setImageBitmap(ZoomImage.readBitmapFromResource(this,
-		// R.drawable.logo,displaywidth*2/3,displayheight/6));
 		publishSitButton.setBackgroundResource(R.drawable.button_message60);
 		settingButton.setBackgroundResource(R.drawable.button_setting60);
 		locationButton.setText("定位");
@@ -324,11 +322,30 @@ public class LocationAndMainActivity extends Activity {
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
-//				Toast.makeText(LocationAndMainActivity.this, "好友",
-//						Toast.LENGTH_SHORT).show();
-				Intent intent = new Intent(getApplicationContext(),
-						LoginActivity.class);
-				startActivity(intent);
+				int loginState = preferences.getInt("loginState", -1);
+				Intent intent = new Intent();
+				switch (loginState) {
+				case 0:
+					intent.setClass(getApplicationContext(),
+							LoginActivity.class);
+					startActivity(intent);
+					break;
+				case 1:
+					intent.setClass(getApplicationContext(),
+							FriendListActivity.class);
+					startActivity(intent);
+					break;
+				default:
+					intent.setClass(getApplicationContext(),
+							LoginActivity.class);
+					startActivity(intent);
+					preferences = getSharedPreferences("conges", MODE_WORLD_READABLE);
+					Editor editor = preferences.edit();
+					editor.putInt("loginState", 0);
+					editor.commit();
+					
+					break;
+				}
 			}
 		});
 

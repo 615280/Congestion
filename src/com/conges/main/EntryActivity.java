@@ -72,7 +72,7 @@ public class EntryActivity extends Activity {
 		// 存入当前时间
 		editor.putString("lastTime", sdf.format(new Date()));
 		// 存入一个随机数
-		editor.putInt("loginState", -1);
+		editor.putInt("loginState", 0);
 		// 提交所有存入的数据
 		editor.commit();
 		
