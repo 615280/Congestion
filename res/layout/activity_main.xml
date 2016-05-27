@@ -14,6 +14,19 @@
         android:lines="4"
         android:text="点击、长按、双击地图以获取经纬度和地图状态" />
     
+<!--     <Button -->
+<!--             android:id="@+id/bt_main_transit" -->
+<!--             android:layout_width="wrap_content" -->
+<!--             android:layout_height="wrap_content" -->
+<!--             android:onClick="searchButtonProcess" -->
+<!--             android:visibility="invisible" /> -->
+    
+        <Button
+            android:id="@+id/bt_main_transit"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="invisible" />
+    
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

@@ -87,7 +87,7 @@ public class LoginActivity extends Activity {
 				new Thread() {
 					public void run() {
 						result = BusinessFunctions.login(phoneNum, userPass,preferences,getBaseContext());
-						handler.sendEmptyMessage(0x123);
+						handler.sendEmptyMessage(0x124);
 					};
 				}.start();
 			}
@@ -106,7 +106,7 @@ public class LoginActivity extends Activity {
 	Handler handler = new Handler() {
 		@SuppressWarnings("deprecation")
 		public void handleMessage(Message msg) {
-			if (msg.what == 0x123) {
+			if (msg.what == 0x124) {
 				int auth_result = -1;
 				String userName = "";
 				try {

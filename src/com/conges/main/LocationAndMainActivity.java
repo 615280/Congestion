@@ -18,6 +18,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.RadioGroup;
 import android.widget.RadioGroup.OnCheckedChangeListener;
 import android.widget.RelativeLayout;
@@ -49,13 +50,27 @@ import com.baidu.mapapi.map.MyLocationConfiguration;
 import com.baidu.mapapi.map.MyLocationConfiguration.LocationMode;
 import com.baidu.mapapi.map.MyLocationData;
 import com.baidu.mapapi.model.LatLng;
+import com.baidu.mapapi.overlayutil.OverlayManager;
+import com.baidu.mapapi.overlayutil.TransitRouteOverlay;
+import com.baidu.mapapi.search.core.RouteLine;
+import com.baidu.mapapi.search.core.SearchResult;
+import com.baidu.mapapi.search.route.BikingRouteResult;
+import com.baidu.mapapi.search.route.DrivingRoutePlanOption;
+import com.baidu.mapapi.search.route.DrivingRouteResult;
+import com.baidu.mapapi.search.route.OnGetRoutePlanResultListener;
 import com.baidu.mapapi.search.route.PlanNode;
+import com.baidu.mapapi.search.route.RoutePlanSearch;
+import com.baidu.mapapi.search.route.TransitRoutePlanOption;
+import com.baidu.mapapi.search.route.TransitRouteResult;
+import com.baidu.mapapi.search.route.WalkingRouteResult;
 import com.conges.user.FriendListActivity;
 import com.conges.user.LoginActivity;
+import com.conges.util.HelpFunctions;
 import com.conges.util.LineStep;
 
-@SuppressLint({ "WorldReadableFiles", "HandlerLeak" })
-public class LocationAndMainActivity extends Activity {
+@SuppressLint({ "WorldReadableFiles" })
+public class LocationAndMainActivity extends Activity implements
+		OnGetRoutePlanResultListener {
 	private MapView mMapView = null;
 	private BaiduMap mBaiduMap;
 	private BaiduMapOptions mBaiduMapOptions;
@@ -82,6 +97,11 @@ public class LocationAndMainActivity extends Activity {
 	private static final int accuracyCircleStrokeColor = 0xAA00FF00; // 边缘线
 
 	private List<LineStep> roadStateList = new ArrayList<LineStep>();
+	RouteLine route = null;
+	OverlayManager routeOverlay = null;
+	RoutePlanSearch mSearch = null;
+	Button transitButton;
+	LineStep lineStep;
 
 	SharedPreferences preferences;
 
@@ -91,12 +111,37 @@ public class LocationAndMainActivity extends Activity {
 		SDKInitializer.initialize(getApplicationContext());
 		setContentView(R.layout.activity_main);
 		init();
+		mSearch = RoutePlanSearch.newInstance();
+		mSearch.setOnGetRoutePlanResultListener(this);
 	}
 
+	@Override
+	protected void onPause() {
+		mMapView.onPause();
+		super.onPause();
+	}
+
+	@Override
+	protected void onResume() {
+		mMapView.onResume();
+		super.onResume();
+	}
+
+	@Override
+	protected void onDestroy() {
+		// 退出时销毁定位
+		mLocClient.stop();
+		// 关闭定位图层
+		mBaiduMap.setMyLocationEnabled(false);
+		mMapView.onDestroy();
+		mMapView = null;
+		super.onDestroy();
+	}
+	
 	@SuppressWarnings("deprecation")
 	private void init() {
 		preferences = getSharedPreferences("conges", MODE_WORLD_READABLE);
-		
+
 		// 地图初始化
 		mBaiduMapOptions = new BaiduMapOptions();
 		mBaiduMapOptions.zoomControlsEnabled(false);
@@ -224,28 +269,39 @@ public class LocationAndMainActivity extends Activity {
 					// 关闭
 					Toast.makeText(LocationAndMainActivity.this, "closeColor",
 							Toast.LENGTH_SHORT).show();
-//					addCustomColorRoute();
+					// addCustomColorRoute();
 					// clearOverlay();
 				}
 				if (checkedId == R.id.openColor) {
 					// 打开
 					Toast.makeText(LocationAndMainActivity.this, "openColor",
 							Toast.LENGTH_SHORT).show();
-//					Intent intent = new Intent(LocationAndMainActivity.this,
-//							RoutePlan.class);
-//					startActivity(intent);
+					// Intent intent = new Intent(LocationAndMainActivity.this,
+					// RoutePlan.class);
+					// startActivity(intent);
 					// addCustomColorRoute();
-					new Thread(){
+					new Thread() {
 						@Override
 						public void run() {
-							roadStateList = BusinessFunctions.getRoadStateResult(currentPt);
+							roadStateList = BusinessFunctions
+									.getRoadStateResult(currentPt);
 							handler.sendEmptyMessage(0x123);
 						}
 					}.start();
 				}
 			}
 		};
+		
 		group.setOnCheckedChangeListener(radioButtonListener);
+
+		transitButton = (Button) findViewById(R.id.bt_main_transit);
+		transitButton.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				searchButtonProcess(v);
+			}
+		});
 
 		publishSitButton = (Button) findViewById(R.id.button_main_publish);
 		settingButton = (Button) findViewById(R.id.button_main_setting);
@@ -353,7 +409,6 @@ public class LocationAndMainActivity extends Activity {
 					Editor editor = preferences.edit();
 					editor.putInt("loginState", 0);
 					editor.commit();
-
 					break;
 				}
 			}
@@ -362,27 +417,44 @@ public class LocationAndMainActivity extends Activity {
 		mStateBar = (TextView) findViewById(R.id.state);
 	}
 
+	public void aaatest(){
+		HelpFunctions.useToastLong(getApplicationContext(), "！！！！！");
+	}
+	
+	public void searchButtonProcess(View v) {
+		// 重置浏览节点的路线数据
+		route = null;
+//		mBaiduMap.clear();
+		// 设置起终点信息，对于tranist search 来说，城市名无意义
+		PlanNode stNode = PlanNode.withCityNameAndPlaceName("苏州", lineStep.getStartNode());
+		PlanNode enNode = PlanNode.withCityNameAndPlaceName("苏州", lineStep.getEndNode());
+
+		// PlanNode stNode = PlanNode.withCityNameAndPlaceName("北京", "龙泽");
+		// PlanNode enNode = PlanNode.withCityNameAndPlaceName("北京", "西单");
+
+		// 实际使用中请对起点终点城市进行正确的设定
+		if (v.getId() == R.id.bt_main_transit) {
+			HelpFunctions.useToastLong(getApplicationContext(), "！！！！！");
+			mSearch.transitSearch((new TransitRoutePlanOption()).from(stNode)
+					.city("北京").to(enNode));
+		}
+	}
+	
+	Handler handler = new Handler() {
+		@Override
+		public void handleMessage(Message msg) {
+			if (msg.what == 0x123) {
+//				for (int i = 0; i < roadStateList.size(); i++) {
+//					lineStep = roadStateList.get(i);
+//					
+//				}
+				transitButton.performClick();
+			}
+		}
+	};
+	
 	private void changeLocationButtonVisible() {
 		locationButton.setVisibility(View.VISIBLE);
-	}
-
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		// Inflate the menu; this adds items to the action bar if it is present.
-		// getMenuInflater().inflate(R.menu.main, menu);
-		return true;
-	}
-
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		// Handle action bar item clicks here. The action bar will
-		// automatically handle clicks on the Home/Up button, so long
-		// as you specify a parent activity in AndroidManifest.xml.
-		int id = item.getItemId();
-		if (id == R.id.action_settings) {
-			return true;
-		}
-		return super.onOptionsItemSelected(item);
 	}
 
 	/**
@@ -451,52 +523,74 @@ public class LocationAndMainActivity extends Activity {
 	}
 
 	@Override
-	protected void onPause() {
-		mMapView.onPause();
-		super.onPause();
-	}
-
-	@Override
-	protected void onResume() {
-		mMapView.onResume();
-		super.onResume();
-	}
-
-	@Override
-	protected void onDestroy() {
-		// 退出时销毁定位
-		mLocClient.stop();
-		// 关闭定位图层
-		mBaiduMap.setMyLocationEnabled(false);
-		mMapView.onDestroy();
-		mMapView = null;
-		super.onDestroy();
-	}
-
-	/**
-	 * 添加线
-	 */
-	public void addCustomColorRoute() {
-		String city = "苏州";
-		PlanNode stNode = PlanNode.withCityNameAndPlaceName(city, "中科大西");
-		PlanNode enNode = PlanNode.withCityNameAndPlaceName(city, "西交大");
-		getRouteAndDraw(city, stNode, enNode);
-	}
-
-	public void getRouteAndDraw(String city, PlanNode stNode, PlanNode enNode) {
-		// Toast.makeText(this, "test", Toast.LENGTH_SHORT).show();
-		// mSearch.transitSearch(new TransitRoutePlanOption().from(stNode)
-		// .city(city).to(enNode));
-	}
-
-	Handler handler = new Handler() {
-		@Override
-		public void handleMessage(Message msg) {
-			if (msg.what == 0x123) {
-				for(int i=0; i<roadStateList.size(); i++){
-					
-				}
-			}
+	public void onGetTransitRouteResult(TransitRouteResult result) {
+		// TODO Auto-generated method stub
+		if (result == null || result.error != SearchResult.ERRORNO.NO_ERROR) {
+			Toast.makeText(LocationAndMainActivity.this, "抱歉，未找到结果",
+					Toast.LENGTH_SHORT).show();
 		}
-	};
+		if (result.error == SearchResult.ERRORNO.AMBIGUOUS_ROURE_ADDR) {
+			// 起终点或途经点地址有岐义，通过以下接口获取建议查询信息
+			// result.getSuggestAddrInfo()
+			return;
+		}
+		if (result.error == SearchResult.ERRORNO.NO_ERROR) {
+			route = result.getRouteLines().get(0);
+			TransitRouteOverlay overlay = new MyTransitRouteOverlay(mBaiduMap);
+			mBaiduMap.setOnMarkerClickListener(overlay);
+			routeOverlay = overlay;
+			overlay.setData(result.getRouteLines().get(0));
+			overlay.addToMap();
+//			overlay.zoomToSpan();
+		}
+	}
+
+	private class MyTransitRouteOverlay extends TransitRouteOverlay {
+
+		public MyTransitRouteOverlay(BaiduMap baiduMap) {
+			super(baiduMap);
+		}
+
+		@Override
+		public BitmapDescriptor getStartMarker() {
+			return null;
+		}
+
+		@Override
+		public BitmapDescriptor getTerminalMarker() {
+			return null;
+		}
+	}
+	
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		return true;
+	}
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		int id = item.getItemId();
+		if (id == R.id.action_settings) {
+			return true;
+		}
+		return super.onOptionsItemSelected(item);
+	}
+	
+	@Override
+	public void onGetBikingRouteResult(BikingRouteResult arg0) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void onGetDrivingRouteResult(DrivingRouteResult arg0) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void onGetWalkingRouteResult(WalkingRouteResult arg0) {
+		// TODO Auto-generated method stub
+
+	}
 }
