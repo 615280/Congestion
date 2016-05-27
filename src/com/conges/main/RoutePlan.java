@@ -2,6 +2,8 @@ package com.conges.main;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -36,6 +38,7 @@ import com.baidu.mapapi.search.route.TransitRouteResult;
 import com.baidu.mapapi.search.route.WalkingRouteLine;
 import com.baidu.mapapi.search.route.WalkingRoutePlanOption;
 import com.baidu.mapapi.search.route.WalkingRouteResult;
+import com.conges.util.HelpFunctions;
 
 /**
  * 此demo用来展示如何进行驾车、步行、公交路线搜索并在地图使用RouteOverlay、TransitOverlay绘制
@@ -76,8 +79,10 @@ public class RoutePlan extends Activity implements BaiduMap.OnMapClickListener,
 		// 初始化搜索模块，注册事件监听
 		mSearch = RoutePlanSearch.newInstance();
 		mSearch.setOnGetRoutePlanResultListener(this);
+		Button transitButton = (Button) findViewById(R.id.transit);
+		transitButton.performClick();
 	}
-
+	
 	/**
 	 * 发起路线规划搜索示例
 	 *
@@ -93,16 +98,18 @@ public class RoutePlan extends Activity implements BaiduMap.OnMapClickListener,
 		EditText editSt = (EditText) findViewById(R.id.start);
 		EditText editEn = (EditText) findViewById(R.id.end);
 		// 设置起终点信息，对于tranist search 来说，城市名无意义
-		PlanNode stNode = PlanNode.withCityNameAndPlaceName("北京", editSt
-				.getText().toString());
-		PlanNode enNode = PlanNode.withCityNameAndPlaceName("北京", editEn
-				.getText().toString());
+		PlanNode stNode = PlanNode.withCityNameAndPlaceName("苏州", "苏州中科大");
+		PlanNode enNode = PlanNode.withCityNameAndPlaceName("苏州", "苏州西交大");
+		
+//		 PlanNode stNode = PlanNode.withCityNameAndPlaceName("北京", "龙泽");
+//	     PlanNode enNode = PlanNode.withCityNameAndPlaceName("北京", "西单");
 
-		// 实际使用中请对起点终点城市进行正确的设定
+	     // 实际使用中请对起点终点城市进行正确的设定
 		if (v.getId() == R.id.drive) {
 			mSearch.drivingSearch((new DrivingRoutePlanOption()).from(stNode)
 					.to(enNode));
 		} else if (v.getId() == R.id.transit) {
+			HelpFunctions.useToastLong(getApplicationContext(), "！！！！！");
 			mSearch.transitSearch((new TransitRoutePlanOption()).from(stNode)
 					.city("北京").to(enNode));
 		} 

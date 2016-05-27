@@ -17,27 +17,27 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * ç”¨äºæ˜¾ç¤ºä¸€æ¡å…¬äº¤è¯¦æƒ…ç»“æœçš„Overlay
+ * ÓÃÓÚÏÔÊ¾Ò»Ìõ¹«½»ÏêÇé½á¹ûµÄOverlay
  */
 public class BusLineOverlay extends OverlayManager {
 
     private BusLineResult mBusLineResult = null;
 
     /**
-     * æ„é€ å‡½æ•°
+     * ¹¹Ôìº¯Êı
      * 
      * @param baiduMap
-     *            è¯¥BusLineOverlayæ‰€å¼•ç”¨çš„ BaiduMap å¯¹è±¡
+     *            ¸ÃBusLineOverlayËùÒıÓÃµÄ BaiduMap ¶ÔÏó
      */
     public BusLineOverlay(BaiduMap baiduMap) {
         super(baiduMap);
     }
 
     /**
-     * è®¾ç½®å…¬äº¤çº¿æ•°æ®
+     * ÉèÖÃ¹«½»ÏßÊı¾İ
      * 
      * @param result
-     *            å…¬äº¤çº¿è·¯ç»“æœæ•°æ®
+     *            ¹«½»ÏßÂ·½á¹ûÊı¾İ
      */
     public void setData(BusLineResult result) {
         this.mBusLineResult = result;
@@ -75,13 +75,13 @@ public class BusLineOverlay extends OverlayManager {
     }
 
     /**
-     * è¦†å†™æ­¤æ–¹æ³•ä»¥æ”¹å˜é»˜è®¤ç‚¹å‡»è¡Œä¸º
+     * ¸²Ğ´´Ë·½·¨ÒÔ¸Ä±äÄ¬ÈÏµã»÷ĞĞÎª
      * 
      * @param index
-     *            è¢«ç‚¹å‡»çš„ç«™ç‚¹åœ¨
+     *            ±»µã»÷µÄÕ¾µãÔÚ
      *            {@link com.baidu.mapapi.search.busline.BusLineResult#getStations()}
-     *            ä¸­çš„ç´¢å¼•
-     * @return æ˜¯å¦å¤„ç†äº†è¯¥ç‚¹å‡»äº‹ä»¶
+     *            ÖĞµÄË÷Òı
+     * @return ÊÇ·ñ´¦ÀíÁË¸Ãµã»÷ÊÂ¼ş
      */
     public boolean onBusStationClick(int index) {
         if (mBusLineResult.getStations() != null

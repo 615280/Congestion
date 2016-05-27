@@ -1,10 +1,7 @@
 package com.conges.main;
 
 import java.util.ArrayList;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
+import java.util.List;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
@@ -53,13 +50,11 @@ import com.baidu.mapapi.map.MyLocationConfiguration.LocationMode;
 import com.baidu.mapapi.map.MyLocationData;
 import com.baidu.mapapi.model.LatLng;
 import com.baidu.mapapi.search.route.PlanNode;
-import com.baidu.mapapi.search.route.RoutePlanSearch;
-import com.baidu.mapapi.search.route.TransitRoutePlanOption;
-import com.conges.database.ConnectUtil;
 import com.conges.user.FriendListActivity;
 import com.conges.user.LoginActivity;
+import com.conges.util.LineStep;
 
-@SuppressLint("WorldReadableFiles")
+@SuppressLint({ "WorldReadableFiles", "HandlerLeak" })
 public class LocationAndMainActivity extends Activity {
 	private MapView mMapView = null;
 	private BaiduMap mBaiduMap;
@@ -86,40 +81,22 @@ public class LocationAndMainActivity extends Activity {
 	private static final int accuracyCircleFillColor = 0x2200CCCC; // 包围圈背景色
 	private static final int accuracyCircleStrokeColor = 0xAA00FF00; // 边缘线
 
-	private RoutePlanSearch mSearch = null;
-	Thread getRoadState;
-	String roadStateResult;
+	private List<LineStep> roadStateList = new ArrayList<LineStep>();
 
 	SharedPreferences preferences;
 
-	@SuppressWarnings("deprecation")
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		SDKInitializer.initialize(getApplicationContext());
 		setContentView(R.layout.activity_main);
-		preferences = getSharedPreferences("conges", MODE_WORLD_READABLE);
 		init();
-
-		mSearch = RoutePlanSearch.newInstance();
-		getRoadState = new Thread(new Runnable() {
-			
-			@Override
-			public void run() {
-				// TODO Auto-generated method stub
-				String message = String
-						.format("{\"getRoadState\":[{\"latitudeMin\":\"%s\",\"latitudeMax\":\"%s\",    \"longitudeMin\":\"%s\",\"longitudeMax\":\"%s\"}]}",
-								currentPt.latitude - 0.01,
-								currentPt.latitude + 0.01,
-								currentPt.longitude - 0.01,
-								currentPt.longitude + 0.01);
-				roadStateResult = ConnectUtil.getConnDef(message);
-				handler.sendEmptyMessage(0x123);
-			}
-		});
 	}
 
+	@SuppressWarnings("deprecation")
 	private void init() {
+		preferences = getSharedPreferences("conges", MODE_WORLD_READABLE);
+		
 		// 地图初始化
 		mBaiduMapOptions = new BaiduMapOptions();
 		mBaiduMapOptions.zoomControlsEnabled(false);
@@ -247,17 +224,24 @@ public class LocationAndMainActivity extends Activity {
 					// 关闭
 					Toast.makeText(LocationAndMainActivity.this, "closeColor",
 							Toast.LENGTH_SHORT).show();
-					addCustomColorRoute();
+//					addCustomColorRoute();
 					// clearOverlay();
 				}
 				if (checkedId == R.id.openColor) {
 					// 打开
 					Toast.makeText(LocationAndMainActivity.this, "openColor",
 							Toast.LENGTH_SHORT).show();
-					Intent intent = new Intent(LocationAndMainActivity.this,
-							RoutePlan.class);
-					startActivity(intent);
+//					Intent intent = new Intent(LocationAndMainActivity.this,
+//							RoutePlan.class);
+//					startActivity(intent);
 					// addCustomColorRoute();
+					new Thread(){
+						@Override
+						public void run() {
+							roadStateList = BusinessFunctions.getRoadStateResult(currentPt);
+							handler.sendEmptyMessage(0x123);
+						}
+					}.start();
 				}
 			}
 		};
@@ -503,24 +487,14 @@ public class LocationAndMainActivity extends Activity {
 		// Toast.makeText(this, "test", Toast.LENGTH_SHORT).show();
 		// mSearch.transitSearch(new TransitRoutePlanOption().from(stNode)
 		// .city(city).to(enNode));
-		getRoadState.start();
 	}
 
 	Handler handler = new Handler() {
 		@Override
 		public void handleMessage(Message msg) {
 			if (msg.what == 0x123) {
-				try {
-					JSONArray jArray = new JSONArray(getRoadState);
-					if (jArray.length() > 0) {
-						for (int i = 0; i < jArray.length(); i++) {
-							JSONObject jObject = jArray.getJSONObject(i);
-							jObject.get("");
-						}
-					}
-				} catch (JSONException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
+				for(int i=0; i<roadStateList.size(); i++){
+					
 				}
 			}
 		}
