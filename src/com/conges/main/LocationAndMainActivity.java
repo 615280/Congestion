@@ -2,6 +2,9 @@ package com.conges.main;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.locks.Condition;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
@@ -101,6 +104,9 @@ public class LocationAndMainActivity extends Activity implements
 	OverlayManager routeOverlay = null;
 	RoutePlanSearch mSearch = null;
 	Button transitButton;
+	
+	Lock lock = new ReentrantLock();
+	Condition condition = lock.newCondition();
 
 	SharedPreferences preferences;
 
@@ -416,6 +422,25 @@ public class LocationAndMainActivity extends Activity implements
 		// PlanNode stNode = PlanNode.withCityNameAndPlaceName("北京", "龙泽");
 		// PlanNode enNode = PlanNode.withCityNameAndPlaceName("北京", "西单");
 
+//		if(v.getId() == R.id.bt_main_transit){
+//			while(roadStateList.size() > 0){
+//				LineStep lineStep = new LineStep();
+//					if (roadStateList.size() > 0) {
+//						lineStep = roadStateList.get(0);
+//						roadStateList.remove(0);
+//					} else {
+//						return;
+//					}
+//				// 设置起终点信息
+//				PlanNode stNode = PlanNode.withCityNameAndPlaceName(
+//						"苏州", lineStep.getStartNode());
+//				PlanNode enNode = PlanNode.withCityNameAndPlaceName(
+//						"苏州", lineStep.getEndNode());
+//				mSearch.transitSearch((new TransitRoutePlanOption())
+//						.from(stNode).city("苏州").to(enNode));
+//			}
+//		}
+		
 		if (v.getId() == R.id.bt_main_transit) {
 			// HelpFunctions.useToastLong(getApplicationContext(), "！！！！！");
 //			while (roadStateList.size() > 0) {
@@ -442,14 +467,8 @@ public class LocationAndMainActivity extends Activity implements
 					}
 				});
 				A.start();
-				try {
-					Thread.sleep(100);
-				} catch (InterruptedException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-//			}
-		}
+			}
+//		}
 	}
 
 	Handler handler = new Handler() {
