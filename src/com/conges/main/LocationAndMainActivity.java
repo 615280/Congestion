@@ -101,7 +101,6 @@ public class LocationAndMainActivity extends Activity implements
 	OverlayManager routeOverlay = null;
 	RoutePlanSearch mSearch = null;
 	Button transitButton;
-	LineStep lineStep;
 
 	SharedPreferences preferences;
 
@@ -137,7 +136,7 @@ public class LocationAndMainActivity extends Activity implements
 		mMapView = null;
 		super.onDestroy();
 	}
-	
+
 	@SuppressWarnings("deprecation")
 	private void init() {
 		preferences = getSharedPreferences("conges", MODE_WORLD_READABLE);
@@ -163,8 +162,6 @@ public class LocationAndMainActivity extends Activity implements
 		initLocPosition(); // 初始化定位
 		initChangeIconGeo(); // 改变定位点样式
 
-		// System.out.println(currentPt.latitude);
-		// System.out.println(currentPt.longitude);
 		initListener(); // 初始化监听
 	}
 
@@ -269,17 +266,12 @@ public class LocationAndMainActivity extends Activity implements
 					// 关闭
 					Toast.makeText(LocationAndMainActivity.this, "closeColor",
 							Toast.LENGTH_SHORT).show();
-					// addCustomColorRoute();
-					// clearOverlay();
+					clearOverlay();
 				}
 				if (checkedId == R.id.openColor) {
 					// 打开
 					Toast.makeText(LocationAndMainActivity.this, "openColor",
 							Toast.LENGTH_SHORT).show();
-					// Intent intent = new Intent(LocationAndMainActivity.this,
-					// RoutePlan.class);
-					// startActivity(intent);
-					// addCustomColorRoute();
 					new Thread() {
 						@Override
 						public void run() {
@@ -291,7 +283,7 @@ public class LocationAndMainActivity extends Activity implements
 				}
 			}
 		};
-		
+
 		group.setOnCheckedChangeListener(radioButtonListener);
 
 		transitButton = (Button) findViewById(R.id.bt_main_transit);
@@ -417,42 +409,66 @@ public class LocationAndMainActivity extends Activity implements
 		mStateBar = (TextView) findViewById(R.id.state);
 	}
 
-	public void aaatest(){
-		HelpFunctions.useToastLong(getApplicationContext(), "！！！！！");
-	}
-	
 	public void searchButtonProcess(View v) {
 		// 重置浏览节点的路线数据
 		route = null;
-//		mBaiduMap.clear();
-		// 设置起终点信息，对于tranist search 来说，城市名无意义
-		PlanNode stNode = PlanNode.withCityNameAndPlaceName("苏州", lineStep.getStartNode());
-		PlanNode enNode = PlanNode.withCityNameAndPlaceName("苏州", lineStep.getEndNode());
-
+		// mBaiduMap.clear();
 		// PlanNode stNode = PlanNode.withCityNameAndPlaceName("北京", "龙泽");
 		// PlanNode enNode = PlanNode.withCityNameAndPlaceName("北京", "西单");
 
-		// 实际使用中请对起点终点城市进行正确的设定
 		if (v.getId() == R.id.bt_main_transit) {
-			HelpFunctions.useToastLong(getApplicationContext(), "！！！！！");
-			mSearch.transitSearch((new TransitRoutePlanOption()).from(stNode)
-					.city("北京").to(enNode));
+			// HelpFunctions.useToastLong(getApplicationContext(), "！！！！！");
+//			while (roadStateList.size() > 0) {
+				Thread A = new Thread(new Runnable() {
+					@Override
+					public void run() {
+						System.out.println("hello");
+						LineStep lineStep = new LineStep();
+						synchronized (this) {
+							if (roadStateList.size() > 0) {
+								lineStep = roadStateList.get(0);
+								roadStateList.remove(0);
+							} else {
+								return;
+							}
+						}
+						// 设置起终点信息
+						PlanNode stNode = PlanNode.withCityNameAndPlaceName(
+								"苏州", lineStep.getStartNode());
+						PlanNode enNode = PlanNode.withCityNameAndPlaceName(
+								"苏州", lineStep.getEndNode());
+						mSearch.transitSearch((new TransitRoutePlanOption())
+								.from(stNode).city("苏州").to(enNode));
+					}
+				});
+				A.start();
+				try {
+					Thread.sleep(100);
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+//			}
 		}
 	}
-	
+
 	Handler handler = new Handler() {
 		@Override
 		public void handleMessage(Message msg) {
 			if (msg.what == 0x123) {
-//				for (int i = 0; i < roadStateList.size(); i++) {
-//					lineStep = roadStateList.get(i);
-//					
-//				}
+				// for (int i = 0; i < roadStateList.size(); i++) {
+				// synchronized (this) {
+				// LineStep lineStep = roadStateList.get(i);
+				// String a = lineStep.getStartNode();
+				// String b = lineStep.getEndNode();
+				// transitButton.performClick();
+				// }
+				// }
 				transitButton.performClick();
 			}
 		}
 	};
-	
+
 	private void changeLocationButtonVisible() {
 		locationButton.setVisibility(View.VISIBLE);
 	}
@@ -524,7 +540,6 @@ public class LocationAndMainActivity extends Activity implements
 
 	@Override
 	public void onGetTransitRouteResult(TransitRouteResult result) {
-		// TODO Auto-generated method stub
 		if (result == null || result.error != SearchResult.ERRORNO.NO_ERROR) {
 			Toast.makeText(LocationAndMainActivity.this, "抱歉，未找到结果",
 					Toast.LENGTH_SHORT).show();
@@ -541,7 +556,7 @@ public class LocationAndMainActivity extends Activity implements
 			routeOverlay = overlay;
 			overlay.setData(result.getRouteLines().get(0));
 			overlay.addToMap();
-//			overlay.zoomToSpan();
+			// overlay.zoomToSpan();
 		}
 	}
 
@@ -561,7 +576,7 @@ public class LocationAndMainActivity extends Activity implements
 			return null;
 		}
 	}
-	
+
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		return true;
@@ -575,7 +590,7 @@ public class LocationAndMainActivity extends Activity implements
 		}
 		return super.onOptionsItemSelected(item);
 	}
-	
+
 	@Override
 	public void onGetBikingRouteResult(BikingRouteResult arg0) {
 		// TODO Auto-generated method stub
