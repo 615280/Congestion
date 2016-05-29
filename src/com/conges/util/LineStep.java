@@ -1,6 +1,9 @@
 package com.conges.util;
 
-public class LineStep {
+import android.os.Parcel;
+import android.os.Parcelable;
+
+public class LineStep implements Parcelable {
 	private String startNode;
 	private String endNode;
 	private int degree;
@@ -27,5 +30,19 @@ public class LineStep {
 
 	public void setDegree(int degree) {
 		this.degree = degree;
+	}
+
+	@Override
+	public int describeContents() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public void writeToParcel(Parcel dest, int flags) {
+		// TODO Auto-generated method stub
+		dest.writeString(startNode);
+		dest.writeString(endNode);
+		dest.writeInt(degree);
 	}
 }

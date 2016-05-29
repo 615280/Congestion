@@ -48,11 +48,11 @@ public class BusinessFunctions {
 				df.format(currentPt.latitude + 0.001) + "" ,
 				df.format(currentPt.longitude - 0.001) + "" ,
 				df.format(currentPt.longitude) + 0.001 + "");
-		String roadStateResult = ConnectUtil.getConnDef(message);
+//		String roadStateResult = ConnectUtil.getConnDef(message);
 		
 //		String message = String.format("{\"getRoadState\":{\"latitudeMin\":\"%s\",\"latitudeMax\":\"%s\",\"longitudeMin\":\"%s\",\"longitudeMax\":\"%s\"}}",
 //		"32.282150", "32.282250" , "121.731086" , "121.731186");
-//		String roadStateResult = "{\"retRoadState\": {\"4\":[],\"1\": [\"\\u4e2d\\u79d1\\u5927\\u897f-\\u5357\\u5927\\u7814\\u7a76\\u751f\\u9662\", \"\\u4e2d\\u79d1\\u5927-\\u72ec\\u5885\\u6e56\\u56fe\\u4e66\\u9986\"], \"3\": [\"\\u5357\\u5927\\u7814\\u7a76\\u751f\\u9662-\\u897f\\u4ea4\\u5927\", \"\\u897f\\u4ea4\\u5927-\\u5357\\u5927\\u7814\\u7a76\\u751f\\u9662\"], \"2\": [\"\\u8363\\u57df\\u82b1\\u56ed-\\u4e2d\\u79d1\\u5927\\u897f\", \"\\u72ec\\u5885\\u6e56\\u56fe\\u4e66\\u9986-\\u8363\\u57df\\u82b1\\u56ed\"]}}";
+		String roadStateResult = "{\"retRoadState\": {\"4\":[],\"1\": [\"\\u4e2d\\u79d1\\u5927\\u897f-\\u5357\\u5927\\u7814\\u7a76\\u751f\\u9662\", \"\\u4e2d\\u79d1\\u5927-\\u72ec\\u5885\\u6e56\\u56fe\\u4e66\\u9986\"], \"3\": [\"\\u5357\\u5927\\u7814\\u7a76\\u751f\\u9662-\\u897f\\u4ea4\\u5927\", \"\\u897f\\u4ea4\\u5927-\\u5357\\u5927\\u7814\\u7a76\\u751f\\u9662\"], \"2\": [\"\\u8363\\u57df\\u82b1\\u56ed-\\u4e2d\\u79d1\\u5927\\u897f\", \"\\u72ec\\u5885\\u6e56\\u56fe\\u4e66\\u9986-\\u8363\\u57df\\u82b1\\u56ed\"]}}";
 
 		list = phaseRoadStateResult(roadStateResult, list);
 		return list;

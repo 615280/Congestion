@@ -40,8 +40,9 @@ public class TransitRouteOverlay extends OverlayManager {
      * @param baiduMap
      *            该TransitRouteOverlay引用的 BaiduMap 对象
      */
-    public TransitRouteOverlay(BaiduMap baiduMap) {
+    public TransitRouteOverlay(BaiduMap baiduMap, int degree) {
         super(baiduMap);
+        this.degree = degree;
     }
 
     @Override
