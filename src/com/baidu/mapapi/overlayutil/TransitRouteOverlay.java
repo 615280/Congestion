@@ -40,6 +40,10 @@ public class TransitRouteOverlay extends OverlayManager {
      * @param baiduMap
      *            该TransitRouteOverlay引用的 BaiduMap 对象
      */
+    public TransitRouteOverlay(BaiduMap baiduMap) {
+        super(baiduMap);
+    }
+    
     public TransitRouteOverlay(BaiduMap baiduMap, int degree) {
         super(baiduMap);
         this.degree = degree;
@@ -108,16 +112,23 @@ public class TransitRouteOverlay extends OverlayManager {
 //                    color = Color.argb(178, 0, 78, 255);
                 	switch (getDegree()) {
 					case 1:  //绿
-						color = getLineColor() != 0 ? getLineColor() : Color.argb(178, 88, 208, 0);
+						color = getLineColor() != 0 ? getLineColor() : Color.argb(255, 88, 208, 0);
+//						color = getLineColor() != 0 ? getLineColor() : Color.argb(178, 88, 208, 0);
 						break;
-					case 2:  //橙黄
-						color = getLineColor() != 0 ? getLineColor() : Color.argb(178, 255, 204, 51);
+					case 2:	//黄
+						color = getLineColor() != 0 ? getLineColor() : Color.argb(255, 255, 255, 51);
+//						color = getLineColor() != 0 ? getLineColor() : Color.argb(178, 255, 255, 51);
 						break;
-					case 3:  //红
-						color = getLineColor() != 0 ? getLineColor() : Color.argb(178, 255, 0, 0);
+					case 3:   //橙黄
+						color = getLineColor() != 0 ? getLineColor() : Color.argb(255, 255, 204, 51);
+//						color = getLineColor() != 0 ? getLineColor() : Color.argb(178, 255, 0, 0);
 						break;
+					case 4:	//红
+						color = getLineColor() != 0 ? getLineColor() : Color.argb(255, 255, 0, 0);
+//						color = getLineColor() != 0 ? getLineColor() : Color.argb(178, 88, 208, 0);
 					default:  //默认绿
-						color = getLineColor() != 0 ? getLineColor() : Color.argb(178, 88, 208, 0);
+						color = getLineColor() != 0 ? getLineColor() : Color.argb(255, 88, 208, 0);
+//						color = getLineColor() != 0 ? getLineColor() : Color.argb(178, 88, 208, 0);
 						break;
 					}
                 } else {

@@ -5,9 +5,6 @@ import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Semaphore;
-import java.util.concurrent.locks.Condition;
-import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReentrantLock;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
@@ -74,10 +71,12 @@ import com.conges.user.FriendListActivity;
 import com.conges.user.LoginActivity;
 import com.conges.util.HelpFunctions;
 import com.conges.util.LineStep;
+import com.conges.util.OnGetMyRouteResultListener;
 
 @SuppressLint({ "WorldReadableFiles" })
-public class LocationAndMainActivity extends Activity implements
-		OnGetRoutePlanResultListener {
+public class LocationAndMainActivity extends Activity
+// implements OnGetMyRouteResultListener
+		implements OnGetRoutePlanResultListener {
 	private MapView mMapView = null;
 	private BaiduMap mBaiduMap;
 	private BaiduMapOptions mBaiduMapOptions;
@@ -107,10 +106,11 @@ public class LocationAndMainActivity extends Activity implements
 	RouteLine route = null;
 	OverlayManager routeOverlay = null;
 	RoutePlanSearch mSearch = null;
-	
+
 	ExecutorService exec = Executors.newCachedThreadPool();
 	final Semaphore semaphore = new Semaphore(1);
-	
+	int degree = -1;
+
 	SharedPreferences preferences;
 
 	@Override
@@ -120,6 +120,10 @@ public class LocationAndMainActivity extends Activity implements
 		setContentView(R.layout.activity_main);
 		init();
 		mSearch = RoutePlanSearch.newInstance();
+		// mSearch.setOnGetRoutePlanResultListener(new
+		// OnGetMyRouteResultListener(){
+		//
+		// });
 		mSearch.setOnGetRoutePlanResultListener(this);
 	}
 
@@ -291,6 +295,9 @@ public class LocationAndMainActivity extends Activity implements
 								Message message = Message.obtain();
 
 								Bundle b = new Bundle();
+								// b.putParcelable("linestep",
+								// (Parcelable) roadStateList.get(0));
+
 								b.putParcelable("linestep",
 										(Parcelable) roadStateList.get(i));
 
@@ -422,10 +429,10 @@ public class LocationAndMainActivity extends Activity implements
 	Handler handler = new Handler() {
 		@Override
 		public void handleMessage(Message msg) {
-			System.out.println("hello");
+			// System.out.println("hello");
 			final LineStep lineStep = (LineStep) msg.getData().getParcelable(
 					"linestep");
-			
+
 			Runnable run = new Runnable() {
 				@Override
 				public void run() {
@@ -437,18 +444,19 @@ public class LocationAndMainActivity extends Activity implements
 							lineStep.getStartNode());
 					PlanNode enNode = PlanNode.withCityNameAndPlaceName("苏州",
 							lineStep.getEndNode());
-					
+
 					try {
 						semaphore.acquire();
-						mSearch.transitSearch((new TransitRoutePlanOption()).from(stNode)
-								.city("苏州").to(enNode));
+						degree = lineStep.getDegree();
+						mSearch.transitSearch((new TransitRoutePlanOption())
+								.from(stNode).city("苏州").to(enNode));
 					} catch (InterruptedException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
 				}
 			};
-			
+
 			exec.execute(run);
 		}
 	};
@@ -558,17 +566,13 @@ public class LocationAndMainActivity extends Activity implements
 		// }
 	}
 
-	public void onGetransitRouteResult(TransitRouteResult result){
-		
-	}
-	
-	@Override
+	 @Override
 	public void onGetTransitRouteResult(TransitRouteResult result) {
 		int i = preferences.getInt("test", 0);
 		Editor editor = preferences.edit();
 		editor.putInt("test", i++);
 		editor.commit();
-		
+
 		if (result == null || result.error != SearchResult.ERRORNO.NO_ERROR) {
 			Toast.makeText(LocationAndMainActivity.this, "抱歉，未找到结果",
 					Toast.LENGTH_SHORT).show();
@@ -580,16 +584,16 @@ public class LocationAndMainActivity extends Activity implements
 		}
 		if (result.error == SearchResult.ERRORNO.NO_ERROR) {
 			route = result.getRouteLines().get(0);
-			TransitRouteOverlay overlay = new TransitRouteOverlay(mBaiduMap);
+			TransitRouteOverlay overlay = new TransitRouteOverlay(mBaiduMap, degree);
 			mBaiduMap.setOnMarkerClickListener(overlay);
 			routeOverlay = overlay;
 			overlay.setData(result.getRouteLines().get(0));
 			overlay.addToMap();
 			// overlay.zoomToSpan();
 		}
-		
+
 		semaphore.release();
-		if(i == 6){
+		if (i == 6) {
 			exec.shutdown();
 		}
 	}
@@ -608,19 +612,19 @@ public class LocationAndMainActivity extends Activity implements
 		return super.onOptionsItemSelected(item);
 	}
 
-	@Override
+	 @Override
 	public void onGetBikingRouteResult(BikingRouteResult arg0) {
 		// TODO Auto-generated method stub
 
 	}
 
-	@Override
+	 @Override
 	public void onGetDrivingRouteResult(DrivingRouteResult arg0) {
 		// TODO Auto-generated method stub
 
 	}
 
-	@Override
+	 @Override
 	public void onGetWalkingRouteResult(WalkingRouteResult arg0) {
 		// TODO Auto-generated method stub
 
