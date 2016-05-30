@@ -24,15 +24,4 @@
             android:title="性别" />
     </PreferenceCategory>
 
-    <Button
-        android:id="@+id/preferences_user_bt_returnmain"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="返回主页" />
-    <Button
-        android:id="@+id/preferences_user_bt_logout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="注销" />
-
 </PreferenceScreen>

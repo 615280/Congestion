@@ -25,7 +25,7 @@ import com.conges.util.HelpFunctions;
 public class PreferenceMainActivity extends PreferenceActivity {
 	private Button logoutButton;
 
-	SharedPreferences preferences;
+	static SharedPreferences preferences;
 	Editor editor;
 
 	@SuppressWarnings("deprecation")
@@ -105,6 +105,18 @@ public class PreferenceMainActivity extends PreferenceActivity {
 			// 获取传入该Fragment的参数
 			String website = getArguments().getString("website");
 			Toast.makeText(getActivity(), "网站域名是：" + website, Toast.LENGTH_LONG)
+					.show();
+		}
+	}
+	
+	public static class Prefs3Fragment extends PreferenceFragment {
+		@Override
+		public void onCreate(Bundle savedInstanceState) {
+			super.onCreate(savedInstanceState);
+			Editor editor = preferences.edit();
+			editor.clear();
+			editor.commit();
+			Toast.makeText(getActivity(), "缓存信息已清除（包括个人信息和缓存文件）", Toast.LENGTH_LONG)
 					.show();
 		}
 	}

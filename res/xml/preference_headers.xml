@@ -34,7 +34,8 @@
     </header>
     <header
         android:icon="@drawable/ic_launcher"
-        android:title="清除缓存数据" />
+        android:title="清除缓存数据"
+        android:fragment="com.conges.main.PreferenceMainActivity$Prefs3Fragment"  />
     <header>
     </header>
 
