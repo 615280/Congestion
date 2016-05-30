@@ -119,12 +119,10 @@ public class LocationAndMainActivity extends Activity
 		SDKInitializer.initialize(getApplicationContext());
 		setContentView(R.layout.activity_main);
 		init();
+
 		mSearch = RoutePlanSearch.newInstance();
-		// mSearch.setOnGetRoutePlanResultListener(new
-		// OnGetMyRouteResultListener(){
-		//
-		// });
 		mSearch.setOnGetRoutePlanResultListener(this);
+		
 	}
 
 	@Override
@@ -272,19 +270,29 @@ public class LocationAndMainActivity extends Activity
 	private void initButton() {
 		// 打开或关闭路况显示功能
 		RadioGroup group = (RadioGroup) this.findViewById(R.id.radioGroup);
+//		group.setVisibility(View.INVISIBLE);
+//		group.
 		radioButtonListener = new OnCheckedChangeListener() {
 			@Override
 			public void onCheckedChanged(RadioGroup group, int checkedId) {
 				if (checkedId == R.id.closeColor) {
 					// 关闭
-					Toast.makeText(LocationAndMainActivity.this, "closeColor",
-							Toast.LENGTH_SHORT).show();
+//					Toast.makeText(LocationAndMainActivity.this, "closeColor",
+//							Toast.LENGTH_SHORT).show();
 					clearOverlay();
+					new Thread(){
+						public void run() {
+							while(semaphore.getQueueLength() > 0){
+								semaphore.release();
+							}
+						};
+					}.start();
 				}
+				
 				if (checkedId == R.id.openColor) {
 					// 打开
-					Toast.makeText(LocationAndMainActivity.this, "openColor",
-							Toast.LENGTH_SHORT).show();
+//					Toast.makeText(LocationAndMainActivity.this, "openColor",
+//							Toast.LENGTH_SHORT).show();
 					new Thread() {
 						@Override
 						public void run() {
@@ -311,6 +319,7 @@ public class LocationAndMainActivity extends Activity
 		};
 
 		group.setOnCheckedChangeListener(radioButtonListener);
+		
 
 		publishSitButton = (Button) findViewById(R.id.button_main_publish);
 		settingButton = (Button) findViewById(R.id.button_main_setting);
@@ -574,13 +583,13 @@ public class LocationAndMainActivity extends Activity
 		editor.commit();
 
 		if (result == null || result.error != SearchResult.ERRORNO.NO_ERROR) {
-			Toast.makeText(LocationAndMainActivity.this, "抱歉，未找到结果",
-					Toast.LENGTH_SHORT).show();
+//			Toast.makeText(LocationAndMainActivity.this, "抱歉，未找到结果",
+//					Toast.LENGTH_SHORT).show();
 		}
 		if (result.error == SearchResult.ERRORNO.AMBIGUOUS_ROURE_ADDR) {
 			// 起终点或途经点地址有岐义，通过以下接口获取建议查询信息
 			// result.getSuggestAddrInfo()
-			return;
+//			return;
 		}
 		if (result.error == SearchResult.ERRORNO.NO_ERROR) {
 			route = result.getRouteLines().get(0);
@@ -593,9 +602,6 @@ public class LocationAndMainActivity extends Activity
 		}
 
 		semaphore.release();
-		if (i == 6) {
-			exec.shutdown();
-		}
 	}
 
 	@Override

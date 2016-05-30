@@ -66,8 +66,8 @@ public class RegisterActivity extends Activity {
 					return;
 				}
 				
-				if (userNameStr.equals("")) {
-					HelpFunctions.useToastShort(getApplicationContext(), "请确认用户名！");
+				if (userNameStr.equals("") || userNameStr.length() > 20) {
+					HelpFunctions.useToastShort(getApplicationContext(), "请确认用户名，不超过20个字符！");
 					return;
 				}
 
@@ -76,8 +76,8 @@ public class RegisterActivity extends Activity {
 					return;
 				}
 				
-				if (userPassStr.length() < 6) {
-					HelpFunctions.useToastShort(getApplicationContext(), "请确认密码长度至少6位！");
+				if (userPassStr.length() < 6 || userPassStr.length() > 12) {
+					HelpFunctions.useToastShort(getApplicationContext(), "请确认密码长度为6-12位！");
 					return;
 				}
 

@@ -55,6 +55,9 @@ public class LoginActivity extends Activity {
 		et_userPass.setText(preferences.getString("userPass", ""));
 
 		cb_autoLogin = (CheckBox) findViewById(R.id.cb_login_autologin);
+		if(preferences.getInt("autoLogin", 0) == 1){
+			cb_autoLogin.setChecked(true);
+		} 
 		cb_autoLogin.setOnCheckedChangeListener(new OnCheckedChangeListener() {
 			@Override
 			public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
