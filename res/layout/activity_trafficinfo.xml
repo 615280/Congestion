@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_gravity="center_horizontal"
+    android:background="#44000000"
+    android:orientation="vertical"
+    android:weightSum="20" >
+
+    <Button
+        android:id="@+id/trafficinfo_bt_publish"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/main_black"
+        android:gravity="end"
+        android:text="发布我的路况"
+        android:textColor="@color/white"
+        android:textSize="18sp" />
+
+		
+</LinearLayout>

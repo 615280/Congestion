@@ -1,7 +1,9 @@
 package com.conges.main;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Semaphore;
@@ -15,18 +17,28 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.os.Parcelable;
+import android.text.TextUtils;
+import android.util.SparseArray;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.View.OnTouchListener;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
+import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ListView;
 import android.widget.RadioGroup;
+import android.widget.SearchView;
 import android.widget.RadioGroup.OnCheckedChangeListener;
 import android.widget.RelativeLayout;
 import android.widget.RelativeLayout.LayoutParams;
+import android.widget.SearchView.OnQueryTextListener;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -74,9 +86,8 @@ import com.conges.util.LineStep;
 import com.conges.util.OnGetMyRouteResultListener;
 
 @SuppressLint({ "WorldReadableFiles" })
-public class LocationAndMainActivity extends Activity
-// implements OnGetMyRouteResultListener
-		implements OnGetRoutePlanResultListener {
+public class LocationAndMainActivity extends Activity implements
+		OnGetRoutePlanResultListener {
 	private MapView mMapView = null;
 	private BaiduMap mBaiduMap;
 	private BaiduMapOptions mBaiduMapOptions;
@@ -112,6 +123,8 @@ public class LocationAndMainActivity extends Activity
 	int degree = -1;
 
 	SharedPreferences preferences;
+	String[] nodeName = {"独墅湖图书馆", "西交大", "文荟广场西", "中科大", "中科大西" };
+	AutoCompleteTextView searchText;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -122,7 +135,7 @@ public class LocationAndMainActivity extends Activity
 
 		mSearch = RoutePlanSearch.newInstance();
 		mSearch.setOnGetRoutePlanResultListener(this);
-		
+
 	}
 
 	@Override
@@ -151,7 +164,7 @@ public class LocationAndMainActivity extends Activity
 	@SuppressWarnings("deprecation")
 	private void init() {
 		preferences = getSharedPreferences("conges", MODE_WORLD_READABLE);
-
+		
 		// 地图初始化
 		mBaiduMapOptions = new BaiduMapOptions();
 		mBaiduMapOptions.zoomControlsEnabled(false);
@@ -268,31 +281,38 @@ public class LocationAndMainActivity extends Activity
 	}
 
 	private void initButton() {
+
+		searchText = (AutoCompleteTextView) findViewById(R.id.main_autotext);
+		ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, 
+				android.R.layout.simple_dropdown_item_1line, nodeName);
+		searchText.setAdapter(adapter);
+		
 		// 打开或关闭路况显示功能
 		RadioGroup group = (RadioGroup) this.findViewById(R.id.radioGroup);
-//		group.setVisibility(View.INVISIBLE);
-//		group.
+		// group.setVisibility(View.INVISIBLE);
+		// group.
 		radioButtonListener = new OnCheckedChangeListener() {
 			@Override
 			public void onCheckedChanged(RadioGroup group, int checkedId) {
 				if (checkedId == R.id.closeColor) {
 					// 关闭
-//					Toast.makeText(LocationAndMainActivity.this, "closeColor",
-//							Toast.LENGTH_SHORT).show();
+					// Toast.makeText(LocationAndMainActivity.this,
+					// "closeColor",
+					// Toast.LENGTH_SHORT).show();
 					clearOverlay();
-					new Thread(){
+					new Thread() {
 						public void run() {
-							while(semaphore.getQueueLength() > 0){
+							while (semaphore.getQueueLength() > 0) {
 								semaphore.release();
 							}
 						};
 					}.start();
 				}
-				
+
 				if (checkedId == R.id.openColor) {
 					// 打开
-//					Toast.makeText(LocationAndMainActivity.this, "openColor",
-//							Toast.LENGTH_SHORT).show();
+					// Toast.makeText(LocationAndMainActivity.this, "openColor",
+					// Toast.LENGTH_SHORT).show();
 					new Thread() {
 						@Override
 						public void run() {
@@ -319,7 +339,6 @@ public class LocationAndMainActivity extends Activity
 		};
 
 		group.setOnCheckedChangeListener(radioButtonListener);
-		
 
 		publishSitButton = (Button) findViewById(R.id.button_main_publish);
 		settingButton = (Button) findViewById(R.id.button_main_setting);
@@ -335,10 +354,8 @@ public class LocationAndMainActivity extends Activity
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
-				// Toast.makeText(LocationAndMainActivity.this, "路况",
-				// Toast.LENGTH_SHORT).show();
 				Intent intent = new Intent(LocationAndMainActivity.this,
-						TrafficMenuActivity.class);
+						TrafficInfoActivity.class);
 				startActivity(intent);
 				// publishOverlay();
 				// mBaiduMap.setOnMarkerClickListener(new
@@ -575,7 +592,7 @@ public class LocationAndMainActivity extends Activity
 		// }
 	}
 
-	 @Override
+	@Override
 	public void onGetTransitRouteResult(TransitRouteResult result) {
 		int i = preferences.getInt("test", 0);
 		Editor editor = preferences.edit();
@@ -583,17 +600,18 @@ public class LocationAndMainActivity extends Activity
 		editor.commit();
 
 		if (result == null || result.error != SearchResult.ERRORNO.NO_ERROR) {
-//			Toast.makeText(LocationAndMainActivity.this, "抱歉，未找到结果",
-//					Toast.LENGTH_SHORT).show();
+			// Toast.makeText(LocationAndMainActivity.this, "抱歉，未找到结果",
+			// Toast.LENGTH_SHORT).show();
 		}
 		if (result.error == SearchResult.ERRORNO.AMBIGUOUS_ROURE_ADDR) {
 			// 起终点或途经点地址有岐义，通过以下接口获取建议查询信息
 			// result.getSuggestAddrInfo()
-//			return;
+			// return;
 		}
 		if (result.error == SearchResult.ERRORNO.NO_ERROR) {
 			route = result.getRouteLines().get(0);
-			TransitRouteOverlay overlay = new TransitRouteOverlay(mBaiduMap, degree);
+			TransitRouteOverlay overlay = new TransitRouteOverlay(mBaiduMap,
+					degree);
 			mBaiduMap.setOnMarkerClickListener(overlay);
 			routeOverlay = overlay;
 			overlay.setData(result.getRouteLines().get(0));
@@ -618,19 +636,19 @@ public class LocationAndMainActivity extends Activity
 		return super.onOptionsItemSelected(item);
 	}
 
-	 @Override
+	@Override
 	public void onGetBikingRouteResult(BikingRouteResult arg0) {
 		// TODO Auto-generated method stub
 
 	}
 
-	 @Override
+	@Override
 	public void onGetDrivingRouteResult(DrivingRouteResult arg0) {
 		// TODO Auto-generated method stub
 
 	}
 
-	 @Override
+	@Override
 	public void onGetWalkingRouteResult(WalkingRouteResult arg0) {
 		// TODO Auto-generated method stub
 

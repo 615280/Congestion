@@ -121,6 +121,15 @@ public class PreferenceMainActivity extends PreferenceActivity {
 		}
 	}
 
+	public static class FavorManager extends PreferenceFragment {
+		@Override
+		public void onCreate(Bundle savedInstanceState) {
+			// TODO Auto-generated method stub
+			super.onCreate(savedInstanceState);
+			
+		}
+	}
+	
 	Handler handler = new Handler() {
 		public void handleMessage(Message msg) {
 			if (msg.what == 0x123) {

@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.widget.Button;
 import android.widget.ImageButton;
 
 public class TrafficMenuActivity extends Activity {
@@ -18,6 +19,14 @@ public class TrafficMenuActivity extends Activity {
 	}
 
 	private void initButton() {
+		Button cancelPubButton = (Button) findViewById(R.id.trafficmenu_bt_cancel);
+		cancelPubButton.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				finish();
+			}
+		});
+		
 		ImageButton buttJam = (ImageButton) findViewById(R.id.trafficmenu_bt_traffic);
 		ImageButton buttAccident = (ImageButton) findViewById(R.id.trafficmenu_bt_accident);
 		ImageButton buttWarning = (ImageButton) findViewById(R.id.trafficmenu_bt_warning);

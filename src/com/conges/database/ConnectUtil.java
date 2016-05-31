@@ -28,7 +28,7 @@ public class ConnectUtil {
 		try {
 			InetAddress addr = InetAddress.getByName(uri);
 			socket = new Socket(addr, port);
-			socket.setSoTimeout(15000);
+			socket.setSoTimeout(5000);
 
 			out = new PrintWriter(new BufferedWriter(new OutputStreamWriter(
 					socket.getOutputStream())));

@@ -114,6 +114,13 @@
         </activity>
         
          <activity
+            android:name=".TrafficInfoActivity"
+            android:label="路况信息"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme" >
+        </activity>
+         
+         <activity
             android:name=".TrafficInfoDetailActivity"
             android:label="路况详情"
             android:screenOrientation="portrait"
@@ -146,6 +153,7 @@
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme" >
         </activity>
+        
     </application>
 
 </manifest>
