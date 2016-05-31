@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:layout_weight="1"
+    android:layout_margin="0dp"
+    android:background="@drawable/button_friend100"
+    android:baselineAligned="false"
+    android:gravity="center"
+    android:orientation="vertical" >
+
+    <TextView
+        android:id="@+id/fragment_listView_item_textView_title"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="5dip"
+        android:gravity="center"
+        android:textSize="9pt" />
+
+    <TextView
+        android:layout_width="fill_parent"
+        android:layout_height="3dp"
+        android:background="#53987654" />
+
+    <TableLayout
+        android:layout_width="fill_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:orientation="vertical"
+        android:shrinkColumns="1"
+        android:dividerPadding="5dp" >
+        
+        <TableRow>
+
+            <TextView
+                android:id="@+id/fragment_listView_item_table_startstr"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="30dp"
+                android:text="aaa" />
+
+            <TextView
+                android:id="@+id/fragment_listView_item_textView_starttime"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:maxLines="1" />
+        </TableRow>
+        
+        <TableRow>
+
+            <TextView
+                android:id="@+id/fragment_listView_item_table_endstr"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="40dp"
+                android:text="bbb" />
+
+            <TextView
+                android:id="@+id/fragment_listView_item_textView_endtime"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:maxLines="1" />
+        </TableRow>
+
+        <TableRow>
+
+            <TextView
+                android:id="@+id/fragment_listView_item_table_placestr"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="30dp"
+                android:text="ccc" />
+
+            <TextView
+                android:id="@+id/fragment_listView_item_textView_place"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:maxLines="1" />
+        </TableRow>
+    </TableLayout>
+
+</LinearLayout>

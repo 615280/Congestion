@@ -359,6 +359,7 @@ public class LocationAndMainActivity extends Activity implements
 					Bundle b = new Bundle();
 					b.putString("latitude", currentPt.latitude+"");
 					b.putString("longitude", currentPt.longitude+"");
+					b.putDouble("rate", 10.0);
 					intent.putExtras(b);
 					startActivity(intent);
 				} else {
