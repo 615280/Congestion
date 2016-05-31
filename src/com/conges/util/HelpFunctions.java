@@ -3,7 +3,7 @@ package com.conges.util;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-import com.conges.database.ConnectUtil;
+import com.conges.data.ConnectUtil;
 
 import android.content.Context;
 import android.widget.Toast;

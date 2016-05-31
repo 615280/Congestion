@@ -18,7 +18,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 
-import com.conges.database.ConnectUtil;
+import com.conges.data.ConnectUtil;
 import com.conges.main.R;
 import com.conges.util.HelpFunctions;
 

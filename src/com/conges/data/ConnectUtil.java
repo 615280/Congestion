@@ -1,4 +1,4 @@
-package com.conges.database;
+package com.conges.data;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;

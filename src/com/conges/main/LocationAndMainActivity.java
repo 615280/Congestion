@@ -1,9 +1,7 @@
 package com.conges.main;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Semaphore;
@@ -17,28 +15,19 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.os.Parcelable;
-import android.text.TextUtils;
-import android.util.SparseArray;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.View.OnTouchListener;
-import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
-import android.widget.EditText;
-import android.widget.ListView;
 import android.widget.RadioGroup;
-import android.widget.SearchView;
 import android.widget.RadioGroup.OnCheckedChangeListener;
 import android.widget.RelativeLayout;
 import android.widget.RelativeLayout.LayoutParams;
-import android.widget.SearchView.OnQueryTextListener;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -71,7 +60,6 @@ import com.baidu.mapapi.overlayutil.TransitRouteOverlay;
 import com.baidu.mapapi.search.core.RouteLine;
 import com.baidu.mapapi.search.core.SearchResult;
 import com.baidu.mapapi.search.route.BikingRouteResult;
-import com.baidu.mapapi.search.route.DrivingRoutePlanOption;
 import com.baidu.mapapi.search.route.DrivingRouteResult;
 import com.baidu.mapapi.search.route.OnGetRoutePlanResultListener;
 import com.baidu.mapapi.search.route.PlanNode;
@@ -79,11 +67,9 @@ import com.baidu.mapapi.search.route.RoutePlanSearch;
 import com.baidu.mapapi.search.route.TransitRoutePlanOption;
 import com.baidu.mapapi.search.route.TransitRouteResult;
 import com.baidu.mapapi.search.route.WalkingRouteResult;
+import com.conges.data.LineStep;
 import com.conges.user.FriendListActivity;
 import com.conges.user.LoginActivity;
-import com.conges.util.HelpFunctions;
-import com.conges.util.LineStep;
-import com.conges.util.OnGetMyRouteResultListener;
 
 @SuppressLint({ "WorldReadableFiles" })
 public class LocationAndMainActivity extends Activity implements
@@ -133,6 +119,10 @@ public class LocationAndMainActivity extends Activity implements
 		setContentView(R.layout.activity_main);
 		init();
 
+		ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, 
+				android.R.layout.simple_dropdown_item_1line, nodeName);
+		searchText.setAdapter(adapter);
+		
 		mSearch = RoutePlanSearch.newInstance();
 		mSearch.setOnGetRoutePlanResultListener(this);
 
@@ -283,9 +273,6 @@ public class LocationAndMainActivity extends Activity implements
 	private void initButton() {
 
 		searchText = (AutoCompleteTextView) findViewById(R.id.main_autotext);
-		ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, 
-				android.R.layout.simple_dropdown_item_1line, nodeName);
-		searchText.setAdapter(adapter);
 		
 		// 打开或关闭路况显示功能
 		RadioGroup group = (RadioGroup) this.findViewById(R.id.radioGroup);

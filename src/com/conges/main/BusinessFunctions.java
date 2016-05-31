@@ -14,9 +14,9 @@ import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 
 import com.baidu.mapapi.model.LatLng;
-import com.conges.database.ConnectUtil;
+import com.conges.data.ConnectUtil;
+import com.conges.data.LineStep;
 import com.conges.util.Constant;
-import com.conges.util.LineStep;
 
 @SuppressLint("WorldReadableFiles")
 public class BusinessFunctions {
@@ -81,4 +81,15 @@ public class BusinessFunctions {
 		}
 		return list;
 	}
+	
+	public static int uploadTrafficInfo(){
+		int result = -1;
+		
+		return result;
+	}
+	
+	public static void getTrafficInfo(){
+		
+	}
+
 }

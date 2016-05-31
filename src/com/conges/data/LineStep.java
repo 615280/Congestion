@@ -1,4 +1,4 @@
-package com.conges.util;
+package com.conges.data;
 
 import android.os.Parcel;
 import android.os.Parcelable;
