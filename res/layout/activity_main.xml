@@ -6,19 +6,37 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="com.conges.main.MainActivity" >
 
-    <AutoCompleteTextView
-        android:id="@+id/main_autotext"
+    <LinearLayout
+        android:id="@+id/main_layout_linear"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
-        android:completionThreshold="1"
-        android:dropDownHeight="150dp" />
+        android:orientation="horizontal"
+        android:weightSum="6" >
+
+        <AutoCompleteTextView
+            android:id="@+id/main_autotv"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="5"
+            android:completionThreshold="1"
+            android:dropDownHeight="150dp"
+            android:hint="搜索" />
+
+        <ImageButton
+            android:id="@+id/main_bt_search"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+			android:layout_gravity="end"
+			android:foreground="#44cccccc"
+            android:background="@drawable/icon_search" />
+    </LinearLayout>
 
     <TextView
         android:id="@+id/state"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/main_autotext"
+        android:layout_below="@id/main_layout_linear"
         android:lines="4"
         android:text="点击、长按、双击地图以获取经纬度和地图状态" />
 

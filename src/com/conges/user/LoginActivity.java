@@ -128,6 +128,7 @@ public class LoginActivity extends Activity {
 					preferences = getSharedPreferences("conges",
 							MODE_WORLD_READABLE);
 					editor = preferences.edit();
+					editor.putString("phoneNum", phoneNum);
 					editor.putString("userName", userName);
 					editor.putInt("loginState", 1);
 					editor.commit();

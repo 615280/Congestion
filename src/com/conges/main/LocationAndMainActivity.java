@@ -24,6 +24,7 @@ import android.view.View.OnClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.RadioGroup;
 import android.widget.RadioGroup.OnCheckedChangeListener;
 import android.widget.RelativeLayout;
@@ -70,8 +71,9 @@ import com.baidu.mapapi.search.route.WalkingRouteResult;
 import com.conges.data.LineStep;
 import com.conges.user.FriendListActivity;
 import com.conges.user.LoginActivity;
+import com.conges.util.HelpFunctions;
 
-@SuppressLint({ "WorldReadableFiles" })
+@SuppressLint({ "WorldReadableFiles", "HandlerLeak" })
 public class LocationAndMainActivity extends Activity implements
 		OnGetRoutePlanResultListener {
 	private MapView mMapView = null;
@@ -100,6 +102,7 @@ public class LocationAndMainActivity extends Activity implements
 	private static final int accuracyCircleStrokeColor = 0xAA00FF00; // 边缘线
 
 	private List<LineStep> roadStateList = new ArrayList<LineStep>();
+	@SuppressWarnings("rawtypes")
 	RouteLine route = null;
 	OverlayManager routeOverlay = null;
 	RoutePlanSearch mSearch = null;
@@ -111,6 +114,7 @@ public class LocationAndMainActivity extends Activity implements
 	SharedPreferences preferences;
 	String[] nodeName = {"独墅湖图书馆", "西交大", "文荟广场西", "中科大", "中科大西" };
 	AutoCompleteTextView searchText;
+	ImageButton searchButton;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -272,7 +276,14 @@ public class LocationAndMainActivity extends Activity implements
 
 	private void initButton() {
 
-		searchText = (AutoCompleteTextView) findViewById(R.id.main_autotext);
+		searchText = (AutoCompleteTextView) findViewById(R.id.main_autotv);
+		searchButton = (ImageButton) findViewById(R.id.main_bt_search);
+		searchButton.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				HelpFunctions.useToastShort(getApplicationContext(), "搜索内容为：" + searchText.getText().toString());
+			}
+		});
 		
 		// 打开或关闭路况显示功能
 		RadioGroup group = (RadioGroup) this.findViewById(R.id.radioGroup);
@@ -341,9 +352,19 @@ public class LocationAndMainActivity extends Activity implements
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
-				Intent intent = new Intent(LocationAndMainActivity.this,
-						TrafficInfoActivity.class);
-				startActivity(intent);
+				
+				if(currentPt !=null){
+					Intent intent = new Intent(LocationAndMainActivity.this,
+							TrafficInfoActivity.class);
+					Bundle b = new Bundle();
+					b.putString("latitude", currentPt.latitude+"");
+					b.putString("longitude", currentPt.longitude+"");
+					intent.putExtras(b);
+					startActivity(intent);
+				} else {
+					HelpFunctions.useToastLong(getApplicationContext(), "请先获取定位点");
+					locationButton.setVisibility(View.VISIBLE);
+				}
 				// publishOverlay();
 				// mBaiduMap.setOnMarkerClickListener(new
 				// OnMarkerClickListener() {
@@ -510,6 +531,7 @@ public class LocationAndMainActivity extends Activity implements
 		// }
 	}
 
+	@SuppressWarnings("unused")
 	private void changeLocationButtonVisible() {
 		locationButton.setVisibility(View.VISIBLE);
 	}

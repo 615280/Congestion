@@ -16,6 +16,7 @@ import android.content.SharedPreferences.Editor;
 import com.baidu.mapapi.model.LatLng;
 import com.conges.data.ConnectUtil;
 import com.conges.data.LineStep;
+import com.conges.data.TrafficInfo;
 import com.conges.util.Constant;
 
 @SuppressLint("WorldReadableFiles")
@@ -43,6 +44,7 @@ public class BusinessFunctions {
 			return list;
 		}
 		DecimalFormat df = new DecimalFormat("#.000000");
+		@SuppressWarnings("unused")
 		String message = String.format("{\"getRoadState\":{\"latitudeMin\":\"%s\",\"latitudeMax\":\"%s\",\"longitudeMin\":\"%s\",\"longitudeMax\":\"%s\"}}",
 				df.format(currentPt.latitude - 0.001) + "",
 				df.format(currentPt.latitude + 0.001) + "" ,
@@ -82,9 +84,13 @@ public class BusinessFunctions {
 		return list;
 	}
 	
-	public static int uploadTrafficInfo(){
-		int result = -1;
-		
+	public static String uploadTrafficInfo(TrafficInfo traffic){
+		String message = String.format("{\"uploadTrafficInfo\":"
+				+ "{\"phoneNum\":\"%s\",\"latitude\":\"%s\",\"longitude\":\"%s\","
+				+ "\"dateTime\":\"%s\",\"type\":\"%s\",\"level\":\"%s\",\"detail\":\"%s\"}}",
+				traffic.getPubUser(), traffic.getLatitude(), traffic.getLongitude(),
+				traffic.getDateTime(),traffic.getType(),traffic.getLevel(),traffic.getDetail());
+		String result = ConnectUtil.getConnDef(message);
 		return result;
 	}
 	

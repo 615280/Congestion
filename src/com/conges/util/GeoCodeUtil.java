@@ -72,6 +72,7 @@ public class GeoCodeUtil implements OnGetGeoCoderResultListener {
 		// .fromResource(R.drawable.icon_marka)));
 		// mBaiduMap.setMapStatus(MapStatusUpdateFactory.newLatLng(result
 		// .getLocation()));
+		@SuppressWarnings("unused")
 		String strInfo = String.format("Î³¶È£º%f ¾­¶È£º%f",
 				result.getLocation().latitude, result.getLocation().longitude);
 		// Toast.makeText(TestActivity.this, strInfo, Toast.LENGTH_LONG).show();

@@ -44,7 +44,6 @@ public class TrafficMenuActivity extends Activity {
 		});
 
 		buttAccident.setOnClickListener(new OnClickListener() {
-
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
@@ -93,6 +92,8 @@ public class TrafficMenuActivity extends Activity {
 		Intent intent = new Intent(TrafficMenuActivity.this, TrafficMenuDetailActivity.class);
 		Bundle data = new Bundle();
 		data.putInt("trafficType", type);
+		data.putString("latitude", getIntent().getExtras().getString("latitude"));
+		data.putString("longitude", getIntent().getExtras().getString("longitude"));
 		intent.putExtras(data);
 		startActivity(intent);
 		finish();

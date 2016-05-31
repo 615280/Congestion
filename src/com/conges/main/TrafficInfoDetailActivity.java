@@ -27,6 +27,7 @@ public class TrafficInfoDetailActivity extends Activity {
 		commentTextView.setText("ÆÀÂÛÇøxxxx");
 		
 		Intent intent = getIntent();
+		@SuppressWarnings("unused")
 		Point point = new Point(intent.getExtras().getInt("pointx"),intent.getExtras().getInt("pointx"));
 	}
 	

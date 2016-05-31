@@ -26,6 +26,10 @@ public class TrafficInfoActivity extends Activity {
 				// TODO Auto-generated method stub
 				Intent intent = new Intent();
 				intent.setClass(getApplicationContext(), TrafficMenuActivity.class);
+				Bundle data = new Bundle();
+				data.putString("latitude", getIntent().getExtras().getString("latitude"));
+				data.putString("longitude", getIntent().getExtras().getString("longitude"));
+				intent.putExtras(data);
 				startActivity(intent);
 			}
 		});

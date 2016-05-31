@@ -1,10 +1,22 @@
 package com.conges.main;
 
-import com.conges.util.HelpFunctions;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import com.conges.data.TrafficInfo;
+import com.conges.util.Constant;
+
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -16,26 +28,41 @@ import android.widget.RadioGroup.OnCheckedChangeListener;
 import android.widget.TextView;
 import android.widget.Toast;
 
+@SuppressLint({ "WorldReadableFiles", "HandlerLeak" })
 public class TrafficMenuDetailActivity extends Activity {
 	TextView tv_tableLine;
-	EditText tableLineText;
+	EditText detailEditText;
 	RadioButton lowButton, middleButton, highButton;
 	TextView lowTv, middleTv, highTv;
+	TrafficInfo trafficInfo;
+	
+	SharedPreferences preferences;
+	String uploadResultStr;
 
+	@SuppressWarnings("deprecation")
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
-		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_trafficmenudetail);
+		
+		trafficInfo = new TrafficInfo();
+		preferences = getSharedPreferences("conges", MODE_WORLD_READABLE);
+		
 		int type = getIntent().getIntExtra("trafficType", -1);
 		init(type);
+		trafficInfo.setType(type);
+		trafficInfo.setLatitude(Double.parseDouble(getIntent().getStringExtra("latitude")));
+		trafficInfo.setLongitude(Double.parseDouble(getIntent().getStringExtra("longitude")));
+		trafficInfo.setPubUser(preferences.getString("phoneNum", "0"));
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss",Locale.getDefault());
+		
+		trafficInfo.setDateTime(sdf.format(new Date()));
 	}
 
 	private void init(int type) {
-		tableLineText = (EditText) findViewById(R.id.traffictypedetail_et_description);
-
+		detailEditText = (EditText) findViewById(R.id.traffictypedetail_et_description);
 		setTypeDetail(type);
-
+		
 		Button waitPubButton = (Button) findViewById(R.id.traffictypedetail_bt_waitpublish);
 		waitPubButton.setOnClickListener(new OnClickListener() {
 			@Override
@@ -49,12 +76,34 @@ public class TrafficMenuDetailActivity extends Activity {
 		pubButton.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				// TODO Auto-generated method stub
-				// make connection with Server
 				Toast.makeText(TrafficMenuDetailActivity.this, "发布上传",
 						Toast.LENGTH_SHORT).show();
-				boolean result = true;
-				if (result) {
+				
+				trafficInfo.setDetail(detailEditText.getText().toString());
+				
+				new Thread(){
+					public void run() {
+						uploadResultStr = BusinessFunctions.uploadTrafficInfo(trafficInfo);
+						handler.sendEmptyMessage(0x125);
+					};
+				}.start();
+			}
+		});
+	}
+	
+	Handler handler = new Handler(){
+		public void handleMessage(Message msg) {
+			if(msg.what == 0x125){
+				int uploadResult = -1;
+				try {
+					JSONObject jObject = new JSONObject(uploadResultStr);
+					uploadResult = (Integer) jObject.get("uploadResult");
+				} catch (JSONException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				
+				if (uploadResult == 0) {
 					Toast.makeText(TrafficMenuDetailActivity.this, "上传成功",
 							Toast.LENGTH_SHORT).show();
 				} else {
@@ -63,19 +112,30 @@ public class TrafficMenuDetailActivity extends Activity {
 				}
 				finish();
 			}
-		});
-	}
+		};
+	};
 
 	private void setTypeDetail(int type) {
 		tv_tableLine = (TextView) findViewById(R.id.traffictypedetail_tv_tableLine);
 
 		RadioGroup rgGp = (RadioGroup) findViewById(R.id.traffictypedetail_radiogp);
 		rgGp.setOnCheckedChangeListener(new OnCheckedChangeListener() {
-			
 			@Override
 			public void onCheckedChanged(RadioGroup group, int checkedId) {
-				// TODO Auto-generated method stub
-				HelpFunctions.useToastShort(getApplicationContext(), "checkedId" + checkedId);
+				switch (checkedId) {
+				case R.id.traffictypedetail_bt_low:
+					trafficInfo.setLevel(Constant.TRAFFIC_INFO_LEVEL_LOW);
+					break;
+				case R.id.traffictypedetail_bt_middle:
+					trafficInfo.setLevel(Constant.TRAFFIC_INFO_LEVEL_MIDDLE);
+					break;
+				case R.id.traffictypedetail_bt_high:
+					trafficInfo.setLevel(Constant.TRAFFIC_INFO_LEVEL_HIGH);
+					break;
+				default:
+					trafficInfo.setLevel(Constant.TRAFFIC_INFO_LEVEL_LOW);
+					break;
+				}
 			}
 		});
 		

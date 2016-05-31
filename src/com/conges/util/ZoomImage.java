@@ -23,6 +23,7 @@ public class ZoomImage {
 		displayheight = metric.heightPixels;
 	}
 
+	@SuppressWarnings("deprecation")
 	public static Bitmap readBitmapFromResource(Context context,
 			int resourceId, float width, float height) {
 		BitmapFactory.Options opts = new BitmapFactory.Options();

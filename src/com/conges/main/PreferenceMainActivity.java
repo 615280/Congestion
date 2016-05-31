@@ -5,7 +5,6 @@ import java.util.List;
 import android.annotation.SuppressLint;
 import android.app.AlertDialog.Builder;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.os.Bundle;
@@ -18,7 +17,6 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.Toast;
 
-import com.conges.user.UserInfoActivity;
 import com.conges.util.HelpFunctions;
 
 @SuppressLint({ "WorldReadableFiles", "HandlerLeak" })
