@@ -119,16 +119,17 @@ public class BusinessFunctions {
 			TrafficInfo trafficInfo;
 			JSONArray jArray = (JSONArray) new JSONObject(result)
 					.get("retTrafficInfo");
-			
-			if(jArray.length() == 0){
+
+			if (jArray.length() == 0) {
 				return list;
 			}
-			
-			for(int i=0; i<jArray.length(); i++){
+
+			for (int i = 0; i < jArray.length(); i++) {
 				trafficInfo = new TrafficInfo();
 				JSONObject j_data = (JSONObject) jArray.get(i);
 				trafficInfo.setLatitude(j_data.getDouble("latitude"));
-				trafficInfo.setLongitude(Double.parseDouble(j_data.getString("longitude")));
+				trafficInfo.setLongitude(Double.parseDouble(j_data
+						.getString("longitude")));
 				trafficInfo.setLevel(j_data.getInt("level"));
 				trafficInfo.setDateTime(j_data.getString("dateTime"));
 				trafficInfo.setDetail(j_data.getString("detail"));
@@ -140,5 +141,54 @@ public class BusinessFunctions {
 			e.printStackTrace();
 		}
 		return list;
+	}
+
+	public static String getTrafficTypeAndLevelStr(int type, int level) {
+		String typeStr;
+		switch (type) {
+		case Constant.TRAFFIC_TYPE_TRAFFIC:
+			typeStr = Constant.TRAFFIC_TYPE_TRAFFIC_STR + "  ";
+			switch (level) {
+			case Constant.TRAFFIC_INFO_LEVEL_LOW:
+				return typeStr + Constant.TRAFFIC_TYPE_TRAFFIC_STR_LOW;
+			case Constant.TRAFFIC_INFO_LEVEL_MIDDLE:
+				return typeStr + Constant.TRAFFIC_TYPE_TRAFFIC_STR_MIDDLE;
+			case Constant.TRAFFIC_INFO_LEVEL_HIGH:
+				return typeStr + Constant.TRAFFIC_TYPE_TRAFFIC_STR_HIGH;
+			}
+			break;
+		case Constant.TRAFFIC_TYPE_ACCIDENT:
+			typeStr = Constant.TRAFFIC_TYPE_ACCIDENT_STR + "  ";
+			switch (level) {
+			case Constant.TRAFFIC_INFO_LEVEL_LOW:
+				return typeStr + Constant.TRAFFIC_TYPE_ACCIDENT_STR_LOW;
+			case Constant.TRAFFIC_INFO_LEVEL_HIGH:
+				return typeStr + Constant.TRAFFIC_TYPE_ACCIDENT_STR_HIGH;
+			}
+			break;
+		case Constant.TRAFFIC_TYPE_WARNING:
+			typeStr = Constant.TRAFFIC_TYPE_WARNING_STR + "  ";
+			switch (level) {
+			case Constant.TRAFFIC_INFO_LEVEL_LOW:
+				return typeStr + Constant.TRAFFIC_TYPE_WARNING_STR_LOW;
+			case Constant.TRAFFIC_INFO_LEVEL_MIDDLE:
+				return typeStr + Constant.TRAFFIC_TYPE_WARNING_STR_MIDDLE;
+			case Constant.TRAFFIC_INFO_LEVEL_HIGH:
+				return typeStr + Constant.TRAFFIC_TYPE_WARNING_STR_HIGH;
+			}
+			break;
+		case Constant.TRAFFIC_TYPE_CAMERA:
+			typeStr = Constant.TRAFFIC_TYPE_CAMERA_STR + "  ";
+			switch (level) {
+			case Constant.TRAFFIC_INFO_LEVEL_LOW:
+				return typeStr + Constant.TRAFFIC_TYPE_CAMERA_STR_LOW;
+			case Constant.TRAFFIC_INFO_LEVEL_HIGH:
+				return typeStr + Constant.TRAFFIC_TYPE_CAMERA_STR_HIGH;
+			}
+			break;
+		default:
+			break;
+		}
+		return null;
 	}
 }

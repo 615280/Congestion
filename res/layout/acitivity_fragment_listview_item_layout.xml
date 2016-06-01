@@ -1,21 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
-    android:layout_height="wrap_content"
-    android:layout_weight="1"
+    android:layout_height="fill_parent"
+    android:layout_gravity="center"
     android:layout_margin="0dp"
-    android:background="@drawable/button_friend100"
+    android:background="@color/forth_color"
     android:baselineAligned="false"
     android:gravity="center"
     android:orientation="vertical" >
 
     <TextView
-        android:id="@+id/fragment_listView_item_textView_title"
+        android:id="@+id/fragment_listView_item_tv_nodeName"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:layout_marginTop="5dip"
         android:gravity="center"
+        android:textColor="@color/main_black"
         android:textSize="9pt" />
 
     <TextView
@@ -27,56 +28,62 @@
         android:layout_width="fill_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
+        android:dividerPadding="5dp"
         android:orientation="vertical"
-        android:shrinkColumns="1"
-        android:dividerPadding="5dp" >
-        
+        android:shrinkColumns="1" >
+
         <TableRow>
 
             <TextView
-                android:id="@+id/fragment_listView_item_table_startstr"
+                android:id="@+id/fragment_listView_item_table_datetimestrandpubuser"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="30dp"
-                android:text="aaa" />
+                android:text="发布："
+                android:textColor="@color/main_black" />
 
             <TextView
-                android:id="@+id/fragment_listView_item_textView_starttime"
+                android:id="@+id/fragment_listView_item_tv_datetimeandpubuser"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:maxLines="1" />
-        </TableRow>
-        
-        <TableRow>
-
-            <TextView
-                android:id="@+id/fragment_listView_item_table_endstr"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="40dp"
-                android:text="bbb" />
-
-            <TextView
-                android:id="@+id/fragment_listView_item_textView_endtime"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:maxLines="1" />
+                android:maxLines="1"
+                android:textColor="@color/main_black" />
         </TableRow>
 
         <TableRow>
 
             <TextView
-                android:id="@+id/fragment_listView_item_table_placestr"
+                android:id="@+id/fragment_listView_item_table_typeandlevel"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="30dp"
-                android:text="ccc" />
+                android:text="类别："
+                android:textColor="@color/main_black" />
 
             <TextView
-                android:id="@+id/fragment_listView_item_textView_place"
+                android:id="@+id/fragment_listView_item_tv_typeandlevel"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:maxLines="1" />
+                android:maxLines="1"
+                android:textColor="@color/main_black" />
+        </TableRow>
+
+        <TableRow>
+
+            <TextView
+                android:id="@+id/fragment_listView_item_table_detail"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="30dp"
+                android:text="详情："
+                android:textColor="@color/main_black" />
+
+            <TextView
+                android:id="@+id/fragment_listView_item_tv_detail"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:maxLines="1"
+                android:textColor="@color/main_black" />
         </TableRow>
     </TableLayout>
 

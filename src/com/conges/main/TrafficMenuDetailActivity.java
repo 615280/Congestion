@@ -150,44 +150,44 @@ public class TrafficMenuDetailActivity extends Activity {
 		String str_tableLine = null;
 		switch (type) {
 		case 1:
-			str_tableLine = "交通堵塞";
+			str_tableLine = Constant.TRAFFIC_TYPE_TRAFFIC_STR;
 			lowButton.setBackgroundResource(R.drawable.mark_jam_middle);
 			middleButton.setBackgroundResource(R.drawable.mark_jam_serious);
 			highButton.setBackgroundResource(R.drawable.mark_jam_fixed);
-			lowTv.setText("中等");
-			middleTv.setText("严重");
-			highTv.setText("不动");
+			lowTv.setText(Constant.TRAFFIC_TYPE_TRAFFIC_STR_LOW);
+			middleTv.setText(Constant.TRAFFIC_TYPE_TRAFFIC_STR_MIDDLE);
+			highTv.setText(Constant.TRAFFIC_TYPE_TRAFFIC_STR_HIGH);
 			break;
 		case 2:
-			str_tableLine = "事故";
+			str_tableLine = Constant.TRAFFIC_TYPE_ACCIDENT_STR;
 			lowButton.setBackgroundResource(R.drawable.mark_accident_low);
 			middleButton.setVisibility(View.GONE);
 			highButton.setBackgroundResource(R.drawable.mark_accident_high);
-			lowTv.setText("轻微");
+			lowTv.setText(Constant.TRAFFIC_TYPE_ACCIDENT_STR_LOW);
 			middleTv.setVisibility(View.GONE);
-			highTv.setText("严重");
+			highTv.setText(Constant.TRAFFIC_TYPE_ACCIDENT_STR_HIGH);
 			break;
 		case 3:
-			str_tableLine = "危险";
+			str_tableLine = Constant.TRAFFIC_TYPE_WARNING_STR;
 			lowButton.setBackgroundResource(R.drawable.mark_warning_road);
 			middleButton
 					.setBackgroundResource(R.drawable.mark_warning_roadside);
 			highButton.setBackgroundResource(R.drawable.mark_warning_weather);
-			lowTv.setText("路上");
-			middleTv.setText("路边");
-			highTv.setText("天气");
+			lowTv.setText(Constant.TRAFFIC_TYPE_WARNING_STR_LOW);
+			middleTv.setText(Constant.TRAFFIC_TYPE_WARNING_STR_MIDDLE);
+			highTv.setText(Constant.TRAFFIC_TYPE_WARNING_STR_HIGH);
 			break;
 		case 4:
-			str_tableLine = "摄像头";
+			str_tableLine = Constant.TRAFFIC_TYPE_CAMERA_STR;
 			lowButton.setBackgroundResource(R.drawable.mark_camera_speed);
 			middleButton.setVisibility(View.GONE);
 			highButton.setBackgroundResource(R.drawable.mark_camera_redlight);
-			lowTv.setText("速度");
+			lowTv.setText(Constant.TRAFFIC_TYPE_CAMERA_STR_LOW);
 			middleTv.setVisibility(View.GONE);
-			highTv.setText("红灯");
+			highTv.setText(Constant.TRAFFIC_TYPE_CAMERA_STR_HIGH);
 			break;
 		case 5:
-			str_tableLine = "地图聊天";
+			str_tableLine = Constant.TRAFFIC_TYPE_MAPHI_STR;
 			lowButton.setVisibility(View.GONE);
 			middleButton.setVisibility(View.GONE);
 			highButton.setVisibility(View.GONE);
@@ -196,7 +196,7 @@ public class TrafficMenuDetailActivity extends Activity {
 			highTv.setVisibility(View.GONE);
 			break;
 		case 6:
-			str_tableLine = "地图问题";
+			str_tableLine = Constant.TRAFFIC_TYPE_MAPPROBLEM_STR;
 			lowButton.setVisibility(View.GONE);
 			middleButton.setVisibility(View.GONE);
 			highButton.setVisibility(View.GONE);

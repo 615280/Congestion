@@ -21,15 +21,16 @@
             android:layout_weight="5"
             android:completionThreshold="1"
             android:dropDownHeight="150dp"
-            android:hint="搜索" />
+            android:hint="搜索"
+            android:singleLine="true" />
 
         <ImageButton
             android:id="@+id/main_bt_search"
             android:layout_width="50dp"
             android:layout_height="50dp"
-			android:layout_gravity="end"
-			android:foreground="#44cccccc"
-            android:background="@drawable/icon_search" />
+            android:layout_gravity="end"
+            android:background="@drawable/icon_search"
+            android:foreground="#44cccccc" />
     </LinearLayout>
 
     <TextView

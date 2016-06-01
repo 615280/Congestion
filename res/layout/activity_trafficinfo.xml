@@ -12,11 +12,17 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:background="@color/main_black"
-        android:gravity="end"
-        android:layout_gravity="center_vertical"
-        android:text="发布路况"
+        android:gravity="end|center_vertical"
+        android:text="我要发布路况"
         android:textColor="@color/white"
-        android:textSize="18sp" />
+        android:textSize="20sp" />
 
-		
+    <ListView
+        android:id="@+id/fragment_listView"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:divider="#53999999"
+        android:dividerHeight="10dp"
+        android:gravity="center" />
+
 </LinearLayout>
