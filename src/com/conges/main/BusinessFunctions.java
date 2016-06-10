@@ -17,6 +17,7 @@ import com.baidu.mapapi.model.LatLng;
 import com.conges.data.ConnectUtil;
 import com.conges.data.LineStep;
 import com.conges.data.TrafficInfo;
+import com.conges.data.UserInfo;
 import com.conges.util.Constant;
 
 @SuppressLint("WorldReadableFiles")
@@ -190,5 +191,10 @@ public class BusinessFunctions {
 			break;
 		}
 		return null;
+	}
+	
+	public static String getUserInfoByPhoneNum(String phoneNum){
+		String message = String.format("{\"getUserInfo\":{\"phoneNum\":\"%s\"}}", phoneNum);
+		return ConnectUtil.getConnDef(message);
 	}
 }

@@ -1,5 +1,6 @@
 package com.conges.user;
 
+import com.conges.main.BusinessFunctions;
 import com.conges.main.LocationAndMainActivity;
 import com.conges.main.R;
 
@@ -24,13 +25,23 @@ public class UserInfoActivity extends Activity {
 	
 	SharedPreferences preferences;
 	Editor editor;
+	String phoneNum = "13821582818";
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_userinfo);
 		init();
-		
+		getUserInfo();
+		System.out.println("  ");
+	}
+
+	private void getUserInfo() {
+		new Thread(){
+			public void run() {
+				String result = BusinessFunctions.getUserInfoByPhoneNum(phoneNum);
+			};
+		}.start();
 	}
 
 	@SuppressWarnings("deprecation")
