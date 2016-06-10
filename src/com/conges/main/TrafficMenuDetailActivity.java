@@ -35,7 +35,7 @@ public class TrafficMenuDetailActivity extends Activity {
 	RadioButton lowButton, middleButton, highButton;
 	TextView lowTv, middleTv, highTv;
 	TrafficInfo trafficInfo;
-	
+
 	SharedPreferences preferences;
 	String uploadResultStr;
 
@@ -44,25 +44,28 @@ public class TrafficMenuDetailActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_trafficmenudetail);
-		
+
 		trafficInfo = new TrafficInfo();
 		preferences = getSharedPreferences("conges", MODE_WORLD_READABLE);
-		
+
 		int type = getIntent().getIntExtra("trafficType", -1);
 		init(type);
 		trafficInfo.setType(type);
-		trafficInfo.setLatitude(Double.parseDouble(getIntent().getStringExtra("latitude")));
-		trafficInfo.setLongitude(Double.parseDouble(getIntent().getStringExtra("longitude")));
+		trafficInfo.setLatitude(Double.parseDouble(getIntent().getStringExtra(
+				"latitude")));
+		trafficInfo.setLongitude(Double.parseDouble(getIntent().getStringExtra(
+				"longitude")));
 		trafficInfo.setPubUser(preferences.getString("phoneNum", "0"));
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss",Locale.getDefault());
-		
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss",
+				Locale.getDefault());
+
 		trafficInfo.setDateTime(sdf.format(new Date()));
 	}
 
 	private void init(int type) {
 		detailEditText = (EditText) findViewById(R.id.traffictypedetail_et_description);
 		setTypeDetail(type);
-		
+
 		Button waitPubButton = (Button) findViewById(R.id.traffictypedetail_bt_waitpublish);
 		waitPubButton.setOnClickListener(new OnClickListener() {
 			@Override
@@ -76,24 +79,27 @@ public class TrafficMenuDetailActivity extends Activity {
 		pubButton.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
+				//加个空检测！
+				
 				Toast.makeText(TrafficMenuDetailActivity.this, "发布上传",
 						Toast.LENGTH_SHORT).show();
-				
+
 				trafficInfo.setDetail(detailEditText.getText().toString());
-				
-				new Thread(){
+
+				new Thread() {
 					public void run() {
-						uploadResultStr = BusinessFunctions.uploadTrafficInfo(trafficInfo);
+						uploadResultStr = BusinessFunctions
+								.uploadTrafficInfo(trafficInfo);
 						handler.sendEmptyMessage(0x125);
 					};
 				}.start();
 			}
 		});
 	}
-	
-	Handler handler = new Handler(){
+
+	Handler handler = new Handler() {
 		public void handleMessage(Message msg) {
-			if(msg.what == 0x125){
+			if (msg.what == 0x125) {
 				int uploadResult = -1;
 				try {
 					JSONObject jObject = new JSONObject(uploadResultStr);
@@ -102,7 +108,7 @@ public class TrafficMenuDetailActivity extends Activity {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
-				
+
 				if (uploadResult == 0) {
 					Toast.makeText(TrafficMenuDetailActivity.this, "上传成功",
 							Toast.LENGTH_SHORT).show();
@@ -138,11 +144,11 @@ public class TrafficMenuDetailActivity extends Activity {
 				}
 			}
 		});
-		
+
 		lowButton = (RadioButton) findViewById(R.id.traffictypedetail_bt_low);
 		middleButton = (RadioButton) findViewById(R.id.traffictypedetail_bt_middle);
 		highButton = (RadioButton) findViewById(R.id.traffictypedetail_bt_high);
-		
+
 		lowTv = (TextView) findViewById(R.id.traffictypedetail_tv_low);
 		middleTv = (TextView) findViewById(R.id.traffictypedetail_tv_middle);
 		highTv = (TextView) findViewById(R.id.traffictypedetail_tv_high);
@@ -215,9 +221,10 @@ public class TrafficMenuDetailActivity extends Activity {
 
 	@Override
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
-		
+
 		if (keyCode == KeyEvent.KEYCODE_BACK) {
-			Intent intent = new Intent(TrafficMenuDetailActivity.this, TrafficMenuActivity.class);
+			Intent intent = new Intent(TrafficMenuDetailActivity.this,
+					TrafficMenuActivity.class);
 			startActivity(intent);
 			finish();
 		}

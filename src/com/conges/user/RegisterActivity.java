@@ -66,13 +66,23 @@ public class RegisterActivity extends Activity {
 					return;
 				}
 				
-				if (userNameStr.equals("") || userNameStr.length() > 20) {
+				if (userNameStr.equals("")) {
+					HelpFunctions.useToastShort(getApplicationContext(), "请输入用户名！");
+					return;
+				}
+				
+				if (userNameStr.length() > 20) {
 					HelpFunctions.useToastShort(getApplicationContext(), "请确认用户名，不超过20个字符！");
 					return;
 				}
 
-				if (userPassStr.equals("") || userPassCheckStr.equals("")) {
-					HelpFunctions.useToastShort(getApplicationContext(), "请确认密码！");
+				if (userPassStr.equals("")) {
+					HelpFunctions.useToastShort(getApplicationContext(), "请输入密码！");
+					return;
+				}
+				
+				if (userPassCheckStr.equals("")) {
+					HelpFunctions.useToastShort(getApplicationContext(), "请再次输入密码！");
 					return;
 				}
 				
