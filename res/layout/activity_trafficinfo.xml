@@ -1,16 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_gravity="center_horizontal"
-    android:background="#44000000"
-    android:orientation="vertical"
-    android:weightSum="20" >
+    android:background="#44000000" >
 
     <Button
         android:id="@+id/trafficinfo_bt_publish"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
         android:background="@color/main_black"
         android:gravity="end|center_vertical"
         android:text="我要发布路况"
@@ -21,8 +20,19 @@
         android:id="@+id/fragment_listView"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
+        android:layout_below="@id/trafficinfo_bt_publish"
         android:divider="#53999999"
         android:dividerHeight="10dp"
         android:gravity="center" />
 
-</LinearLayout>
+    <ImageButton
+        android:id="@+id/trafficinfo_bt_refresh"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginBottom="30dp"
+        android:layout_marginEnd="10dp"
+        android:background="@drawable/icon_refresh_50" />
+
+</RelativeLayout>

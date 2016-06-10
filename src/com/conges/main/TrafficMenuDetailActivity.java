@@ -105,7 +105,6 @@ public class TrafficMenuDetailActivity extends Activity {
 					JSONObject jObject = new JSONObject(uploadResultStr);
 					uploadResult = (Integer) jObject.get("uploadResult");
 				} catch (JSONException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 
@@ -116,6 +115,8 @@ public class TrafficMenuDetailActivity extends Activity {
 					Toast.makeText(TrafficMenuDetailActivity.this,
 							"∑¢≤º ß∞‹£¨«Î…‘∫Ú‘Ÿ ‘£°", Toast.LENGTH_LONG).show();
 				}
+				Intent intent = new Intent(getApplicationContext(), TrafficInfoActivity.class);
+				startActivity(intent);
 				finish();
 			}
 		};

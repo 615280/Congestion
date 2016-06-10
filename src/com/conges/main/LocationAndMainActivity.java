@@ -366,49 +366,12 @@ public class LocationAndMainActivity extends Activity implements
 					HelpFunctions.useToastLong(getApplicationContext(), "请先获取定位点");
 					locationButton.setVisibility(View.VISIBLE);
 				}
-				// publishOverlay();
-				// mBaiduMap.setOnMarkerClickListener(new
-				// OnMarkerClickListener() {
-				// public boolean onMarkerClick(final Marker marker) {
-				// Intent intent = new Intent(
-				// LocationAndMainActivity.this,
-				// TrafficDetailActivity.class);
-				// Bundle data = new Bundle();
-				// Projection projection = mMapView.getMap()
-				// .getProjection();
-				// Point point = projection.toScreenLocation(currentPt);
-				// data.putInt("pointx", point.x);
-				// data.putInt("pointy", point.y);
-				// intent.putExtras(data);
-				// startActivity(intent);
-				// /*
-				// * Button button = new Button(getApplicationContext());
-				// * button.setBackgroundResource(R.drawable.popup);
-				// * OnInfoWindowClickListener listener = null; if (marker
-				// * == marker_jam) { button.setText("详情信息"); listener =
-				// * new OnInfoWindowClickListener() { public void
-				// * onInfoWindowClick() { mBaiduMap.hideInfoWindow();
-				// * //点击提示Button之后的操作 } }; LatLng ll =
-				// * marker.getPosition(); Bitmap bm =
-				// * BitmapFactory.decodeResource(getResources(),
-				// * R.drawable.popup); int yOffset = (int)
-				// * (bm.getHeight()*(-1.1)); mInfoWindow = new
-				// * InfoWindow(BitmapDescriptorFactory.fromView(button),
-				// * ll, yOffset, listener);
-				// * mBaiduMap.showInfoWindow(mInfoWindow); }
-				// */
-				// return true;
-				// }
-				// });
 			}
 		});
 
 		settingButton.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				// TODO Auto-generated method stub
-				// Toast.makeText(LocationAndMainActivity.this, "设置",
-				// Toast.LENGTH_SHORT).show();
 				Intent intent = new Intent(LocationAndMainActivity.this,
 						PreferenceMainActivity.class);
 				startActivity(intent);
@@ -499,25 +462,6 @@ public class LocationAndMainActivity extends Activity implements
 	public void searchButtonProcess(LineStep lineStep) {
 		// 重置浏览节点的路线数据
 		route = null;
-		// mBaiduMap.clear();
-		// PlanNode stNode = PlanNode.withCityNameAndPlaceName("北京", "龙泽");
-		// PlanNode enNode = PlanNode.withCityNameAndPlaceName("北京", "西单");
-
-		// if (v.getId() == R.id.bt_main_transit) {
-		// HelpFunctions.useToastLong(getApplicationContext(), "！！！！！");
-		// while (roadStateList.size() > 0) {
-		// Thread A = new Thread(new Runnable() {
-		// @Override
-		// public void run() {
-		// System.out.println("hello");
-		// synchronized (this) {
-		// if (roadStateList.size() > 0) {
-		// lineStep = roadStateList.get(0);
-		// roadStateList.remove(0);
-		// } else {
-		// return;
-		// }
-		// }
 		// 设置起终点信息
 		PlanNode stNode = PlanNode.withCityNameAndPlaceName("苏州",
 				lineStep.getStartNode());
@@ -525,11 +469,6 @@ public class LocationAndMainActivity extends Activity implements
 				lineStep.getEndNode());
 		mSearch.transitSearch((new TransitRoutePlanOption()).from(stNode)
 				.city("苏州").to(enNode));
-		// }
-		// });
-		// A.start();
-		// }
-		// }
 	}
 
 	@SuppressWarnings("unused")
