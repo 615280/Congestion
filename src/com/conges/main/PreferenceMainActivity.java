@@ -5,6 +5,7 @@ import java.util.List;
 import android.annotation.SuppressLint;
 import android.app.AlertDialog.Builder;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.os.Bundle;
@@ -12,11 +13,13 @@ import android.os.Handler;
 import android.os.Message;
 import android.preference.PreferenceActivity;
 import android.preference.PreferenceFragment;
+import android.preference.PreferenceScreen;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.Toast;
 
+import com.conges.user.UserInfoActivity;
 import com.conges.util.HelpFunctions;
 
 @SuppressLint({ "WorldReadableFiles", "HandlerLeak" })
@@ -73,6 +76,7 @@ public class PreferenceMainActivity extends PreferenceActivity {
 					}
 				});
 			}
+			
 		}
 	}
 
@@ -100,10 +104,11 @@ public class PreferenceMainActivity extends PreferenceActivity {
 		public void onCreate(Bundle savedInstanceState) {
 			super.onCreate(savedInstanceState);
 			addPreferencesFromResource(R.xml.preferences_user);
-			// 获取传入该Fragment的参数
-			String website = getArguments().getString("website");
-			Toast.makeText(getActivity(), "网站域名是：" + website, Toast.LENGTH_LONG)
-					.show();
+//			PreferenceScreen ps = getPreferenceScreen().;
+//			ps.setTitle("未登录");
+			Intent intent = new Intent();
+			intent.setClass(getActivity(), UserInfoActivity.class);
+			startActivity(intent);
 		}
 	}
 	

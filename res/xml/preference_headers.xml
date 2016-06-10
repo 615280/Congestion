@@ -5,7 +5,7 @@
     <header
         android:icon="@drawable/ic_launcher"
         android:summary="设置登录账户的相关选项"
-        android:title="未登录" >
+        android:title="账户信息设置" >
         <intent
             android:action="android.intent.action.VIEW"
             android:targetPackage="com.conges.main"
@@ -18,13 +18,12 @@
         android:icon="@drawable/ic_launcher"
         android:summary="设置应用的相关选项"
         android:title="程序选项设置 " >
-
-        <!-- 使用extra可向Activity传入额外的数据 -->
-        <extra
-            android:name="website"
-            android:value="data want to transfer" />
     </header>
-    <!-- 使用Intent启动指定Activity的列表项 -->
+
+<!--         <extra -->
+<!--             android:name="website" -->
+<!--             android:value="data want to transfer" /> -->
+    
     <header
         android:icon="@drawable/ic_launcher"
         android:summary="常用地点管理"
