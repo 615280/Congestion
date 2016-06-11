@@ -85,7 +85,8 @@
             android:name=".PreferenceMainActivity"
             android:label="设置"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme" >
+            android:theme="@style/AppTheme"
+            android:launchMode="singleTask" >
         </activity>
         
          <activity

@@ -3,13 +3,10 @@
 
     <!-- 指定启动指定PreferenceFragment的列表项 -->
     <header
+        android:fragment="com.conges.main.PreferenceMainActivity$Prefs1Fragment"
         android:icon="@drawable/ic_launcher"
         android:summary="设置登录账户的相关选项"
         android:title="账户信息设置" >
-        <intent
-            android:action="android.intent.action.VIEW"
-            android:targetPackage="com.conges.main"
-            android:targetClass="com.conges.main$EntryActivity" />
     </header>
 
     <!-- 指定启动指定PreferenceFragment的列表项 -->

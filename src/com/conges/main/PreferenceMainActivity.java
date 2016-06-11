@@ -19,12 +19,13 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.Toast;
 
+import com.conges.user.LoginActivity;
 import com.conges.user.UserInfoActivity;
 import com.conges.util.HelpFunctions;
 
 @SuppressLint({ "WorldReadableFiles", "HandlerLeak" })
 public class PreferenceMainActivity extends PreferenceActivity {
-	private Button logoutButton;
+	private Button logoutButton, loginButton;
 
 	static SharedPreferences preferences;
 	Editor editor;
@@ -76,8 +77,25 @@ public class PreferenceMainActivity extends PreferenceActivity {
 					}
 				});
 			}
-			
+		} else {
+			if (hasHeaders()) {
+				loginButton = new Button(this);
+				loginButton.setText("登录");
+				setListFooter(loginButton);
+				loginButton.setOnClickListener(new OnClickListener() {
+					@Override
+					public void onClick(View v) {
+						goToLoginActivity();
+					}
+				});
+			}
 		}
+	}
+	
+	public void goToLoginActivity(){
+		Intent intent = new Intent();
+		intent.setClass(getApplicationContext(), LoginActivity.class);
+		startActivity(intent);
 	}
 
 	@Override
@@ -95,7 +113,17 @@ public class PreferenceMainActivity extends PreferenceActivity {
 		@Override
 		public void onCreate(Bundle savedInstanceState) {
 			super.onCreate(savedInstanceState);
-			addPreferencesFromResource(R.xml.preferences_user);
+			System.out.println("1234");
+			// addPreferencesFromResource(R.xml.preferences_user);
+			// PreferenceScreen ps = getPreferenceScreen().;
+			// ps.setTitle("未登录");
+			if (preferences.getInt("loginState", -1) == 1) {
+				Intent intent = new Intent();
+				intent.setClass(getActivity(), UserInfoActivity.class);
+				startActivity(intent);
+			} else {
+				Toast.makeText(getActivity(), "目前尚未登录", Toast.LENGTH_SHORT).show();
+			}
 		}
 	}
 
@@ -104,14 +132,9 @@ public class PreferenceMainActivity extends PreferenceActivity {
 		public void onCreate(Bundle savedInstanceState) {
 			super.onCreate(savedInstanceState);
 			addPreferencesFromResource(R.xml.preferences_user);
-//			PreferenceScreen ps = getPreferenceScreen().;
-//			ps.setTitle("未登录");
-			Intent intent = new Intent();
-			intent.setClass(getActivity(), UserInfoActivity.class);
-			startActivity(intent);
 		}
 	}
-	
+
 	public static class Prefs3Fragment extends PreferenceFragment {
 		@Override
 		public void onCreate(Bundle savedInstanceState) {
@@ -119,8 +142,8 @@ public class PreferenceMainActivity extends PreferenceActivity {
 			Editor editor = preferences.edit();
 			editor.clear();
 			editor.commit();
-			Toast.makeText(getActivity(), "缓存信息已清除（包括个人信息和缓存文件）", Toast.LENGTH_LONG)
-					.show();
+			Toast.makeText(getActivity(), "缓存信息已清除（包括个人信息和缓存文件）",
+					Toast.LENGTH_LONG).show();
 		}
 	}
 
@@ -129,10 +152,10 @@ public class PreferenceMainActivity extends PreferenceActivity {
 		public void onCreate(Bundle savedInstanceState) {
 			// TODO Auto-generated method stub
 			super.onCreate(savedInstanceState);
-			
+
 		}
 	}
-	
+
 	Handler handler = new Handler() {
 		public void handleMessage(Message msg) {
 			if (msg.what == 0x123) {

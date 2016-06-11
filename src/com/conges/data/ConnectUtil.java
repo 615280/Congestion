@@ -21,6 +21,7 @@ public class ConnectUtil {
 	}
 	
 	public static String getConn(String uri, int port, String message) {
+		System.out.println(message);
 		String result = "";
 		Socket socket = null;
 		PrintWriter out = null;
