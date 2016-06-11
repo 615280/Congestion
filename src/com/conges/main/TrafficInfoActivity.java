@@ -30,7 +30,7 @@ public class TrafficInfoActivity extends Activity {
 	List<Map<String, Object>> trafficInfoMapList;
 	ListView listView;
 	double latitude, longitude = 0.0;
-	
+
 	SharedPreferences preferences;
 
 	@SuppressWarnings("deprecation")
@@ -40,7 +40,7 @@ public class TrafficInfoActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_trafficinfo);
 		init();
-		
+
 		preferences = getSharedPreferences("conges", MODE_WORLD_READABLE);
 
 		latitude = Double.parseDouble(getIntent().getExtras().getString(
@@ -49,10 +49,11 @@ public class TrafficInfoActivity extends Activity {
 				"longitude"));
 		trafficInfoList = new ArrayList<TrafficInfo>();
 		trafficInfoMapList = new ArrayList<Map<String, Object>>();
+
 		getTrafficInfoList();
 	}
 
-	public void getTrafficInfoList(){
+	public void getTrafficInfoList() {
 		new Thread() {
 			public void run() {
 				trafficInfoList = BusinessFunctions.getTrafficInfo(latitude,
@@ -60,13 +61,13 @@ public class TrafficInfoActivity extends Activity {
 				handler.sendEmptyMessage(0x126);
 			};
 		}.start();
-		refreshButton.setBackgroundResource(R.drawable.icon_refresh_50_reverse);
+		refreshButton.setBackgroundResource(R.drawable.icon_refresh_50n_reverse);
 	}
-	
+
 	Handler handler = new Handler() {
 		public void handleMessage(Message msg) {
 			if (msg.what == 0x126) {
-				System.out.println("hello");
+				trafficInfoMapList = new ArrayList<Map<String, Object>>();
 				if (trafficInfoList.size() == 0) {
 					HelpFunctions.useToastShort(getApplicationContext(),
 							"当前无信息");
@@ -90,7 +91,8 @@ public class TrafficInfoActivity extends Activity {
 									R.id.fragment_listView_item_tv_detail });
 
 					listView.setAdapter(sa);
-					refreshButton.setBackgroundResource(R.drawable.icon_refresh_50);
+					refreshButton
+							.setBackgroundResource(R.drawable.icon_refresh_50n);
 				}
 			}
 		};
@@ -104,11 +106,12 @@ public class TrafficInfoActivity extends Activity {
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
-				if(preferences.getInt("loginState", 0) != 1){
-					HelpFunctions.useToastLong(getApplicationContext(), "发布路况信息，需要进行登录！");
+				if (preferences.getInt("loginState", 0) != 1) {
+					HelpFunctions.useToastLong(getApplicationContext(),
+							"发布路况信息，需要进行登录！");
 					return;
 				}
-				
+
 				Intent intent = new Intent();
 				intent.setClass(getApplicationContext(),
 						TrafficMenuActivity.class);
@@ -119,7 +122,7 @@ public class TrafficInfoActivity extends Activity {
 				startActivity(intent);
 			}
 		});
-		
+
 		refreshButton = (ImageButton) findViewById(R.id.trafficinfo_bt_refresh);
 		refreshButton.setOnClickListener(new OnClickListener() {
 			@Override
@@ -146,4 +149,9 @@ public class TrafficInfoActivity extends Activity {
 		return map;
 	}
 
+	@Override
+	protected void onResume() {
+		super.onResume();
+		refreshButton.performClick();
+	}
 }

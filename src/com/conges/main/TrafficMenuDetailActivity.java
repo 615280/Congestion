@@ -9,6 +9,7 @@ import org.json.JSONObject;
 
 import com.conges.data.TrafficInfo;
 import com.conges.util.Constant;
+import com.conges.util.HelpFunctions;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
@@ -79,12 +80,20 @@ public class TrafficMenuDetailActivity extends Activity {
 		pubButton.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				//加个空检测！
+				boolean flag = lowButton.isChecked() || middleButton.isChecked() || highButton.isChecked();
+				if(!flag){
+					HelpFunctions.useToastLong(getApplicationContext(), "请选择路况程度！");
+					return;
+				}
+				
+				if(detailEditText.getText().toString().equals("")){
+					trafficInfo.setDetail("无");
+				} else {
+					trafficInfo.setDetail(detailEditText.getText().toString());
+				}
 				
 				Toast.makeText(TrafficMenuDetailActivity.this, "发布上传",
 						Toast.LENGTH_SHORT).show();
-
-				trafficInfo.setDetail(detailEditText.getText().toString());
 
 				new Thread() {
 					public void run() {
