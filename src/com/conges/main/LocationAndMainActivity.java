@@ -76,6 +76,9 @@ import com.conges.util.HelpFunctions;
 @SuppressLint({ "WorldReadableFiles", "HandlerLeak" })
 public class LocationAndMainActivity extends Activity implements
 		OnGetRoutePlanResultListener {
+	
+	private static final int RANGE = 1;
+	
 	private MapView mMapView = null;
 	private BaiduMap mBaiduMap;
 	private BaiduMapOptions mBaiduMapOptions;
@@ -315,7 +318,7 @@ public class LocationAndMainActivity extends Activity implements
 						@Override
 						public void run() {
 							roadStateList = BusinessFunctions
-									.getRoadStateResult(currentPt);
+									.getRoadStateResult(currentPt, RANGE);
 							// handler.sendEmptyMessage(0x123);
 							for (int i = 0; i < roadStateList.size(); i++) {
 								Message message = Message.obtain();

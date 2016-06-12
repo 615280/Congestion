@@ -121,7 +121,6 @@ public class PreferenceMainActivity extends PreferenceActivity {
 	public static class FavorManager extends PreferenceFragment {
 		@Override
 		public void onCreate(Bundle savedInstanceState) {
-			// TODO Auto-generated method stub
 			super.onCreate(savedInstanceState);
 			getActivity().finish();
 			HelpFunctions.useToastShort(getActivity(), "正在开发，请稍候！");
