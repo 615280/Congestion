@@ -31,7 +31,7 @@ public class LoginActivity extends Activity {
 	private CheckBox cb_autoLogin;
 	private Button loginButton;
 	private Button toRegisterButton;
-	
+
 	String result = "";
 	String phoneNum, userPass;
 
@@ -49,19 +49,20 @@ public class LoginActivity extends Activity {
 	private void init() {
 		et_phoneNum = (EditText) findViewById(R.id.et_login_phonenum);
 		et_userPass = (EditText) findViewById(R.id.et_login_userpass);
-		
+
 		preferences = getSharedPreferences("conges", MODE_WORLD_READABLE);
 		et_phoneNum.setText(preferences.getString("phoneNum", ""));
 		et_userPass.setText(preferences.getString("userPass", ""));
 
 		cb_autoLogin = (CheckBox) findViewById(R.id.cb_login_autologin);
-		if(preferences.getInt("autoLogin", 0) == 1){
+		if (preferences.getInt("autoLogin", 0) == 1) {
 			cb_autoLogin.setChecked(true);
-		} 
+		}
 		cb_autoLogin.setOnCheckedChangeListener(new OnCheckedChangeListener() {
 			@Override
-			public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-				if(isChecked){
+			public void onCheckedChanged(CompoundButton buttonView,
+					boolean isChecked) {
+				if (isChecked) {
 					editor = preferences.edit();
 					editor.putInt("autoLogin", 1);
 					editor.commit();
@@ -72,7 +73,7 @@ public class LoginActivity extends Activity {
 				}
 			}
 		});
-		
+
 		loginButton = (Button) findViewById(R.id.button_login);
 		toRegisterButton = (Button) findViewById(R.id.button_login_toregister);
 
@@ -89,7 +90,8 @@ public class LoginActivity extends Activity {
 
 				new Thread() {
 					public void run() {
-						result = BusinessFunctions.login(phoneNum, userPass,preferences,getBaseContext());
+						result = BusinessFunctions.login(phoneNum, userPass,
+								preferences, getBaseContext());
 						handler.sendEmptyMessage(0x124);
 					};
 				}.start();
@@ -133,13 +135,21 @@ public class LoginActivity extends Activity {
 					editor.putInt("loginState", 1);
 					editor.commit();
 
-					Intent intent = new Intent(LoginActivity.this,
-							FriendListActivity.class);
-					startActivity(intent);
+					if (getIntent().getStringExtra("from") == null) {
+						Intent intent = new Intent(LoginActivity.this,
+								FriendListActivity.class);
+						startActivity(intent);
+					}
 					finish();
-				} else if (auth_result == 1) { // 输入错误，返回1
+				} else if (auth_result == 1) { 
 					Toast.makeText(getApplicationContext(),
-							"登录失败，\n请检查用户名密码是否正确", Toast.LENGTH_LONG).show();
+							"密码错误，请重新输入！", Toast.LENGTH_LONG).show();
+				} else if (auth_result == 2) { 
+					Toast.makeText(getApplicationContext(),
+							"当前手机号码尚未注册！", Toast.LENGTH_LONG).show();
+				} else if (auth_result == 3) { 
+					Toast.makeText(getApplicationContext(),
+							"网络异常，请检查网络设置！", Toast.LENGTH_LONG).show();
 				} else { // 程序错误，返回-1
 					Toast.makeText(getApplicationContext(), "登录失败，请稍后重试",
 							Toast.LENGTH_LONG).show();
@@ -147,5 +157,5 @@ public class LoginActivity extends Activity {
 			}
 		}
 	};
-	
+
 }

@@ -21,7 +21,7 @@ public class ConnectUtil {
 	}
 	
 	public static String getConn(String uri, int port, String message) {
-		System.out.println(message);
+//		System.out.println(message);
 		String result = "";
 		Socket socket = null;
 		PrintWriter out = null;
@@ -29,7 +29,7 @@ public class ConnectUtil {
 		try {
 			InetAddress addr = InetAddress.getByName(uri);
 			socket = new Socket(addr, port);
-			socket.setSoTimeout(5000);
+			socket.setSoTimeout(3000);
 
 			out = new PrintWriter(new BufferedWriter(new OutputStreamWriter(
 					socket.getOutputStream())));

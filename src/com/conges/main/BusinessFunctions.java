@@ -36,6 +36,9 @@ public class BusinessFunctions {
 		editor.putString("userPass", userPass);
 		editor.commit();
 		String result = ConnectUtil.getConnDef(message);
+		if(result == null){
+			result = "{\"loginResult\": 3}";
+		}
 		return result;
 	}
 

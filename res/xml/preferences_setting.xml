@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen 
+    xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <PreferenceCategory android:title="程序选项设置" >
+        
+        <ListPreference
+            android:dialogTitle="更新频率"
+            android:entries="@array/refresh_time_name_list"
+            android:entryValues="@array/refresh_time_value_list"
+            android:key="refreshtime"
+            android:summary="选择路况状态的更新频率"
+            android:title="更新频率" />
+    </PreferenceCategory>
+
+</PreferenceScreen>

@@ -40,6 +40,7 @@ public class UserInfoActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_userinfo);
+		phoneNumber.setText("加载中...");
 		getUserInfo();
 		init();
 	}
@@ -82,7 +83,7 @@ public class UserInfoActivity extends Activity {
 		userIcon = (ImageView) findViewById(R.id.userinfo_iv);
 		phoneNumber = (TextView) findViewById(R.id.userinfo_tv_phonenumber);
 		userName = (TextView) findViewById(R.id.userinfo_tv_username);
-		returnButton = (Button) findViewById(R.id.userinfo_bt_returnmain);
+//		returnButton = (Button) findViewById(R.id.userinfo_bt_returnmain);
 		logoutButton = (Button) findViewById(R.id.userinfo_bt_logout);
 		
 		preferences = getSharedPreferences("conges", MODE_WORLD_READABLE);
@@ -90,15 +91,15 @@ public class UserInfoActivity extends Activity {
 //		userName.setText("用户名：" + preferences.getString("userName", "信息获取失败"));
 		userIcon.setImageResource(R.drawable.icon_usericon);
 		
-		returnButton.setOnClickListener(new OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				Intent intent = new Intent();
-				intent.setClass(getApplicationContext(), LocationAndMainActivity.class);
-				startActivity(intent);
-				finish();
-			}
-		});
+//		returnButton.setOnClickListener(new OnClickListener() {
+//			@Override
+//			public void onClick(View v) {
+//				Intent intent = new Intent();
+//				intent.setClass(getApplicationContext(), LocationAndMainActivity.class);
+//				startActivity(intent);
+//				finish();
+//			}
+//		});
 		
 		logoutButton.setOnClickListener(new OnClickListener() {
 			@Override

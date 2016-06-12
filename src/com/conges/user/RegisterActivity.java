@@ -114,6 +114,9 @@ public class RegisterActivity extends Activity {
 														userPassStr);
 										registerResult = ConnectUtil
 												.getConnDef(message);
+										if(registerResult == null){
+											registerResult = "{\"registerResult\": 2}";
+										}
 										handler.sendEmptyMessage(0x123);
 									};
 								}.start();
@@ -172,11 +175,16 @@ public class RegisterActivity extends Activity {
 					
 					startActivity(intent);
 					finish();
+				} else if(reg_result == 1) {
+					preferences = getSharedPreferences("conges", MODE_WORLD_READABLE);
+					editor = preferences.edit();
+					editor.putString("phoneNum", phoneNumStr);
+					editor.commit();
+					HelpFunctions.useToastLong(getApplicationContext(), "手机号已注册，可直接登录！");
 				} else if(reg_result == 2) {
-					//已注册，可直接登录
-					
-				} else { // 程序错误，返回 !0
-					HelpFunctions.useToastLong(getApplicationContext(), "注册失败，请稍后重试");
+					HelpFunctions.useToastLong(getApplicationContext(), "网络异常，请检查网络设置！");
+				} else { // 程序错误
+					HelpFunctions.useToastLong(getApplicationContext(), "注册失败，请稍后重试！");
 				}
 			}
 		};

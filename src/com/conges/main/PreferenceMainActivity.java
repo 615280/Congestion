@@ -13,7 +13,6 @@ import android.os.Handler;
 import android.os.Message;
 import android.preference.PreferenceActivity;
 import android.preference.PreferenceFragment;
-import android.preference.PreferenceScreen;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -25,7 +24,7 @@ import com.conges.util.HelpFunctions;
 
 @SuppressLint({ "WorldReadableFiles", "HandlerLeak" })
 public class PreferenceMainActivity extends PreferenceActivity {
-	private Button logoutButton, loginButton;
+	private Button logCtrlButton;
 
 	static SharedPreferences preferences;
 	Editor editor;
@@ -35,54 +34,26 @@ public class PreferenceMainActivity extends PreferenceActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		preferences = getSharedPreferences("conges", MODE_WORLD_READABLE);
+		logCtrlButton = new Button(this);
 
 		if (preferences.getInt("loginState", -1) == 1) {
 			if (hasHeaders()) {
-				logoutButton = new Button(this);
-				logoutButton.setText("注销");
-				// 将该按钮添加到该界面上
-				setListFooter(logoutButton);
-				logoutButton.setOnClickListener(new OnClickListener() {
+				logCtrlButton.setText("注销");
+				setListFooter(logCtrlButton);
+				logCtrlButton.setOnClickListener(new OnClickListener() {
 					@Override
 					public void onClick(View v) {
-						// TODO Auto-generated method stub
-
 						Builder checkAlert = new Builder(
 								PreferenceMainActivity.this);
-						checkAlert.setTitle("提示")
-								.setIcon(R.drawable.ic_launcher)
-								.setMessage("确认退出该帐号吗？");
-						checkAlert.setPositiveButton("确认",
-								new DialogInterface.OnClickListener() {
-									@Override
-									public void onClick(DialogInterface dialog,
-											int which) {
-										new Thread() {
-											public void run() {
-												handler.sendEmptyMessage(0x123);
-											};
-										}.start();
-									}
-								});
-
-						checkAlert.setNegativeButton("取消",
-								new DialogInterface.OnClickListener() {
-									@Override
-									public void onClick(DialogInterface dialog,
-											int which) {
-										return;
-									}
-								});
-						checkAlert.show();
+						setCheckAlert(checkAlert);
 					}
 				});
 			}
 		} else {
 			if (hasHeaders()) {
-				loginButton = new Button(this);
-				loginButton.setText("登录");
-				setListFooter(loginButton);
-				loginButton.setOnClickListener(new OnClickListener() {
+				logCtrlButton.setText("登录");
+				setListFooter(logCtrlButton);
+				logCtrlButton.setOnClickListener(new OnClickListener() {
 					@Override
 					public void onClick(View v) {
 						goToLoginActivity();
@@ -91,10 +62,11 @@ public class PreferenceMainActivity extends PreferenceActivity {
 			}
 		}
 	}
-	
-	public void goToLoginActivity(){
+
+	public void goToLoginActivity() {
 		Intent intent = new Intent();
 		intent.setClass(getApplicationContext(), LoginActivity.class);
+		intent.putExtra("from", "prefermain");
 		startActivity(intent);
 	}
 
@@ -105,7 +77,6 @@ public class PreferenceMainActivity extends PreferenceActivity {
 
 	@Override
 	public void onBuildHeaders(List<Header> target) {
-		// 加载选项设置列表的布局文件
 		loadHeadersFromResource(R.xml.preference_headers, target);
 	}
 
@@ -113,17 +84,17 @@ public class PreferenceMainActivity extends PreferenceActivity {
 		@Override
 		public void onCreate(Bundle savedInstanceState) {
 			super.onCreate(savedInstanceState);
-			System.out.println("1234");
-			// addPreferencesFromResource(R.xml.preferences_user);
+			getActivity().finish();
+
 			// PreferenceScreen ps = getPreferenceScreen().;
 			// ps.setTitle("未登录");
-			if (preferences.getInt("loginState", -1) == 1) {
-				Intent intent = new Intent();
-				intent.setClass(getActivity(), UserInfoActivity.class);
-				startActivity(intent);
-			} else {
-				Toast.makeText(getActivity(), "目前尚未登录", Toast.LENGTH_SHORT).show();
+			if (preferences.getInt("loginState", -1) != 1) {
+				HelpFunctions.useToastShort(getActivity(), "目前尚未登录！");
+				return;
 			}
+			Intent intent = new Intent();
+			intent.setClass(getActivity(), UserInfoActivity.class);
+			startActivity(intent);
 		}
 	}
 
@@ -131,7 +102,7 @@ public class PreferenceMainActivity extends PreferenceActivity {
 		@Override
 		public void onCreate(Bundle savedInstanceState) {
 			super.onCreate(savedInstanceState);
-			addPreferencesFromResource(R.xml.preferences_user);
+			 addPreferencesFromResource(R.xml.preferences_setting);
 		}
 	}
 
@@ -152,7 +123,8 @@ public class PreferenceMainActivity extends PreferenceActivity {
 		public void onCreate(Bundle savedInstanceState) {
 			// TODO Auto-generated method stub
 			super.onCreate(savedInstanceState);
-
+			getActivity().finish();
+			HelpFunctions.useToastShort(getActivity(), "正在开发，请稍候！");
 		}
 	}
 
@@ -166,8 +138,57 @@ public class PreferenceMainActivity extends PreferenceActivity {
 				editor.commit();
 				HelpFunctions.useToastLong(PreferenceMainActivity.this,
 						"退出登录成功！");
-				logoutButton.setVisibility(View.INVISIBLE);
+				logCtrlButton.setText("登录");
+				logCtrlButton.setOnClickListener(new OnClickListener() {
+					@Override
+					public void onClick(View v) {
+						goToLoginActivity();
+					}
+				});
 			}
 		};
 	};
+
+	protected void onResume() {
+		super.onResume();
+		if (preferences.getInt("loginState", -1) == 1) {
+			if (hasHeaders()) {
+				logCtrlButton.setText("注销");
+				setListFooter(logCtrlButton);
+				logCtrlButton.setOnClickListener(new OnClickListener() {
+					@Override
+					public void onClick(View v) {
+						Builder checkAlert = new Builder(
+								PreferenceMainActivity.this);
+						setCheckAlert(checkAlert);
+					}
+				});
+			}
+		}
+	};
+
+	private void setCheckAlert(Builder checkAlert) {
+		checkAlert.setTitle("提示").setIcon(R.drawable.ic_launcher)
+				.setMessage("确认退出该帐号吗？");
+		checkAlert.setPositiveButton("确认",
+				new DialogInterface.OnClickListener() {
+					@Override
+					public void onClick(DialogInterface dialog, int which) {
+						new Thread() {
+							public void run() {
+								handler.sendEmptyMessage(0x123);
+							};
+						}.start();
+					}
+				});
+
+		checkAlert.setNegativeButton("取消",
+				new DialogInterface.OnClickListener() {
+					@Override
+					public void onClick(DialogInterface dialog, int which) {
+						return;
+					}
+				});
+		checkAlert.show();
+	}
 }
