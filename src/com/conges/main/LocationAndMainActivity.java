@@ -77,7 +77,7 @@ import com.conges.util.HelpFunctions;
 public class LocationAndMainActivity extends Activity implements
 		OnGetRoutePlanResultListener {
 	
-	private static final int RANGE = 1;
+	private static final double RANGE = 0.5;
 	
 	private MapView mMapView = null;
 	private BaiduMap mBaiduMap;
@@ -385,7 +385,7 @@ public class LocationAndMainActivity extends Activity implements
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
-				Toast.makeText(LocationAndMainActivity.this, "定位",
+				Toast.makeText(LocationAndMainActivity.this, "定位中……",
 						Toast.LENGTH_SHORT).show();
 				isFirstLoc = true;
 				initLocPosition();
