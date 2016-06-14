@@ -1,0 +1,126 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    tools:context="com.conges.main.MainActivity" >
+
+    <LinearLayout
+        android:id="@+id/main_layout_linear"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:orientation="horizontal"
+        android:weightSum="6" >
+
+        <AutoCompleteTextView
+            android:id="@+id/main_autotv"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="5"
+            android:completionThreshold="1"
+            android:dropDownHeight="150dp"
+            android:hint="搜索"
+            android:singleLine="true" />
+
+        <ImageButton
+            android:id="@+id/main_bt_search"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_gravity="end"
+            android:background="@drawable/icon_search"
+            android:foreground="#44cccccc" />
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/state"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/main_layout_linear"
+        android:lines="4"
+        android:text="点击、长按、双击地图以获取经纬度和地图状态" />
+
+    <!-- <Button -->
+    <!-- android:id="@+id/bt_main_transit" -->
+    <!-- android:layout_width="wrap_content" -->
+    <!-- android:layout_height="wrap_content" -->
+    <!-- android:onClick="searchButtonProcess" -->
+    <!-- android:visibility="invisible" /> -->
+
+    <Button
+        android:id="@+id/bt_main_transit"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="invisible" />
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_marginTop="80dip"
+        android:background="#D000"
+        android:minWidth="100dip"
+        android:orientation="vertical"
+        android:padding="2dp" >
+
+        <RadioGroup
+            android:id="@+id/radioGroup"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:contentDescription="是否显示路况" >
+
+            <RadioButton
+                android:id="@+id/closeColor"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:checked="true"
+                android:text="关闭" >
+            </RadioButton>
+
+            <RadioButton
+                android:id="@+id/openColor"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="打开" >
+            </RadioButton>
+        </RadioGroup>
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/button_main_publish"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:layout_marginBottom="10dip"
+        android:layout_marginRight="25dp" />
+
+    <Button
+        android:id="@+id/button_main_setting"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:layout_marginBottom="10dip"
+        android:layout_marginLeft="25dp" />
+
+    <Button
+        android:id="@+id/button_main_location"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@id/button_main_setting"
+        android:layout_alignLeft="@id/button_main_setting"
+        android:layout_alignStart="@id/button_main_setting"
+        android:layout_marginBottom="50dip" />
+
+    <Button
+        android:id="@+id/button_main_contact"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@id/button_main_publish"
+        android:layout_alignStart="@id/button_main_publish"
+        android:layout_alignTop="@id/button_main_location" />
+
+</RelativeLayout>

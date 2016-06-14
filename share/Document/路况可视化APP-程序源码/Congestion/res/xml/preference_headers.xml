@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<preference-headers xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <!-- 指定启动指定PreferenceFragment的列表项 -->
+    <header
+        android:fragment="com.conges.main.PreferenceMainActivity$Prefs1Fragment"
+        android:icon="@drawable/ic_launcher"
+        android:summary="设置登录账户的相关选项"
+        android:title="账户信息设置" >
+    </header>
+
+    <!-- 指定启动指定PreferenceFragment的列表项 -->
+    <header
+        android:fragment="com.conges.main.PreferenceMainActivity$Prefs2Fragment"
+        android:icon="@drawable/ic_launcher"
+        android:summary="设置应用的相关选项"
+        android:title="程序选项设置 " >
+    </header>
+
+<!--         <extra -->
+<!--             android:name="website" -->
+<!--             android:value="data want to transfer" /> -->
+    
+    <header
+        android:icon="@drawable/ic_launcher"
+        android:summary="常用地点管理"
+        android:title="常用地点"
+        android:fragment = "com.conges.main.PreferenceMainActivity$FavorManager" >
+    </header>
+    <header
+        android:icon="@drawable/ic_launcher"
+        android:title="清除缓存数据"
+        android:fragment="com.conges.main.PreferenceMainActivity$Prefs3Fragment"  />
+    <header>
+    </header>
+
+</preference-headers>

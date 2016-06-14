@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen 
+    xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <PreferenceCategory android:title="用户信息设置" >
+        <Preference
+            android:icon="@drawable/icon_usericon"
+            android:key="phonenum"
+            android:summary="不可修改"
+            android:title="手机号" />
+
+        <EditTextPreference
+            android:dialogTitle="用户名："
+            android:key="name"
+            android:summary="修改您的用户名"
+            android:title="用户名" />
+
+        <ListPreference
+            android:dialogTitle="性别："
+            android:entries="@array/gender_name_list"
+            android:entryValues="@array/gender_value_list"
+            android:key="gender"
+            android:summary="选择您的性别"
+            android:title="性别" />
+    </PreferenceCategory>
+
+</PreferenceScreen>
