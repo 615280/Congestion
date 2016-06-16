@@ -102,7 +102,7 @@ public class PreferenceMainActivity extends PreferenceActivity {
 		@Override
 		public void onCreate(Bundle savedInstanceState) {
 			super.onCreate(savedInstanceState);
-			 addPreferencesFromResource(R.xml.preferences_setting);
+			addPreferencesFromResource(R.xml.preferences_setting);
 		}
 	}
 
@@ -110,11 +110,32 @@ public class PreferenceMainActivity extends PreferenceActivity {
 		@Override
 		public void onCreate(Bundle savedInstanceState) {
 			super.onCreate(savedInstanceState);
-			Editor editor = preferences.edit();
-			editor.clear();
-			editor.commit();
-			Toast.makeText(getActivity(), "缓存信息已清除（包括个人信息和缓存文件）",
-					Toast.LENGTH_LONG).show();
+			Builder clearAlert = new Builder(getActivity());
+			clearAlert.setTitle("提示").setIcon(R.drawable.ic_launcher)
+					.setMessage("确认清除缓存数据（包括登录用户信息和缓存文件）？");
+			clearAlert.setPositiveButton("确认",
+					new DialogInterface.OnClickListener() {
+						@Override
+						public void onClick(DialogInterface dialog, int which) {
+							Editor editor = preferences.edit();
+							editor.clear();
+							editor.commit();
+							getActivity().finish();
+							Toast.makeText(getActivity(),
+									"缓存信息已清除（包括个人信息和缓存文件）", Toast.LENGTH_LONG)
+									.show();
+						}
+					});
+
+			clearAlert.setNegativeButton("取消",
+					new DialogInterface.OnClickListener() {
+						@Override
+						public void onClick(DialogInterface dialog, int which) {
+							getActivity().finish();
+							return;
+						}
+					});
+			clearAlert.show();
 		}
 	}
 
@@ -123,7 +144,8 @@ public class PreferenceMainActivity extends PreferenceActivity {
 		public void onCreate(Bundle savedInstanceState) {
 			super.onCreate(savedInstanceState);
 			getActivity().finish();
-			HelpFunctions.useToastShort(getActivity(), "正在开发，请稍候！");
+			HelpFunctions.useToastShort(getActivity(), getResources()
+					.getString(R.string.waittocode));
 		}
 	}
 

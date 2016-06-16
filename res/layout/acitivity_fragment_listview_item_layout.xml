@@ -17,7 +17,8 @@
         android:layout_marginTop="5dip"
         android:gravity="center"
         android:textColor="@color/main_black"
-        android:textSize="9pt" />
+        android:textSize="9pt"
+        android:maxLines="1" />
 
     <TextView
         android:layout_width="fill_parent"
