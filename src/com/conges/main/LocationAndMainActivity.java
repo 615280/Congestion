@@ -76,9 +76,9 @@ import com.conges.util.HelpFunctions;
 @SuppressLint({ "WorldReadableFiles", "HandlerLeak" })
 public class LocationAndMainActivity extends Activity implements
 		OnGetRoutePlanResultListener {
-	
+
 	private static final double RANGE = 0.5;
-	
+
 	private MapView mMapView = null;
 	private BaiduMap mBaiduMap;
 	private BaiduMapOptions mBaiduMapOptions;
@@ -115,7 +115,7 @@ public class LocationAndMainActivity extends Activity implements
 	int degree = -1;
 
 	SharedPreferences preferences;
-	String[] nodeName = {"独墅湖图书馆", "西交大", "文荟广场西", "中科大", "中科大西" };
+	String[] nodeName = { "独墅湖图书馆", "西交大", "文荟广场西", "中科大", "中科大西" };
 	AutoCompleteTextView searchText;
 	ImageButton searchButton;
 
@@ -126,10 +126,10 @@ public class LocationAndMainActivity extends Activity implements
 		setContentView(R.layout.activity_main);
 		init();
 
-		ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, 
+		ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
 				android.R.layout.simple_dropdown_item_1line, nodeName);
 		searchText.setAdapter(adapter);
-		
+
 		mSearch = RoutePlanSearch.newInstance();
 		mSearch.setOnGetRoutePlanResultListener(this);
 
@@ -161,7 +161,7 @@ public class LocationAndMainActivity extends Activity implements
 	@SuppressWarnings("deprecation")
 	private void init() {
 		preferences = getSharedPreferences("conges", MODE_WORLD_READABLE);
-		
+
 		// 地图初始化
 		mBaiduMapOptions = new BaiduMapOptions();
 		mBaiduMapOptions.zoomControlsEnabled(false);
@@ -284,10 +284,11 @@ public class LocationAndMainActivity extends Activity implements
 		searchButton.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				HelpFunctions.useToastShort(getApplicationContext(), "搜索内容为：" + searchText.getText().toString());
+				HelpFunctions.useToastShort(getApplicationContext(), "搜索内容为："
+						+ searchText.getText().toString());
 			}
 		});
-		
+
 		// 打开或关闭路况显示功能
 		RadioGroup group = (RadioGroup) this.findViewById(R.id.radioGroup);
 		// group.setVisibility(View.INVISIBLE);
@@ -355,18 +356,19 @@ public class LocationAndMainActivity extends Activity implements
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
-				
-				if(currentPt !=null){
+
+				if (currentPt != null) {
 					Intent intent = new Intent(LocationAndMainActivity.this,
 							TrafficInfoActivity.class);
 					Bundle b = new Bundle();
-					b.putString("latitude", currentPt.latitude+"");
-					b.putString("longitude", currentPt.longitude+"");
-					b.putDouble("rate", 10.0);		//设置获取路况的经纬度差值 10对应-10 +10
+//					b.putString("latitude", currentPt.latitude + "");
+//					b.putString("longitude", currentPt.longitude + "");
+					b.putDouble("rate", 10.0); // 设置获取路况的经纬度差值 10对应-10 +10
 					intent.putExtras(b);
 					startActivity(intent);
 				} else {
-					HelpFunctions.useToastLong(getApplicationContext(), "请先获取定位点");
+					HelpFunctions.useToastLong(getApplicationContext(),
+							"请先获取定位点");
 					locationButton.setVisibility(View.VISIBLE);
 				}
 			}
@@ -507,6 +509,11 @@ public class LocationAndMainActivity extends Activity implements
 				mBaiduMap.animateMapStatus(MapStatusUpdateFactory
 						.newMapStatus(builder.build()));
 				currentPt = ll;
+
+				Editor editor = preferences.edit();
+				editor.putString("latitude", currentPt.latitude + "");
+				editor.putString("longitude", currentPt.longitude + "");
+				editor.commit();
 			}
 		}
 

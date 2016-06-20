@@ -1,28 +1,37 @@
 package com.conges.data;
 
 public class TrafficInfo {
-	private double latitude;
-	private double longitude;
+	private String latitude;
+	private String longitude;
+	private String address;
 	private String dateTime;
 	private int type;
 	private int level;
 	private String detail;
 	private String pubUser;
 
-	public double getLatitude() {
+	public String getLatitude() {
 		return latitude;
 	}
 
-	public void setLatitude(double latitude) {
+	public void setLatitude(String latitude) {
 		this.latitude = latitude;
 	}
 
-	public double getLongitude() {
+	public String getLongitude() {
 		return longitude;
 	}
 
-	public void setLongitude(double longitude) {
+	public void setLongitude(String longitude) {
 		this.longitude = longitude;
+	}
+
+	public String getAddress() {
+		return address;
+	}
+
+	public void setAddress(String address) {
+		this.address = address;
 	}
 
 	public String getDateTime() {

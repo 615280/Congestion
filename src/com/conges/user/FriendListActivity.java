@@ -48,7 +48,7 @@ public class FriendListActivity extends Activity {
 				MODE_WORLD_READABLE);
 		String userName = preferences.getString("userName", "信息获取失败");
 
-		userNameTextView.setText("用户名：" + userName);
+		userNameTextView.setText("用户: " + userName);
 		userNameTextView.setTextColor(getResources().getColor(
 				R.color.whitesmoke));
 
@@ -96,15 +96,15 @@ public class FriendListActivity extends Activity {
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view,
 					int position, long id) {
-				HelpFunctions.useToastShort(getApplicationContext(), "开始会话");
+				HelpFunctions.useToastShort(getApplicationContext(), "开始会话: " + friendsName[position]);
 			}
 		});
 		listView.setOnItemLongClickListener(new OnItemLongClickListener() {
 			@Override
 			public boolean onItemLongClick(AdapterView<?> parent, View view,
 					int position, long id) {
-				HelpFunctions.useToastShort(getApplicationContext(), "长按删除好友");
-				return false;
+				HelpFunctions.useToastShort(getApplicationContext(), "长按删除好友: " + friendsName[position]);
+				return true;		//true则不会调用onitemclick了
 			}
 		});
 	}

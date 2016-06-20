@@ -1,7 +1,5 @@
 package com.conges.main;
 
-import com.conges.util.Constant;
-
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -9,15 +7,42 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.Toast;
 
-public class TrafficMenuActivity extends Activity {
+import com.baidu.mapapi.model.LatLng;
+import com.baidu.mapapi.search.core.SearchResult;
+import com.baidu.mapapi.search.geocode.GeoCodeResult;
+import com.baidu.mapapi.search.geocode.GeoCoder;
+import com.baidu.mapapi.search.geocode.OnGetGeoCoderResultListener;
+import com.baidu.mapapi.search.geocode.ReverseGeoCodeOption;
+import com.baidu.mapapi.search.geocode.ReverseGeoCodeResult;
+import com.conges.util.Constant;
+
+public class TrafficMenuActivity extends Activity implements
+		OnGetGeoCoderResultListener {
+
+	GeoCoder mSearch = null;
+	String geoAddress = "";
+	String latitude = "";
+	String longitude = "";
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
-		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_trafficmenu);
 		initButton();
+		mSearch = GeoCoder.newInstance();
+		mSearch.setOnGetGeoCodeResultListener(this);
+		new Thread() {
+			public void run() {
+				latitude = getIntent().getExtras().getString("latitude");
+				longitude = getIntent().getExtras().getString("longitude");
+				LatLng ptCenter = new LatLng(Float.valueOf(latitude),
+						Float.valueOf(longitude));
+				mSearch.reverseGeoCode(new ReverseGeoCodeOption()
+						.location(ptCenter));
+			};
+		}.start();
 	}
 
 	private void initButton() {
@@ -59,19 +84,15 @@ public class TrafficMenuActivity extends Activity {
 		});
 
 		buttCamera.setOnClickListener(new OnClickListener() {
-
 			@Override
 			public void onClick(View v) {
-				// TODO Auto-generated method stub
 				setTypeDataAndSA(Constant.TRAFFIC_TYPE_CAMERA);
 			}
 		});
 
 		buttMapHi.setOnClickListener(new OnClickListener() {
-
 			@Override
 			public void onClick(View v) {
-				// TODO Auto-generated method stub
 				setTypeDataAndSA(Constant.TRAFFIC_TYPE_MAPHI);
 			}
 		});
@@ -85,16 +106,41 @@ public class TrafficMenuActivity extends Activity {
 	}
 
 	private void setTypeDataAndSA(int type) {
+		Bundle data = new Bundle();
+		while (geoAddress.equals("")) { // 自旋等待
+		}
+
+		if (geoAddress.equals("-1")) {
+			return;
+		}
+
 		Intent intent = new Intent(TrafficMenuActivity.this,
 				TrafficMenuDetailActivity.class);
-		Bundle data = new Bundle();
 		data.putInt("trafficType", type);
-		data.putString("latitude", getIntent().getExtras()
-				.getString("latitude"));
-		data.putString("longitude",
-				getIntent().getExtras().getString("longitude"));
+		data.putString("latitude", latitude);
+		data.putString("longitude", longitude);
+		data.putString("address", geoAddress);
 		intent.putExtras(data);
 		startActivity(intent);
 		finish();
+	}
+
+	@Override
+	public void onGetGeoCodeResult(GeoCodeResult arg0) {
+		return;
+	}
+
+	@Override
+	public void onGetReverseGeoCodeResult(ReverseGeoCodeResult result) {
+		if (result == null || result.error != SearchResult.ERRORNO.NO_ERROR) {
+			Toast.makeText(TrafficMenuActivity.this, "抱歉，当前位置获取失败，请移动后重试！",
+					Toast.LENGTH_LONG).show();
+			geoAddress = "-1";
+			return;
+		}
+//		geoAddress = result.getAddress();
+		geoAddress = result.getAddressDetail().district;
+		geoAddress += result.getAddressDetail().street;
+		geoAddress += result.getAddressDetail().streetNumber;
 	}
 }

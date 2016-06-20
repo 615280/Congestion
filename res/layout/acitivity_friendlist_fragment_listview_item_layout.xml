@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:layout_margin="0dp"
+    android:background="@color/forth_color"
+    android:baselineAligned="false" >
+
+    <ImageView
+        android:id="@+id/friendlist_fragment_usericon"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:scaleType="fitXY"
+        android:src="@drawable/icon_usericon" />
+
+    <TextView
+        android:id="@+id/friendlist_fragment_username"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_marginLeft="10dp"
+        android:layout_toEndOf="@id/friendlist_fragment_usericon"
+        android:maxLines="1"
+        android:textSize="9pt" />
+
+<!--     <ImageButton -->
+<!--         android:id="@+id/friendlist_fragment_deletebt" -->
+<!--         android:layout_width="50dp" -->
+<!--         android:layout_height="50dp" -->
+<!--         android:layout_alignParentEnd="true" -->
+<!--         android:layout_alignParentTop="true" -->
+<!--         android:scaleType="fitXY" -->
+<!--         android:src="@drawable/icon_deletefriend" /> -->
+
+</RelativeLayout>

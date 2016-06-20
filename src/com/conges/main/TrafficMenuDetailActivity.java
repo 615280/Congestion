@@ -52,10 +52,9 @@ public class TrafficMenuDetailActivity extends Activity {
 		int type = getIntent().getIntExtra("trafficType", -1);
 		init(type);
 		trafficInfo.setType(type);
-		trafficInfo.setLatitude(Double.parseDouble(getIntent().getStringExtra(
-				"latitude")));
-		trafficInfo.setLongitude(Double.parseDouble(getIntent().getStringExtra(
-				"longitude")));
+		trafficInfo.setLatitude(getIntent().getStringExtra("latitude"));
+		trafficInfo.setLongitude(getIntent().getStringExtra("longitude"));
+		trafficInfo.setAddress(getIntent().getStringExtra("address"));
 		trafficInfo.setPubUser(preferences.getString("phoneNum", "0"));
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss",
 				Locale.getDefault());

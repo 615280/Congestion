@@ -17,7 +17,6 @@ import com.baidu.mapapi.model.LatLng;
 import com.conges.data.ConnectUtil;
 import com.conges.data.LineStep;
 import com.conges.data.TrafficInfo;
-import com.conges.data.UserInfo;
 import com.conges.util.Constant;
 
 @SuppressLint("WorldReadableFiles")
@@ -36,28 +35,28 @@ public class BusinessFunctions {
 		editor.putString("userPass", userPass);
 		editor.commit();
 		String result = ConnectUtil.getConnDef(message);
-		if(result == null){
+		if (result == null) {
 			result = "{\"loginResult\": 3}";
 		}
 		return result;
 	}
 
-	public static List<LineStep> getRoadStateResult(LatLng currentPt, double range) {
+	public static List<LineStep> getRoadStateResult(LatLng currentPt,
+			double range) {
 		List<LineStep> list = new ArrayList<LineStep>();
 		if (currentPt == null) {
 			return list;
 		}
 		DecimalFormat df = new DecimalFormat("#.000000");
-		@SuppressWarnings("unused")
 		String message = String
 				.format("{\"getRoadState\":{\"latitudeMin\":\"%s\",\"latitudeMax\":\"%s\",\"longitudeMin\":\"%s\",\"longitudeMax\":\"%s\"}}",
 						df.format(currentPt.latitude - range) + "",
 						df.format(currentPt.latitude + range) + "",
 						df.format(currentPt.longitude - range) + "",
 						df.format(currentPt.longitude + range) + "");
-		 String roadStateResult = ConnectUtil.getConnDef(message);
+		String roadStateResult = ConnectUtil.getConnDef(message);
 		list = phaseRoadStateResult(roadStateResult, list);
-		
+
 		return list;
 	}
 
@@ -89,13 +88,13 @@ public class BusinessFunctions {
 
 	public static String uploadTrafficInfo(TrafficInfo traffic) {
 		String message = String
-				.format("{\"uploadTrafficInfo\":"
-						+ "{\"phoneNum\":\"%s\",\"latitude\":\"%s\",\"longitude\":\"%s\","
+				.format("{\"uploadTrafficInfo\":{\"phoneNum\":\"%s\","
+						+ "\"latitude\":\"%s\",\"longitude\":\"%s\",\"address\":\"%s\","
 						+ "\"dateTime\":\"%s\",\"type\":\"%s\",\"level\":\"%s\",\"detail\":\"%s\"}}",
 						traffic.getPubUser(), traffic.getLatitude(),
-						traffic.getLongitude(), traffic.getDateTime(),
-						traffic.getType(), traffic.getLevel(),
-						traffic.getDetail());
+						traffic.getLongitude(), traffic.getAddress(),
+						traffic.getDateTime(), traffic.getType(),
+						traffic.getLevel(), traffic.getDetail());
 		return ConnectUtil.getConnDef(message);
 	}
 
@@ -126,9 +125,10 @@ public class BusinessFunctions {
 			for (int i = 0; i < jArray.length(); i++) {
 				trafficInfo = new TrafficInfo();
 				JSONObject j_data = (JSONObject) jArray.get(i);
-				trafficInfo.setLatitude(j_data.getDouble("latitude"));
-				trafficInfo.setLongitude(Double.parseDouble(j_data
-						.getString("longitude")));
+				trafficInfo.setAddress(j_data.getString("address"));
+				// Latitude(j_data.getDouble("latitude"));
+				// trafficInfo.setLongitude(Double.parseDouble(j_data
+				// .getString("longitude")));
 				trafficInfo.setLevel(j_data.getInt("level"));
 				trafficInfo.setDateTime(j_data.getString("dateTime"));
 				trafficInfo.setDetail(j_data.getString("detail"));
@@ -190,9 +190,10 @@ public class BusinessFunctions {
 		}
 		return null;
 	}
-	
-	public static String getUserInfoByPhoneNum(String phoneNum){
-		String message = String.format("{\"getUserInfo\":{\"phoneNum\":\"%s\"}}", phoneNum);
+
+	public static String getUserInfoByPhoneNum(String phoneNum) {
+		String message = String.format(
+				"{\"getUserInfo\":{\"phoneNum\":\"%s\"}}", phoneNum);
 		return ConnectUtil.getConnDef(message);
 	}
 }

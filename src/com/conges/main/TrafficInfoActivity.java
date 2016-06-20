@@ -43,10 +43,19 @@ public class TrafficInfoActivity extends Activity {
 
 		preferences = getSharedPreferences("conges", MODE_WORLD_READABLE);
 
-		latitude = Double.parseDouble(getIntent().getExtras().getString(
-				"latitude"));
-		longitude = Double.parseDouble(getIntent().getExtras().getString(
-				"longitude"));
+//		latitude = Double.parseDouble(getIntent().getExtras().getString(
+//				"latitude"));
+//		longitude = Double.parseDouble(getIntent().getExtras().getString(
+//				"longitude"));
+		latitude = Double.parseDouble(preferences.getString("latitude", ""));
+		longitude = Double.parseDouble(preferences.getString("longitude", ""));
+		
+		if(latitude == 0 || longitude == 0){
+			HelpFunctions.useToastShort(getApplicationContext(), "请先定位！");
+			finish();
+			return;
+		}
+		
 		trafficInfoList = new ArrayList<TrafficInfo>();
 		trafficInfoMapList = new ArrayList<Map<String, Object>>();
 
@@ -61,7 +70,8 @@ public class TrafficInfoActivity extends Activity {
 				handler.sendEmptyMessage(0x126);
 			};
 		}.start();
-		refreshButton.setBackgroundResource(R.drawable.icon_refresh_50n_reverse);
+		refreshButton
+				.setBackgroundResource(R.drawable.icon_refresh_50n_reverse);
 	}
 
 	Handler handler = new Handler() {
@@ -134,8 +144,7 @@ public class TrafficInfoActivity extends Activity {
 
 	private Map<String, Object> getMapFromTrafficInfo(TrafficInfo traInfo) {
 		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("nodeName",
-				traInfo.getLatitude() + ", " + traInfo.getLongitude());
+		map.put("nodeName", traInfo.getAddress());
 		String pubUser = traInfo.getPubUser();
 		if (pubUser.equals("0")) {
 			pubUser = "未知";
