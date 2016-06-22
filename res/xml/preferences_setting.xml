@@ -10,7 +10,8 @@
             android:entryValues="@array/refresh_time_value_list"
             android:key="refreshtime"
             android:summary="选择路况状态的更新频率"
-            android:title="更新频率" />
+            android:title="更新频率"
+            android:defaultValue="5" />
     </PreferenceCategory>
 
 </PreferenceScreen>

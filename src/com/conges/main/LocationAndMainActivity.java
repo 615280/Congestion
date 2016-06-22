@@ -2,6 +2,7 @@ package com.conges.main;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Timer;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Semaphore;
@@ -15,6 +16,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.os.Parcelable;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -89,6 +91,9 @@ public class LocationAndMainActivity extends Activity implements
 		OnGetSuggestionResultListener {
 
 	private static final double RANGE = 0.5;
+	private static int Count = 0;
+	private static int RefreshTime = 10;
+	private static Timer timer;
 
 	private MapView mMapView = null;
 	private BaiduMap mBaiduMap;
@@ -98,11 +103,13 @@ public class LocationAndMainActivity extends Activity implements
 	private String touchType;
 	private TextView mStateBar;
 
+	private TextView loadingText;
 	private OnCheckedChangeListener radioButtonListener;
 	private Button publishSitButton;
 	private Button settingButton;
 	private Button locationButton;
 	private Button contactButton;
+	private RadioGroup radioGroup;
 
 	// 定位相关
 	private LocationClient mLocClient;
@@ -125,6 +132,7 @@ public class LocationAndMainActivity extends Activity implements
 	ExecutorService exec = Executors.newCachedThreadPool();
 	final Semaphore semaphore = new Semaphore(1);
 	int degree = -1;
+	List<TransitRouteOverlay> roadStateOverlayList = new ArrayList<TransitRouteOverlay>();
 
 	SharedPreferences preferences;
 	String[] nodeName = { "独墅湖图书馆", "西交大", "文荟广场西", "中科大", "中科大西" };
@@ -148,6 +156,45 @@ public class LocationAndMainActivity extends Activity implements
 
 		mPoiSearch = PoiSearch.newInstance();
 		mPoiSearch.setOnGetPoiSearchResultListener(this);
+
+		getRoadStateList();
+
+		// timer = new Timer();
+		// timer.schedule(new TimerTask() {
+		// @Override
+		// public void run() {
+		// handler.sendEmptyMessage(0x150);
+		// }
+		// }, 30000, RefreshTime * 60 * 100);
+	}
+
+	private void getRoadStateList() {
+		loadingText.setVisibility(View.VISIBLE); // 显示加载中字样
+		radioGroup.setVisibility(View.GONE); // 不显示打开关闭按钮
+
+		new Thread() {
+			@Override
+			public void run() {
+				while (currentPt == null) {
+				}
+				roadStateList = BusinessFunctions.getRoadStateResult(currentPt,
+						RANGE);
+				// handler.sendEmptyMessage(0x123);
+				for (int i = 0; i < roadStateList.size(); i++) {
+					Message message = Message.obtain();
+
+					Bundle b = new Bundle();
+					// b.putParcelable("linestep",
+					// (Parcelable) roadStateList.get(0));
+
+					b.putParcelable("linestep",
+							(Parcelable) roadStateList.get(i));
+
+					message.setData(b);
+					handler.sendMessage(message);
+				}
+			}
+		}.start();
 	}
 
 	@Override
@@ -173,12 +220,15 @@ public class LocationAndMainActivity extends Activity implements
 
 		mSearch.destroy();
 		mPoiSearch.destroy();
+
+		timer.cancel();
 		super.onDestroy();
 	}
 
 	@SuppressWarnings("deprecation")
 	private void init() {
 		preferences = getSharedPreferences("conges", MODE_WORLD_READABLE);
+		RefreshTime = preferences.getInt("refreshtime", 10);
 
 		// 地图初始化
 		mBaiduMapOptions = new BaiduMapOptions();
@@ -206,7 +256,6 @@ public class LocationAndMainActivity extends Activity implements
 
 	private void initListener() {
 		mBaiduMap.setOnMapTouchListener(new OnMapTouchListener() {
-
 			@Override
 			public void onTouch(MotionEvent event) {
 
@@ -269,7 +318,8 @@ public class LocationAndMainActivity extends Activity implements
 		MapStatus ms = mBaiduMap.getMapStatus();
 		state += String.format("zoom=%.1f rotate=%d overlook=%d", ms.zoom,
 				(int) ms.rotate, (int) ms.overlook);
-		mStateBar.setText(state);
+		mStateBar.setText(state); // 不显示给用户，只在debug时使用
+		mStateBar.setVisibility(View.GONE);
 
 		// changeLocationButtonVisible(); //显示定位按钮
 	}
@@ -311,59 +361,59 @@ public class LocationAndMainActivity extends Activity implements
 			}
 		});
 
+		loadingText = (TextView) findViewById(R.id.tv_main_loading);
 		// 打开或关闭路况显示功能
-		RadioGroup group = (RadioGroup) this.findViewById(R.id.radioGroup);
-		// group.setVisibility(View.INVISIBLE);
-		// group.
+		radioGroup = (RadioGroup) this.findViewById(R.id.radioGroup);
 		radioButtonListener = new OnCheckedChangeListener() {
 			@Override
 			public void onCheckedChanged(RadioGroup group, int checkedId) {
 				if (checkedId == R.id.closeColor) {
 					// 关闭
-					// Toast.makeText(LocationAndMainActivity.this,
-					// "closeColor",
-					// Toast.LENGTH_SHORT).show();
 					clearOverlay();
-					new Thread() {
-						public void run() {
-							while (semaphore.getQueueLength() > 0) {
-								semaphore.release();
-							}
-						};
-					}.start();
+					// new Thread() {
+					// public void run() {
+					// while (semaphore.getQueueLength() > 0) {
+					// semaphore.release();
+					// }
+					// };
+					// }.start();
 				}
 
 				if (checkedId == R.id.openColor) {
 					// 打开
 					// Toast.makeText(LocationAndMainActivity.this, "openColor",
 					// Toast.LENGTH_SHORT).show();
-					
-					new Thread() {
-						@Override
-						public void run() {
-							roadStateList = BusinessFunctions
-									.getRoadStateResult(currentPt, RANGE);
-							// handler.sendEmptyMessage(0x123);
-							for (int i = 0; i < roadStateList.size(); i++) {
-								Message message = Message.obtain();
 
-								Bundle b = new Bundle();
-								// b.putParcelable("linestep",
-								// (Parcelable) roadStateList.get(0));
+					for (int i = 0; i < roadStateOverlayList.size(); i++) {
+						roadStateOverlayList.get(i).addToMap();
+					}
 
-								b.putParcelable("linestep",
-										(Parcelable) roadStateList.get(i));
-
-								message.setData(b);
-								handler.sendMessage(message);
-							}
-						}
-					}.start();
+					// new Thread() {
+					// @Override
+					// public void run() {
+					// roadStateList = BusinessFunctions
+					// .getRoadStateResult(currentPt, RANGE);
+					// // handler.sendEmptyMessage(0x123);
+					// for (int i = 0; i < roadStateList.size(); i++) {
+					// Message message = Message.obtain();
+					//
+					// Bundle b = new Bundle();
+					// // b.putParcelable("linestep",
+					// // (Parcelable) roadStateList.get(0));
+					//
+					// b.putParcelable("linestep",
+					// (Parcelable) roadStateList.get(i));
+					//
+					// message.setData(b);
+					// handler.sendMessage(message);
+					// }
+					// }
+					// }.start();
 				}
 			}
 		};
 
-		group.setOnCheckedChangeListener(radioButtonListener);
+		radioGroup.setOnCheckedChangeListener(radioButtonListener);
 
 		publishSitButton = (Button) findViewById(R.id.button_main_publish);
 		settingButton = (Button) findViewById(R.id.button_main_setting);
@@ -455,35 +505,39 @@ public class LocationAndMainActivity extends Activity implements
 	Handler handler = new Handler() {
 		@Override
 		public void handleMessage(Message msg) {
-			// System.out.println("hello");
-			final LineStep lineStep = (LineStep) msg.getData().getParcelable(
-					"linestep");
+			if (msg.what == 0x150) { // 路径加载全部完成
+				Log.i("test", "test");
+				getRoadStateList();
+			} else {
+				final LineStep lineStep = (LineStep) msg.getData()
+						.getParcelable("linestep");
 
-			Runnable run = new Runnable() {
-				@Override
-				public void run() {
-					lineStep.getStartNode();
-					lineStep.getEndNode();
-					// searchButtonProcess();
-					route = null;
-					PlanNode stNode = PlanNode.withCityNameAndPlaceName("苏州",
-							lineStep.getStartNode());
-					PlanNode enNode = PlanNode.withCityNameAndPlaceName("苏州",
-							lineStep.getEndNode());
+				Runnable run = new Runnable() {
+					@Override
+					public void run() {
+						lineStep.getStartNode();
+						lineStep.getEndNode();
+						// searchButtonProcess();
+						route = null;
+						PlanNode stNode = PlanNode.withCityNameAndPlaceName(
+								"苏州", lineStep.getStartNode());
+						PlanNode enNode = PlanNode.withCityNameAndPlaceName(
+								"苏州", lineStep.getEndNode());
 
-					try {
-						semaphore.acquire();
-						degree = lineStep.getDegree();
-						mSearch.transitSearch((new TransitRoutePlanOption())
-								.from(stNode).city("苏州").to(enNode));
-					} catch (InterruptedException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
+						try {
+							semaphore.acquire();
+							degree = lineStep.getDegree();
+							mSearch.transitSearch((new TransitRoutePlanOption())
+									.from(stNode).city("苏州").to(enNode));
+						} catch (InterruptedException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
 					}
-				}
-			};
+				};
 
-			exec.execute(run);
+				exec.execute(run);
+			}
 		}
 	};
 
@@ -564,10 +618,7 @@ public class LocationAndMainActivity extends Activity implements
 
 	@Override
 	public void onGetTransitRouteResult(TransitRouteResult result) {
-		int i = preferences.getInt("test", 0);
-		Editor editor = preferences.edit();
-		editor.putInt("test", i++);
-		editor.commit();
+		Count++;
 
 		if (result == null || result.error != SearchResult.ERRORNO.NO_ERROR) {
 			// Toast.makeText(LocationAndMainActivity.this, "抱歉，未找到结果",
@@ -585,11 +636,19 @@ public class LocationAndMainActivity extends Activity implements
 			mBaiduMap.setOnMarkerClickListener(overlay);
 			routeOverlay = overlay;
 			overlay.setData(result.getRouteLines().get(0));
-			overlay.addToMap();
+			roadStateOverlayList.add(overlay);
+			loadingText.setText("路况信息加载中" + Count * 100 / roadStateList.size()
+					+ "%");
+			// Log.i("test", Count + " " + roadStateList.size() + " " +
+			// Count*100/roadStateList.size());
 			// overlay.zoomToSpan();
 		}
 
 		semaphore.release();
+		if (Count == roadStateList.size()) {
+			loadingText.setVisibility(View.GONE);
+			radioGroup.setVisibility(View.VISIBLE);
+		}
 	}
 
 	@Override
@@ -649,7 +708,7 @@ public class LocationAndMainActivity extends Activity implements
 			return;
 		}
 		if (result.error == SearchResult.ERRORNO.NO_ERROR) {
-//			mBaiduMap.clear();
+			// mBaiduMap.clear();
 			PoiOverlay overlay = new MyPoiOverlay(mBaiduMap);
 			mBaiduMap.setOnMarkerClickListener(overlay);
 			overlay.setData(result);

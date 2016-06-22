@@ -11,8 +11,10 @@ import android.content.SharedPreferences.Editor;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.preference.ListPreference;
 import android.preference.PreferenceActivity;
 import android.preference.PreferenceFragment;
+import android.preference.PreferenceManager;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -26,8 +28,7 @@ import com.conges.util.HelpFunctions;
 public class PreferenceMainActivity extends PreferenceActivity {
 	private Button logCtrlButton;
 
-	static SharedPreferences preferences;
-	Editor editor;
+	private static SharedPreferences preferences;
 
 	@SuppressWarnings("deprecation")
 	@Override
@@ -103,6 +104,12 @@ public class PreferenceMainActivity extends PreferenceActivity {
 		public void onCreate(Bundle savedInstanceState) {
 			super.onCreate(savedInstanceState);
 			addPreferencesFromResource(R.xml.preferences_setting);
+			PreferenceManager pm = getPreferenceManager();
+			ListPreference listPreference = (ListPreference) pm.findPreference("refreshtime");
+			
+			Editor editor = preferences.edit();
+			editor.putInt("refreshtime", Integer.parseInt(listPreference.getValue()));
+			editor.commit();
 		}
 	}
 
@@ -152,7 +159,7 @@ public class PreferenceMainActivity extends PreferenceActivity {
 	Handler handler = new Handler() {
 		public void handleMessage(Message msg) {
 			if (msg.what == 0x123) {
-				editor = preferences.edit();
+				Editor editor = preferences.edit();
 				editor.putInt("loginState", 0);
 				editor.putInt("autoLogin", 0);
 				editor.remove("userPass");

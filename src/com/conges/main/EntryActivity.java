@@ -75,8 +75,8 @@ public class EntryActivity extends Activity {
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy年MM月dd日 " + "hh:mm:ss");
 		// 存入当前时间
 		editor.putString("lastTime", sdf.format(new Date()));
-		// 存入一个随机数
 		editor.putInt("loginState", 0);
+		editor.putInt("refreshtime", 10);
 		// 提交所有存入的数据
 		editor.commit();
 		
