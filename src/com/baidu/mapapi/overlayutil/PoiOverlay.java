@@ -59,7 +59,7 @@ public class PoiOverlay extends OverlayManager {
 			bundle.putInt("index", i);
 			markerList.add(new MarkerOptions()
 					.icon(BitmapDescriptorFactory.fromAssetWithDpi("Icon_mark"
-							+ markerSize + ".png")).extraInfo(bundle)
+							+ markerSize + ".png")).visible(false).extraInfo(bundle)
 					.position(mPoiResult.getAllPoi().get(i).location));
 
 		}

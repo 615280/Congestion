@@ -2,6 +2,7 @@ package com.conges.main;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -25,7 +26,10 @@ public class TrafficMenuActivity extends Activity implements
 	String geoAddress = "";
 	String latitude = "";
 	String longitude = "";
+	
+	SharedPreferences preferences;
 
+	@SuppressWarnings("deprecation")
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -33,10 +37,15 @@ public class TrafficMenuActivity extends Activity implements
 		initButton();
 		mSearch = GeoCoder.newInstance();
 		mSearch.setOnGetGeoCodeResultListener(this);
+		
+		preferences = getSharedPreferences("conges", MODE_WORLD_READABLE);
 		new Thread() {
 			public void run() {
-				latitude = getIntent().getExtras().getString("latitude");
-				longitude = getIntent().getExtras().getString("longitude");
+//				latitude = getIntent().getExtras().getString("latitude");
+//				longitude = getIntent().getExtras().getString("longitude");
+				
+				latitude = preferences.getString("latitude", "");
+				longitude = preferences.getString("longitude", "");
 				LatLng ptCenter = new LatLng(Float.valueOf(latitude),
 						Float.valueOf(longitude));
 				mSearch.reverseGeoCode(new ReverseGeoCodeOption()
@@ -111,6 +120,7 @@ public class TrafficMenuActivity extends Activity implements
 		}
 
 		if (geoAddress.equals("-1")) {
+			finish();
 			return;
 		}
 

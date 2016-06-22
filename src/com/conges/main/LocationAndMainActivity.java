@@ -57,9 +57,17 @@ import com.baidu.mapapi.map.MyLocationConfiguration.LocationMode;
 import com.baidu.mapapi.map.MyLocationData;
 import com.baidu.mapapi.model.LatLng;
 import com.baidu.mapapi.overlayutil.OverlayManager;
+import com.baidu.mapapi.overlayutil.PoiOverlay;
 import com.baidu.mapapi.overlayutil.TransitRouteOverlay;
+import com.baidu.mapapi.search.core.PoiInfo;
 import com.baidu.mapapi.search.core.RouteLine;
 import com.baidu.mapapi.search.core.SearchResult;
+import com.baidu.mapapi.search.poi.OnGetPoiSearchResultListener;
+import com.baidu.mapapi.search.poi.PoiCitySearchOption;
+import com.baidu.mapapi.search.poi.PoiDetailResult;
+import com.baidu.mapapi.search.poi.PoiDetailSearchOption;
+import com.baidu.mapapi.search.poi.PoiResult;
+import com.baidu.mapapi.search.poi.PoiSearch;
 import com.baidu.mapapi.search.route.BikingRouteResult;
 import com.baidu.mapapi.search.route.DrivingRouteResult;
 import com.baidu.mapapi.search.route.OnGetRoutePlanResultListener;
@@ -68,6 +76,8 @@ import com.baidu.mapapi.search.route.RoutePlanSearch;
 import com.baidu.mapapi.search.route.TransitRoutePlanOption;
 import com.baidu.mapapi.search.route.TransitRouteResult;
 import com.baidu.mapapi.search.route.WalkingRouteResult;
+import com.baidu.mapapi.search.sug.OnGetSuggestionResultListener;
+import com.baidu.mapapi.search.sug.SuggestionResult;
 import com.conges.data.LineStep;
 import com.conges.user.FriendListActivity;
 import com.conges.user.LoginActivity;
@@ -75,7 +85,8 @@ import com.conges.util.HelpFunctions;
 
 @SuppressLint({ "WorldReadableFiles", "HandlerLeak" })
 public class LocationAndMainActivity extends Activity implements
-		OnGetRoutePlanResultListener {
+		OnGetRoutePlanResultListener, OnGetPoiSearchResultListener,
+		OnGetSuggestionResultListener {
 
 	private static final double RANGE = 0.5;
 
@@ -109,6 +120,7 @@ public class LocationAndMainActivity extends Activity implements
 	RouteLine route = null;
 	OverlayManager routeOverlay = null;
 	RoutePlanSearch mSearch = null;
+	private PoiSearch mPoiSearch = null;
 
 	ExecutorService exec = Executors.newCachedThreadPool();
 	final Semaphore semaphore = new Semaphore(1);
@@ -117,6 +129,7 @@ public class LocationAndMainActivity extends Activity implements
 	SharedPreferences preferences;
 	String[] nodeName = { "独墅湖图书馆", "西交大", "文荟广场西", "中科大", "中科大西" };
 	AutoCompleteTextView searchText;
+	// private int load_Index = 0;
 	ImageButton searchButton;
 
 	@Override
@@ -133,6 +146,8 @@ public class LocationAndMainActivity extends Activity implements
 		mSearch = RoutePlanSearch.newInstance();
 		mSearch.setOnGetRoutePlanResultListener(this);
 
+		mPoiSearch = PoiSearch.newInstance();
+		mPoiSearch.setOnGetPoiSearchResultListener(this);
 	}
 
 	@Override
@@ -155,6 +170,9 @@ public class LocationAndMainActivity extends Activity implements
 		mBaiduMap.setMyLocationEnabled(false);
 		mMapView.onDestroy();
 		mMapView = null;
+
+		mSearch.destroy();
+		mPoiSearch.destroy();
 		super.onDestroy();
 	}
 
@@ -284,8 +302,12 @@ public class LocationAndMainActivity extends Activity implements
 		searchButton.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				HelpFunctions.useToastShort(getApplicationContext(), "搜索内容为："
-						+ searchText.getText().toString());
+				// HelpFunctions.useToastShort(getApplicationContext(), "搜索内容为："
+				// + searchText.getText().toString());
+				mPoiSearch.searchInCity((new PoiCitySearchOption()).city("苏州")
+						.keyword(searchText.getText().toString())
+						.pageCapacity(1));
+				// .pageNum(load_Index));
 			}
 		});
 
@@ -315,6 +337,7 @@ public class LocationAndMainActivity extends Activity implements
 					// 打开
 					// Toast.makeText(LocationAndMainActivity.this, "openColor",
 					// Toast.LENGTH_SHORT).show();
+					
 					new Thread() {
 						@Override
 						public void run() {
@@ -361,8 +384,8 @@ public class LocationAndMainActivity extends Activity implements
 					Intent intent = new Intent(LocationAndMainActivity.this,
 							TrafficInfoActivity.class);
 					Bundle b = new Bundle();
-//					b.putString("latitude", currentPt.latitude + "");
-//					b.putString("longitude", currentPt.longitude + "");
+					// b.putString("latitude", currentPt.latitude + "");
+					// b.putString("longitude", currentPt.longitude + "");
 					b.putDouble("rate", 10.0); // 设置获取路况的经纬度差值 10对应-10 +10
 					intent.putExtras(b);
 					startActivity(intent);
@@ -463,18 +486,6 @@ public class LocationAndMainActivity extends Activity implements
 			exec.execute(run);
 		}
 	};
-
-	public void searchButtonProcess(LineStep lineStep) {
-		// 重置浏览节点的路线数据
-		route = null;
-		// 设置起终点信息
-		PlanNode stNode = PlanNode.withCityNameAndPlaceName("苏州",
-				lineStep.getStartNode());
-		PlanNode enNode = PlanNode.withCityNameAndPlaceName("苏州",
-				lineStep.getEndNode());
-		mSearch.transitSearch((new TransitRoutePlanOption()).from(stNode)
-				.city("苏州").to(enNode));
-	}
 
 	@SuppressWarnings("unused")
 	private void changeLocationButtonVisible() {
@@ -611,5 +622,71 @@ public class LocationAndMainActivity extends Activity implements
 	public void onGetWalkingRouteResult(WalkingRouteResult arg0) {
 		// TODO Auto-generated method stub
 
+	}
+
+	@Override
+	public void onGetSuggestionResult(SuggestionResult arg0) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void onGetPoiDetailResult(PoiDetailResult result) {
+		if (result.error != SearchResult.ERRORNO.NO_ERROR) {
+		} else {
+			Toast.makeText(LocationAndMainActivity.this,
+					result.getName() + ": " + result.getAddress(),
+					Toast.LENGTH_SHORT).show();
+		}
+	}
+
+	@Override
+	public void onGetPoiResult(PoiResult result) {
+		if (result == null
+				|| result.error == SearchResult.ERRORNO.RESULT_NOT_FOUND) {
+			Toast.makeText(LocationAndMainActivity.this, "未找到结果",
+					Toast.LENGTH_LONG).show();
+			return;
+		}
+		if (result.error == SearchResult.ERRORNO.NO_ERROR) {
+//			mBaiduMap.clear();
+			PoiOverlay overlay = new MyPoiOverlay(mBaiduMap);
+			mBaiduMap.setOnMarkerClickListener(overlay);
+			overlay.setData(result);
+			overlay.addToMap();
+			overlay.zoomToSpan();
+			return;
+		}
+		if (result.error == SearchResult.ERRORNO.AMBIGUOUS_KEYWORD) {
+			String strInfo = "暂不提供非定位所在城市的搜索！";
+
+			// 当输入关键字在本市没有找到，但在其他城市找到时，返回包含该关键字信息的城市列表
+			// String strInfo = "在";
+			// for (CityInfo cityInfo : result.getSuggestCityList()) {
+			// strInfo += cityInfo.city;
+			// strInfo += ",";
+			// }
+			// strInfo += "找到结果";
+			Toast.makeText(LocationAndMainActivity.this, strInfo,
+					Toast.LENGTH_LONG).show();
+		}
+	}
+
+	private class MyPoiOverlay extends PoiOverlay {
+
+		public MyPoiOverlay(BaiduMap baiduMap) {
+			super(baiduMap);
+		}
+
+		@Override
+		public boolean onPoiClick(int index) {
+			super.onPoiClick(index);
+			PoiInfo poi = getPoiResult().getAllPoi().get(index);
+			// if (poi.hasCaterDetails) {
+			mPoiSearch.searchPoiDetail((new PoiDetailSearchOption())
+					.poiUid(poi.uid));
+			// }
+			return true;
+		}
 	}
 }
