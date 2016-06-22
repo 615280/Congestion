@@ -5,6 +5,8 @@ import org.json.JSONObject;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.app.AlertDialog.Builder;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
@@ -26,7 +28,6 @@ import com.conges.util.HelpFunctions;
 public class UserInfoActivity extends Activity {
 	private TextView phoneNumber, userName;
 	private ImageView userIcon;
-	@SuppressWarnings("unused")
 	private Button returnButton;
 	private Button logoutButton;
 
@@ -76,9 +77,13 @@ public class UserInfoActivity extends Activity {
 					// userIcon.setImageResource(R.drawable.icon_usericon);
 
 				} catch (JSONException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
+			} else if(msg.what == 0x135){
+				editor = preferences.edit();
+				editor.putInt("loginState", 0);
+				editor.commit();
+				finish();
 			}
 		}
 	};
@@ -97,6 +102,8 @@ public class UserInfoActivity extends Activity {
 		// "信息获取失败"));
 		userIcon.setImageResource(R.drawable.icon_usericon);
 
+		returnButton = (Button) findViewById(R.id.userinfo_bt_returnmain);
+		returnButton.setVisibility(View.GONE);
 		// returnButton.setOnClickListener(new OnClickListener() {
 		// @Override
 		// public void onClick(View v) {
@@ -111,14 +118,32 @@ public class UserInfoActivity extends Activity {
 		logoutButton.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				editor = preferences.edit();
-				editor.putInt("loginState", 0);
-				editor.commit();
-				Intent intent = new Intent();
-				intent.setClass(getApplicationContext(),
-						LocationAndMainActivity.class);
-				startActivity(intent);
-				finish();
+				Builder checkAlert = new Builder(UserInfoActivity.this);
+				checkAlert.setTitle("提示").setIcon(R.drawable.ic_launcher)
+						.setMessage("确认退出该帐号吗？");
+				checkAlert.setPositiveButton("确认",
+						new DialogInterface.OnClickListener() {
+							@Override
+							public void onClick(DialogInterface dialog,
+									int which) {
+								new Thread() {
+									public void run() {
+										handler.sendEmptyMessage(0x135);
+									};
+								}.start();
+							}
+						});
+
+				checkAlert.setNegativeButton("取消",
+						new DialogInterface.OnClickListener() {
+							@Override
+							public void onClick(DialogInterface dialog,
+									int which) {
+								return;
+							}
+						});
+				checkAlert.show();
+				
 			}
 		});
 	}
